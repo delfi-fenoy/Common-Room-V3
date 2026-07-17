@@ -1,0 +1,36 @@
+<!--
+  Fragmento header reutilizable para la barra superior de la aplicación.
+
+  Incluye:
+  - Logo que linkea a la página de inicio (/home)
+  - Barra de búsqueda (input sin funcionalidad aún)
+  - Botones de usuario que cambian según si hay usuario logueado o no:
+    * Si no hay usuario logueado muestra opciones "Sign in" y "Register"
+    * Si hay usuario logueado muestra foto, nombre y botón para cerrar sesión
+
+  Para incluirlo en otras plantillas utilizar:
+  <div th:insert="fragments/header :: header"></div>
+-->
+<header class="top-header">
+
+    <!-- Contenedor del logo de la aplicación -->
+    <div class="logo-container">
+        <a href="/home" class="logo-link" title="Inicio">
+            <img src="/img/iconLetter.png" alt="Logo de la aplicación" class="logo-img"/>
+        </a>
+    </div>
+
+    <!-- Formulario de búsqueda con lupa incrustada a la derecha -->
+    <form action="/search" method="get" class="search-container">
+        <div class="search-wrapper">
+            <input type="text" name="query" class="search-bar" placeholder="Buscar..." required/>
+            <button type="submit" class="search-icon" title="Buscar">🔍</button>
+        </div>
+    </form>
+
+    <!-- Contenedor dinámico de botones de usuario -->
+    <div class="user-buttons" id="user-buttons">
+        <!-- El JS va a meter contenido acá -->
+    </div>
+
+</header>

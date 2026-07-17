@@ -1,0 +1,188 @@
+/* ? ======== Sección Título ======== */
+.title-section h2 {
+    color: var(--brown-mid);
+    font-size: 5em;
+    letter-spacing: -3px;
+    margin-bottom: 0.8rem;
+    text-align: center;
+    text-shadow:
+        1px 1px 0 var(--green-light),
+        -1px -1px 0 var(--green-light),
+        1px -1px 0 var(--green-light),
+        -1px 1px 0 var(--green-light);
+    transition: 0.7s ease;
+}
+
+.title-section h2:hover {
+    font-variation-settings: "wght" 582;
+    letter-spacing: 1px;
+}
+
+/* ? ======== Sección Usuarios ======== */
+.users-section {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(4, 1fr);
+    margin: 0 auto 3rem auto;
+    max-width: 70rem;
+    padding: 0 2rem;
+}
+
+/* ? ======== Tarjeta de Usuario ======== */
+.user-card {
+    aspect-ratio: 3 / 3.5;
+    background-color: var(--brown-dark);
+    border-radius: 0.7rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.5s ease;
+}
+
+/* * ----- Hover extra: profundidad ----- */
+.user-card:hover {
+    z-index: 10;
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
+    background-color: var(--brown-light);
+}
+
+/* * ----- Imagen del usuario ----- */
+.user-card img {
+    position: absolute;
+    inset: 0.6rem;
+    width: calc(100% - 1.2rem);
+    height: calc(100% - 1.2rem);
+    object-fit: cover;
+    border-radius: 0.5rem;
+    background-color: var(--green-semi-dark);
+    transition: 0.5s ease;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* * ----- Información del usuario ----- */
+.info-overlay {
+    position: absolute;
+    left: 0.6rem;
+    right: 0.6rem;
+    bottom: 0.6rem;
+    height: 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    background: linear-gradient(180deg, transparent 0%, var(--brown-dark) 100%);
+    border-radius: 0.5rem;
+    transition: 0.4s ease;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.user-card:hover .info-overlay {
+    background: var(--brown-mid);
+    border-radius: 0rem;
+}
+
+.user-card:hover .info-overlay h1{
+    transform: scale(1.05);
+    text-decoration: underline;
+}
+
+.info-overlay h1 {
+    color: var(--text-light);
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+}
+
+.info-overlay h3 {
+    color: gold;
+    font-size: 1rem;
+    margin: 0.2rem 0 0;
+}
+
+/* ! ======== En caso de no encontrar ======== */
+.no-results {
+    background: rgb(150, 84, 84);
+    border: 0.3em solid rgb(134, 10, 10);
+    border-radius: 0.7rem;
+    color: white;
+    display: block;
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 2.5rem auto;
+    padding: 1.2rem 2rem;
+    text-align: center;
+    text-transform: uppercase;
+    user-select: none;
+}
+
+/* ? ======== Paginación ======== */
+.pagination-section {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.pagination-section span {
+    align-self: center;
+    background-color: var(--green-dark);
+    border-radius: 0.25rem;
+    color: var(--text-light);
+    font-size: 1.5rem;
+    padding: 0.5rem 1rem;
+    user-select: none;
+}
+
+.pagination-section button {
+    background-color: var(--green-dark);
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    border: none;
+    border-radius: 0.25rem;
+    color: var(--text-light);
+    cursor: pointer;
+    font-size: 1.5rem;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.pagination-section button:hover {
+    background-color: var(--brown-mid);
+    transform: scale(1.1);
+}
+
+.pagination-section button:disabled {
+    background-color: var(--text-dark);
+    pointer-events: none;
+    transform: scale(0.8);
+}
+
+/* ! ======== Responsive ======== */
+@media (max-width: 1024px) {
+    .users-section {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .users-section {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .users-section {
+        gap: 1rem;
+        grid-template-columns: 1fr;
+    }
+
+    .info-overlay h1 {
+        font-size: 1rem;
+    }
+
+    .title-section h2 {
+        font-size: 3rem;
+    }
+}

@@ -1,0 +1,105 @@
+<div class="home-container">
+
+    <!-- * ========== Logo principal ========== -->
+    <section class="logo-section">
+        <img src="assets/img/title.png" alt="Logo" class="main-logo" />
+    </section>
+
+    <!-- * ========== Carrusel | Películas Populares ========== -->
+    <section class="carousel-section">
+        <h3>Popular Movies</h3>
+
+        <div class="carousel-wrapper">
+            <button class="nav-btn left" (click)="prevSlide('popular')">←</button>
+
+            <div class="carousel">
+
+                @for (movie of getVisibleMovies('popular'); track movie.id) {
+                    <div class="movie-card" [routerLink]="['/movies', movie.id]">
+                        <div class="img-wrapper">
+                            <img
+                                [src]="movie.posterUrl || 'assets/img/default-poster.jpg'"
+                                alt="{{ movie.title || 'Poster not available' }}"
+                                (error)="onImgError($event)"
+                            />
+
+                            <div class="info-overlay">
+                                <h4>{{ movie.title }}</h4>
+                                <p>{{ movie.releaseDate }}</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+
+            <button class="nav-btn right" (click)="nextSlide('popular')">→</button>
+        </div>
+    </section>
+
+    <!-- * ========== Carrusel | Películas Recientes ========== -->
+    <section class="carousel-section">
+        <h3>Recent Movies</h3>
+
+        <div class="carousel-wrapper">
+            <button class="nav-btn left" (click)="prevSlide('recent')">←</button>
+
+            <div class="carousel">
+
+                @for (movie of getVisibleMovies('recent'); track movie.id) {
+                    <div class="movie-card" [routerLink]="['/movies', movie.id]">
+                        <div class="img-wrapper">
+                            <img
+                                [src]="movie.posterUrl || 'assets/img/default-poster.jpg'"
+                                alt="{{ movie.title || 'Poster not available' }}"
+                                (error)="onImgError($event)"
+                            />
+
+                            <div class="info-overlay">
+                                <h4>{{ movie.title }}</h4>
+                                <p>{{ movie.releaseDate }}</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+
+            <button class="nav-btn right" (click)="nextSlide('recent')">→</button>
+        </div>
+    </section>
+    
+    <!-- * ========== Carrusel | Proximos Estrenos ========== -->
+    <section class="carousel-section">
+        <h3>Upcoming Movies</h3>
+
+        <div class="carousel-wrapper">
+            <button class="nav-btn left" (click)="prevSlide('upcoming')">←</button>
+
+            <div class="carousel">
+
+                @for (movie of getVisibleMovies('upcoming'); track movie.id) {
+                    <div class="movie-card" [routerLink]="['/movies', movie.id]">
+                        <div class="img-wrapper">
+                            <img
+                                [src]="movie.posterUrl || 'assets/img/default-poster.jpg'"
+                                alt="{{ movie.title || 'Poster not available' }}"
+                                (error)="onImgError($event)"
+                            />
+
+                            <div class="info-overlay">
+                                <h4>{{ movie.title }}</h4>
+                                <p>{{ movie.releaseDate }}</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+
+            <button class="nav-btn right" (click)="nextSlide('upcoming')">→</button>
+        </div>
+    </section>
+
+</div>
+

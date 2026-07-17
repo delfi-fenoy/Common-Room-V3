@@ -1,0 +1,111 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36" version="28.2.8">
+  <diagram name="Página-1" id="c-8bVRI9DMXVMjh8mi_W">
+    <mxGraphModel dx="1948" dy="844" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <object placeholders="1" c4Name="Visitante" c4Type="Person" c4Description="Usuario no logueado. Explora películas, reseñas y perfiles." label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;&lt;font&gt;%c4Description%&lt;/font&gt;&lt;/font&gt;&lt;/div&gt;" id="mqLv7y-prSuZgrNoAT8H-1">
+          <mxCell style="html=1;fontSize=11;dashed=0;fillColor=#dae8fc;strokeColor=#6c8ebf;shape=mxgraph.c4.person2;align=center;metaEdit=1;points=[[0.5,0,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0]];resizable=0;shadow=0;spacingTop=0;whiteSpace=wrap;textShadow=1;strokeWidth=3;" parent="1" vertex="1">
+            <mxGeometry x="330" y="260" width="200" height="180" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="mqLv7y-prSuZgrNoAT8H-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="mqLv7y-prSuZgrNoAT8H-4" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="709.6153846153848" y="560" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mqLv7y-prSuZgrNoAT8H-3" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Usa&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="mqLv7y-prSuZgrNoAT8H-2" vertex="1" connectable="0">
+          <mxGeometry x="-0.1992" y="3" relative="1" as="geometry">
+            <mxPoint x="-3" y="2" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <object placeholders="1" c4Name="Miembro" c4Type="Person" c4Description="Puede crear y modificar reseñas, y editar su perfil." label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;&lt;font&gt;%c4Description%&lt;/font&gt;&lt;/font&gt;&lt;/div&gt;" id="mqLv7y-prSuZgrNoAT8H-4">
+          <mxCell style="html=1;fontSize=11;dashed=0;fillColor=#dae8fc;strokeColor=#6c8ebf;shape=mxgraph.c4.person2;align=center;metaEdit=1;points=[[0.5,0,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0]];resizable=0;shadow=0;spacingTop=0;whiteSpace=wrap;textShadow=1;strokeWidth=3;" parent="1" vertex="1">
+            <mxGeometry x="610" y="260" width="200" height="180" as="geometry" />
+          </mxCell>
+        </object>
+        <object placeholders="1" c4Name="Moderador" c4Type="Person" c4Description="Puede eliminar reseñas de otros usuarios." label="&lt;font style=&quot;font-size:16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;&lt;font&gt;%c4Description%&lt;/font&gt;&lt;/font&gt;&lt;/div&gt;" id="mqLv7y-prSuZgrNoAT8H-5">
+          <mxCell style="html=1;fontSize=11;dashed=0;fillColor=#dae8fc;strokeColor=#6c8ebf;shape=mxgraph.c4.person2;align=center;metaEdit=1;points=[[0.5,0,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0]];resizable=0;shadow=0;spacingTop=0;whiteSpace=wrap;textShadow=1;strokeWidth=3;" parent="1" vertex="1">
+            <mxGeometry x="890" y="260" width="200" height="180" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="mqLv7y-prSuZgrNoAT8H-8" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=3;shadow=0;" parent="1" vertex="1">
+          <mxGeometry x="350" y="570" width="740" height="570" as="geometry" />
+        </mxCell>
+        <mxCell id="mqLv7y-prSuZgrNoAT8H-9" value="&lt;div&gt;&lt;font style=&quot;font-size: 18px;&quot;&gt;&lt;b&gt;The Movie Database&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 12px;&quot;&gt;[External System]&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 15px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;API externa que provee información sobre las películas (títulos, pósters, sinopsis, etc.).&lt;/span&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=3;fontColor=#333333;" parent="1" vertex="1">
+          <mxGeometry x="50" y="720" width="245" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="mqLv7y-prSuZgrNoAT8H-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="429.37" y="560" as="targetPoint" />
+            <mxPoint x="429.75461538461525" y="440" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mqLv7y-prSuZgrNoAT8H-11" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Usa&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="mqLv7y-prSuZgrNoAT8H-10" vertex="1" connectable="0">
+          <mxGeometry x="-0.1992" y="3" relative="1" as="geometry">
+            <mxPoint x="-3" y="2" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mqLv7y-prSuZgrNoAT8H-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="989.38" y="560" as="targetPoint" />
+            <mxPoint x="989.7646153846152" y="440" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mqLv7y-prSuZgrNoAT8H-13" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Usa&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="mqLv7y-prSuZgrNoAT8H-12" vertex="1" connectable="0">
+          <mxGeometry x="-0.1992" y="3" relative="1" as="geometry">
+            <mxPoint x="-3" y="2" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mqLv7y-prSuZgrNoAT8H-14" value="&lt;font style=&quot;font-size: 24px;&quot;&gt;&lt;b style=&quot;&quot;&gt;Common Room&lt;/b&gt;&lt;/font&gt;" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;rounded=0;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="610" y="610" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="mqLv7y-prSuZgrNoAT8H-16" value="&lt;span style=&quot;font-size: 18px;&quot;&gt;&lt;b&gt;App Web&lt;/b&gt;&lt;/span&gt;&lt;div&gt;&lt;div&gt;&lt;div style=&quot;&quot;&gt;&lt;font&gt;&lt;i&gt;[HTML / CSS / TS + Angular]&lt;/i&gt;&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;&lt;div style=&quot;color: rgb(18, 18, 18);&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;Interfaz de usuario para interactuar con el sistema: explorar películas y usuarios, ver y crear reseñas, etc.&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=3;" parent="1" vertex="1">
+          <mxGeometry x="487.5" y="670" width="450" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="mqLv7y-prSuZgrNoAT8H-44" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.433;entryY=1.007;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="mqLv7y-prSuZgrNoAT8H-17" target="mqLv7y-prSuZgrNoAT8H-9" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="200" y="955" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mqLv7y-prSuZgrNoAT8H-46" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;&amp;nbsp;Consulta datos de películas&amp;nbsp;&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="mqLv7y-prSuZgrNoAT8H-44" vertex="1" connectable="0">
+          <mxGeometry x="0.0022" relative="1" as="geometry">
+            <mxPoint x="8" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mqLv7y-prSuZgrNoAT8H-17" value="&lt;span style=&quot;font-size: 18px;&quot;&gt;&lt;b&gt;API REST&lt;/b&gt;&lt;/span&gt;&lt;div&gt;&lt;div&gt;&lt;div style=&quot;&quot;&gt;&lt;font&gt;&lt;i&gt;[Java + Spring Boot + JWT]&lt;/i&gt;&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;&lt;div style=&quot;color: rgb(18, 18, 18);&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;Gestiona lógica de negocio, usuarios, reseñas y autenticación JWT.&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=3;" parent="1" vertex="1">
+          <mxGeometry x="412.5" y="880" width="215" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="mqLv7y-prSuZgrNoAT8H-19" value="&lt;span style=&quot;font-size: 18px;&quot;&gt;&lt;b&gt;Base de Datos&lt;/b&gt;&lt;/span&gt;&lt;div&gt;&lt;div&gt;&lt;div style=&quot;&quot;&gt;&lt;font&gt;&lt;i&gt;[MySQL]&lt;/i&gt;&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;&lt;div style=&quot;color: rgb(18, 18, 18);&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;Almacena usuarios, reseñas y tokens de autenticación JWT.&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=3;" parent="1" vertex="1">
+          <mxGeometry x="792.5" y="880" width="215" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="mqLv7y-prSuZgrNoAT8H-35" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.192;entryY=0.997;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=classic;startFill=1;endArrow=none;endFill=0;fontColor=#FFFFFF;strokeColor=#000000;" parent="1" target="mqLv7y-prSuZgrNoAT8H-16" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="573.5" y="870" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="573.5" y="800" />
+              <mxPoint x="573.5" y="800" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mqLv7y-prSuZgrNoAT8H-36" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Realiza peticiones a la API&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;(JSON / HTTPS)&lt;/font&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#D5E8D4;fontColor=#000000;" parent="mqLv7y-prSuZgrNoAT8H-35" vertex="1" connectable="0">
+          <mxGeometry x="0.1079" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mqLv7y-prSuZgrNoAT8H-41" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=classic;startFill=1;endArrow=none;endFill=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontColor=#FFFFFF;strokeColor=#000000;" parent="1" target="mqLv7y-prSuZgrNoAT8H-17" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="782.5" y="955" as="sourcePoint" />
+            <mxPoint x="627.5" y="950" as="targetPoint" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mqLv7y-prSuZgrNoAT8H-42" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Lee y escribe datos&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;(JPA)&lt;/font&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#D5E8D4;fontColor=#000000;" parent="mqLv7y-prSuZgrNoAT8H-41" vertex="1" connectable="0">
+          <mxGeometry x="0.1079" y="1" relative="1" as="geometry">
+            <mxPoint x="6" as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

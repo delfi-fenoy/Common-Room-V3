@@ -1,0 +1,37 @@
+:root {
+  /* ===== Verdes ===== */
+  --green-dark: #1d3327;
+  --green-semi-dark: #23332a;
+  --green-mid: #355f49;
+  --green-light: #a2b18a;
+  --green-plus-light: #d8e9bd;
+  
+  /* Degradados */
+  --green-gradient: linear-gradient(135deg, #9cab86 0%, #3b5445 100%);
+  --brown-gradient: linear-gradient(135deg, #bb9f8c 0%, #766153 100%);
+
+  /* ===== Marrones ===== */
+  --brown-dark: #51443B;
+  --brown-mid: #766153;
+  --brown-light: #bb9f8c;
+  
+  /* ===== Extras suaves ===== */
+  --bg-light: #f5f5f2;
+  --text-dark: #1a1a1a;
+  --text-light: #ffffff;
+}
+
+*{
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  /* background: var(--green-gradient); */
+  background-image: url('/assets/img/background-page.jpg');
+  background-position: center;
+}

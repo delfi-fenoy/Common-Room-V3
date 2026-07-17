@@ -1,0 +1,84 @@
+<div class="review-modal-container">
+  <div class="full-modal">
+    <!-- * ========== Header del Modal ========== -->
+    <div class="header-modal">
+      <!-- Si hay un id de review, es para modificar, sino para crear -->
+      <h1>{{ review()?.id ? 'Modify Review' : 'New Review' }}</h1>
+      <span (click)="closeModal()">&#x2715;</span>
+    </div>
+  
+    <form [formGroup]="reviewForm" (submit)="onSubmit()">
+      <!-- * ========== Cuerpo del Modal ========== -->
+      <div class="body-modal">
+        
+        <!-- ? --- Poster Izquierdo --- -->
+        <div class="image-modal">
+          <img
+              [src]="movie()?.posterUrl || 'assets/img/default-poster.jpg'"
+              alt="{{ movie()?.title || 'Poster not available' }}"
+              (error)="onImgError($event)"
+          />
+        </div>
+  
+        <div class="text-modal">
+          <!-- ? --- Titulo de la pelicula --- -->
+          <h1>{{movie()?.title}}</h1>
+
+          <!-- ? --- Rating --- -->
+          <div class="rating-group">
+            <label>Rating <span class="required">*</span></label>
+
+            <!-- ? --- Star Container --- -->
+            <div class="stars-wrapper">
+              @for (i of [1,2,3,4,5]; track i) {
+                <span 
+                class="star"
+                (mousemove)="hoverRating($event, i)"
+                (mouseleave)="clearHover()"
+                (click)="selectRating($event, i)">
+                <!-- Estrella llena -->
+                @if (displayedRating >= i) {★}
+                <!-- Media estrella -->
+                @else if (displayedRating === i - 0.5) {⯪}
+                <!-- Estrella vacía -->
+                @else {☆}
+              </span>
+              }
+            </div>
+
+            <!-- Errores -->
+            @if (reviewForm.get('rating')?.hasError('required') && reviewForm.get('rating')?.touched) {
+                <p class="error">Rating is required.</p>
+            }
+            @else if ((reviewForm.get('rating')?.hasError('min') || reviewForm.get('rating')?.hasError('max')) 
+                      && reviewForm.get('rating')?.touched) {
+                <p class="error">Rating must be between 0.5 and 5 stars.</p>
+            }
+            @else if (reviewForm.get('rating')?.hasError('notMultipleOfHalf') 
+                      && reviewForm.get('rating')?.touched) {
+                <p class="error">Rating must be a multiple of 0.5.</p>
+            }
+          </div>
+
+          <!-- ? --- Comentario --- -->
+          <div class="comment-wrapper">
+            <label for="comment">Comment</label>
+            <textarea id="comment" formControlName="comment"></textarea>
+            @if ( 
+              reviewForm.get('comment')?.hasError('maxlength') &&
+              reviewForm.get('comment')?.touched) 
+              {
+              <p>The comment cannot be longer than 700 characters.</p>
+            }
+          </div>
+        </div>
+      </div>
+      <!-- * ========== Footer del Modal ========== -->
+      <div class="footer-modal">
+        <button [disabled]="reviewForm.invalid" type="submit">
+          {{ review()?.id ? 'Update' : 'Add' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

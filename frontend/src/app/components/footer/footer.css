@@ -1,0 +1,35 @@
+/* * ======== Footer ======== */
+footer{
+    align-items: center;
+    background-color: var(--green-dark);
+    text-align: center;
+    padding: 1%;
+    z-index: 20;
+}
+
+/* ? ------- Informacion ------- */
+footer ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+}
+
+footer li {
+    margin: 0 0.5rem;
+}
+
+footer p{
+    color: var(--green-light);
+    margin-top: 0.5rem;
+}
+
+footer a{
+    color: var(--text-light);
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+footer a:hover {
+    color: var(--brown-light);
+    transform: scale(1.1);
+}

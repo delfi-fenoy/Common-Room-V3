@@ -1,0 +1,288 @@
+/* ------------------ Fondo oscuro del modal de review ------------------ */
+.review-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none; /* Se muestra con JS */
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(4px);
+}
+
+/* ------------------ Caja del modal de review ------------------ */
+.review-modal-box {
+    width: 700px;
+    max-width: 95vw;
+    background-color: #5d6e57;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    animation-duration: 0.4s;
+    animation-fill-mode: both;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* ------------------ Animaciones de entrada/salida ------------------ */
+@keyframes review-fadeInUp {
+    0% { opacity: 0; transform: translateY(50px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes review-fadeOutDown {
+    0% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(50px); }
+}
+.review-modal-box.animate-in {
+    animation-name: review-fadeInUp;
+}
+.review-modal-box.animate-out {
+    animation-name: review-fadeOutDown;
+}
+
+/* ------------------ Cabecera del modal (titulo y cerrar) ------------------ */
+.review-modal-header {
+    background-color: #3f5e3e;
+    color: #ffffff;
+    font-size: 1.4rem;
+    font-weight: bold;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.review-modal-close {
+    cursor: pointer;
+    font-size: 1.2rem;
+    background: transparent;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: background-color 0.2s;
+}
+.review-modal-close:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ------------------ Cuerpo del modal ------------------ */
+.review-modal-body {
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+/* ------------------ Columna base para todas las columnas ------------------ */
+.review-modal-column {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ------------------ Columna del póster ------------------ */
+.review-poster-column {
+    flex-basis: 150px;
+    flex-shrink: 0;
+    height: 220px;
+    border: 1px solid black;
+    background-color: #7a8d71;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+.review-modal-poster {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border: none;
+}
+
+/* ------------------ Columna del título y rating ------------------ */
+.review-details-column {
+    flex-grow: 1;
+    flex-basis: 250px;
+    padding-right: 10px;
+}
+.review-movie-title {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #000;
+    border-bottom: 1px solid #000;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#review-movie-title {
+    color: #000;
+}
+.review-movie-title em {
+    font-weight: normal;
+    font-style: normal;
+    color: #6a8063;
+    margin-left: 8px;
+    font-size: 1.2rem;
+}
+
+/* ------------------ Sección de rating ------------------ */
+.review-rating-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.review-rating-label {
+    color: #000;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+.review-rating-label .required {
+    color: #e74c3c;
+    font-size: 0.9em;
+}
+.review-star-container {
+    display: flex;
+    gap: 0px;
+    user-select: none;
+}
+.review-star {
+    font-size: 2.5rem;
+    line-height: 1;
+    position: relative;
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+.review-star::before {
+    content: "★";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: #ccc;
+    pointer-events: none;
+    display: block;
+    text-align: left;
+}
+.review-star::after {
+    content: "★";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    color: #f1c40f;
+    overflow: hidden;
+    pointer-events: none;
+    transition: width 0.3s ease;
+    display: block;
+    text-align: left;
+}
+.review-star.star-empty::after { width: 0%; }
+.review-star.star-full::after { width: 100%; }
+.review-star.star-half::after { width: 42%; }
+.review-star:hover { transform: scale(1.05); }
+
+/* ------------------ Columna de comentario ------------------ */
+.review-description-column {
+    flex-grow: 1.5;
+    flex-basis: 250px;
+}
+.review-description-label {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #000;
+    margin-bottom: 8px;
+    display: block;
+}
+.review-description-label em {
+    font-weight: normal;
+    font-style: italic;
+    color: #6a8063;
+}
+.review-description-textarea {
+    width: 100%;
+    height: 180px;
+    padding: 10px;
+    font-size: 0.95rem;
+    resize: none;
+    background-color: #3f5e3e;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+.review-description-textarea::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* ------------------ Pie del modal (botón de enviar) ------------------ */
+.review-modal-footer {
+    background-color: #3f5e3e;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+.review-btn-submit {
+    background-color: #c3cc9c;
+    border: none;
+    padding: 8px 20px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    color: #000;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+}
+.review-btn-submit:hover {
+    background-color: #e6f5bb;
+}
+
+/* ------------------ Responsive para pantallas chicas ------------------ */
+@media (max-width: 768px) {
+    .review-modal-box {
+        width: 95vw;
+    }
+    .review-modal-body {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+    .review-modal-column {
+        width: 100%;
+        max-width: 300px;
+        text-align: center;
+    }
+    .review-poster-column {
+        width: 150px;
+        height: 220px;
+    }
+    .review-details-column,
+    .review-description-column {
+        text-align: left;
+        width: 90%;
+    }
+    .review-rating-section {
+        justify-content: center;
+    }
+    .review-movie-title {
+        white-space: normal;
+        text-overflow: clip;
+        text-align: center;
+    }
+    .review-description-label {
+        text-align: left;
+    }
+}

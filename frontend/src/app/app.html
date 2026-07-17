@@ -1,0 +1,16 @@
+<div class="main-container">
+
+    @if (showLayout()) {
+        <app-header></app-header>
+        <app-sidebar></app-sidebar>
+    }
+
+    <main [class.no-layout]="!showLayout()">
+        <router-outlet></router-outlet>
+    </main>
+
+    @if (showLayout()) {
+        <app-footer></app-footer>
+    }
+
+</div>

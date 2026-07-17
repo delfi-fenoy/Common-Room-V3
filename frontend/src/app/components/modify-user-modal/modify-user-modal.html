@@ -1,0 +1,87 @@
+<div class="review-modal-container">
+    <div class="full-modal">
+    <!-- * ========== Header del Modal ========== -->
+    <div class="header-modal">
+        <h1>Edit Profile</h1>
+        <span (click)="closeModal()">&#x2715;</span>
+    </div>
+
+    <form [formGroup]="editProfileForm" (submit)="onSubmit()">
+        <!-- * ========== Cuerpo del Modal ========== -->
+        <div class="body-modal">
+
+            <!-- ? --- Imagen de Perfil Izquierda --- -->
+            <div class="image-modal">
+                <img
+                    [src]="editProfileForm.get('profilePictureUrl')?.value || 'assets/img/userv2.jpg'"
+                    alt="User Profile Picture"
+                    (error)="editProfileForm.get('profilePictureUrl')?.setValue('assets/img/default-poster.jpg')"
+                />
+            </div>
+
+            <!-- ? --- Inputs del Perfil --- -->
+            <div class="text-modal">
+                    <!-- Username -->
+                    <div class="input-group">
+                        <label for="username">Username</label>
+                        <input id="username" type="text" formControlName="username"/>
+
+                        @if(editProfileForm.get('username')?.touched && editProfileForm.get('username')?.invalid){
+                                @if(editProfileForm.get('username')?.hasError('required')){
+                                    <p class="error">Username is required.</p>
+                                }
+                                @if(editProfileForm.get('username')?.hasError('minlength') || editProfileForm.get('username')?.hasError('maxlength')){
+                                    <p class="error">Username must be between 5 and 20 characters.</p>
+                                }
+                        }
+                    </div>
+
+                <!-- Email -->
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input id="email" type="email" formControlName="email"/>
+
+                    @if(editProfileForm.get('email')?.touched && editProfileForm.get('email')?.invalid){
+                        @if(editProfileForm.get('email')?.hasError('required')){
+                            <p class="error">Email is required.</p>
+                        }
+                        @if(editProfileForm.get('email')?.hasError('email')){
+                            <p class="error">Enter a valid email address.</p>
+                        }
+                        @if(editProfileForm.get('email')?.hasError('maxlength')){
+                            <p class="error">Email cannot be longer than 50 characters.</p>
+                        }
+                    }
+                </div>
+
+                <!-- Profile Picture URL -->
+                <div class="input-group">
+                    <label for="profilePictureUrl">Profile Picture URL</label>
+                    <input id="profilePictureUrl" type="text" formControlName="profilePictureUrl" />
+
+                    @if(editProfileForm.get('profilePictureUrl')?.touched && editProfileForm.get('profilePictureUrl')?.invalid){
+                        <p class="error">Enter a valid URL (e.g. https://example.com).</p>
+                    }
+                </div>
+
+                <!-- Description -->
+                <div class="input-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" formControlName="description"></textarea>
+
+                    @if(editProfileForm.get('description')?.touched && editProfileForm.get('description')?.hasError('maxlength')){
+                        <p class="error">Description cannot be longer than 255 characters.</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- * ========== Footer del Modal ========== -->
+        <div class="footer-modal">
+            <button [disabled]="editProfileForm.invalid" type="submit">
+            Save Changes
+            </button>
+        </div>
+    </form>
+    </div>
+</div>

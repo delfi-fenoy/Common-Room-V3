@@ -1,0 +1,487 @@
+/* ! ------- Background Image ------- */
+.bg-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -10;
+
+    width: 100%;
+    height: 50em;
+    overflow: hidden;
+}
+
+.bg-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+
+    opacity: 0.6;
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 70%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 0%, black 70%, transparent 100%);
+}
+
+/* * ======== Container | Movie Sheet ======== */
+.movie-sheet-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+
+    width: 100%;
+    padding: 1.25rem;
+
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+/* * ======== Section | Movie General Information ======== */
+.movie-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+
+    width: 100%;
+    max-width: 90rem;
+    margin: 0 auto;
+}
+
+/* * ======== Container | Poster ======== */
+.poster-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* ? --- Image wrapper --- */
+.img-wrapper {
+    width: 100%;
+    max-width: 25rem;
+    aspect-ratio: 2 / 3;
+
+    border: 0.3rem solid var(--brown-mid);
+    border-radius: 0.75rem;
+
+    background-color: var(--brown-dark);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+
+    overflow: hidden;
+}
+
+.img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    user-select: none;
+}
+
+/* ? --- Info wrapper --- */
+.info-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 100%;
+    padding: 0 0.5rem;
+
+    text-align: center;
+}
+
+.info-wrapper h2 {
+    margin-bottom: 0.3rem;
+
+    font-size: 2rem;
+    letter-spacing: -2px;
+    word-break: break-word;
+
+    color: var(--text-light);
+    transition: 0.7s ease;
+    text-shadow:
+        1px 1px 0 var(--green-dark),
+        -1px -1px 0 var(--green-dark),
+        1px -1px 0 var(--green-dark),
+        -1px 1px 0 var(--green-dark);
+}
+
+.info-wrapper h2:hover {
+    letter-spacing: 1px;
+    color: var(--brown-light);
+    text-decoration: underline;
+    font-variation-settings: "wght" 582;
+}
+
+.info-wrapper h4 {
+    padding: 0.25rem 0.5rem;
+    font-size: 1rem;
+    color: var(--text-light);
+
+    border-radius: 0.5rem;
+    background-color: var(--brown-dark);
+}
+
+/* * ======== Section | Movie Details ======== */
+.details-section {
+    display: flex;
+    flex-direction: column;
+
+    width: 95%;
+    margin: 0 auto;
+    max-width: 70rem;
+    margin: 0 auto;
+    padding: 1rem;
+    gap: 1rem;
+
+    color: var(--text-light);
+    background-color: var(--green-semi-dark);
+
+    border: 0.5rem solid var(--brown-dark);
+    border-radius: 0.75rem;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+}
+
+.synopsis-container,
+.info-movie-container {
+    padding: 0.85rem;
+
+    border: 0.5rem solid var(--brown-dark);
+    border-radius: 0.5rem;
+
+    background-color: var(--brown-mid);
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.03);
+}
+
+.synopsis-container p {
+    font-size: 1rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    color: #222;
+}
+
+/* * ======== Section | Reviews ======== */
+.reviews-section {
+    display: flex;
+    flex-direction: column;
+
+    width: 95%;
+    margin: 0 auto;
+    max-width: 70rem;
+    margin: 0 auto;
+    padding: 1rem;
+
+    color: var(--text-light);
+    background-color: var(--green-dark);
+
+    border: 0.5rem solid var(--brown-dark);
+    border-radius: 0.75rem;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14);
+}
+
+/* ? --- Title reviews --- */
+.title-reviews {
+    margin: 0;
+    padding-bottom: 0.25rem;
+
+    font-size: 2rem;
+    text-align: center;
+    color: var(--green-light);
+}
+
+.login-text{
+    display: block;
+    align-items: center;
+    margin-top: 1rem; 
+    text-align: center;
+    padding: 0.75rem 0;
+    font-size: 1.4rem;
+    font-style: italic;
+    text-decoration: underline;
+    color: white;
+    user-select: none;
+}
+
+/* ! --- No Reviews --- */
+.no-reviews {
+    display: block;
+    align-items: center;
+    margin-top: 1rem; 
+    width: 70%;
+    text-align: center;
+    padding: 0.75rem 0;
+    font-size: 1.5rem;
+    font-style: italic;
+    color: white;
+    background-color: rgb(150, 84, 84);
+    border: 0.3em solid rgb(134, 10, 10);
+    border-radius: 0.7rem;
+    user-select: none;
+}
+
+/* * ======== Element | Add Review Button ======== */
+.addReview-button {
+    align-self: center;
+
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    font-size: 1.5rem;
+    color: var(--text-light);
+
+    border: none;
+    border-radius: 1rem;
+
+    background: var(--green-mid);
+    cursor: pointer;
+
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 6px 16px rgba(37, 50, 34, 0.18);
+}
+
+.addReview-button:hover {
+    transform: scale(1.2);
+    color: var(--brown-dark);
+    background-color: var(--green-light);
+}
+
+/* ? --- Reviews Container --- */
+.reviews-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+
+    width: 100%;
+    margin-top: 0.25rem;
+}
+
+/* * ======== Element | Review Card ======== */
+.review-card {
+    display: flex;
+    flex-direction: column;
+
+    width: 90%;
+    margin: 1rem 2rem;
+    color: var(--text-light);
+    background-color: var(--brown-mid);
+
+    border: 0.5rem solid var(--brown-dark);
+    border-radius: 1rem;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
+
+    overflow: hidden;
+}
+
+/* ? --- HEADER --- */
+.review-header {
+    display: flex;
+    align-items: center;
+
+    margin: 0.5rem;
+    padding: 0.7rem 1rem;
+
+    background-color: var(--brown-light);
+    border-radius: 0.5rem;
+}
+
+.review-header img {
+    width: 2.5rem;
+    height: 2.5rem;
+
+    object-fit: cover;
+    margin-right: 0.5rem;
+
+    border: 0.3rem solid var(--brown-dark);
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.review-header h2 {
+    margin: 0;
+    font-size: 1em;
+    line-height: 1.2;
+    color: var(--text-dark);
+    flex-grow: 1;
+    cursor: pointer;
+}
+
+.review-header h2 strong {
+    display: block;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: var(--text-light);
+}
+
+.review-header button{
+    background-color: var(--brown-mid);
+    justify-content: center;
+    padding: 0.5rem;
+    margin: 0.2rem;
+    border-radius: 50%;
+    align-items: center;
+    border: 0.2rem var(--brown-dark) solid;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.2s ease;
+}
+
+.review-header button:hover{
+    background-color: var(--green-light);
+}
+
+/* ? --- BODY --- */
+.review-body {
+    display: flex;
+    flex-direction: column;
+
+    margin: 0.5rem;
+    background-color: var(--green-dark);
+}
+
+.star-container {
+    display: flex;
+    align-items: center;
+
+    padding: 0.7rem 0 0.7rem 1rem;
+    font-size: 1.5rem;
+
+    color: rgb(230, 230, 108);
+    background-color: var(--brown-dark);
+}
+
+.comment-section {
+    padding: 1rem;
+    background-color: var(--brown-light);
+}
+
+.comment-section p {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--text-dark);
+}
+
+/* ? --- FOOTER --- */
+.review-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin: 0.5rem;
+    padding: 0.7rem 1rem;
+
+    font-size: 1em;
+    color: var(--text-dark);
+
+    background-color: var(--brown-light);
+    border-radius: 0.5rem;
+}
+
+.review-footer h3 {
+    font-weight: normal;
+    text-decoration: underline;
+}
+
+.review-footer h2 {
+    font-size: 0.9em;
+    font-weight: bold;
+    text-align: right;
+}
+
+/* ! __________ Responsive __________ */
+/* ======== MOVILES (max-width: 600px) ======== */
+@media (max-width: 600px) {
+    /* Poster e info */
+    .img-wrapper {
+        max-width: 18rem;
+        border-width: 0.25rem;
+    }
+
+    .info-wrapper h2 {
+        font-size: 1.6rem;
+    }
+
+    .info-wrapper h4 {
+        font-size: 0.9rem;
+    }
+
+    /* Review card FULL WIDTH como DETAILS */
+    .review-card {
+        width: 100%;
+        max-width: 100%;   /* importante */
+        margin-bottom: 1.5rem;
+    }
+
+    .review-header img {
+        width: 2.2rem;
+        height: 2.2rem;
+        border-width: 0.2rem;
+    }
+
+    .review-header h2 {
+        font-size: 0.9rem;
+    }
+
+    .review-header h2 strong {
+        font-size: 1rem;
+    }
+
+    .star-container {
+        font-size: 1.3rem;
+        padding-left: 0.75rem;
+    }
+
+    .comment-section {
+        padding: 0.75rem;
+    }
+
+    .comment-section p {
+        font-size: 0.95rem;
+    }
+
+    .review-footer {
+        padding: 0.6rem 0.75rem;
+        font-size: 0.9rem;
+    }
+
+    .review-footer h2 {
+        font-size: 0.8rem;
+    }
+
+    .addReview-button {
+        font-size: 1.2rem;
+        padding: 0.4rem 0.8rem;
+    }
+}
+
+/* ======== TABLETS (600px a 900px) ======== */
+@media (min-width: 600px) and (max-width: 900px) {
+    .img-wrapper {
+        max-width: 22rem;
+    }
+
+    .review-card {
+        width: 100%;
+        max-width: 100%; /* FULL */
+    }
+
+    .info-wrapper h2 {
+        font-size: 1.9rem;
+    }
+}
+
+/* ======== SCREENS GRANDES (mín 1200px) ======== */
+@media (min-width: 1200px) {
+
+    .img-wrapper {
+        max-width: 28rem;
+    }
+
+    /* Igualar ancho reviews = details */
+    .details-section,
+    .reviews-section {
+        width: 95%;
+        max-width: 70rem;
+    }
+}

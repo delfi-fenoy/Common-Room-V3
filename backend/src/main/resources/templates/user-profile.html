@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title th:text="'Profile | ' + ${user.username}"></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="icon" href="/img/iconLetter.png" type="image/png"/>
+        <link href="https://fonts.googleapis.com/css2?family=Grenze&family=Macondo+Swash+Caps&family=Uncial+Antiqua&display=swap" rel="stylesheet"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="/css/common.css">
+        <link rel="stylesheet" href="/css/errorModal.css">
+        <link rel="stylesheet" href="/css/reviewModal.css">
+        <link rel="stylesheet" href="/css/user-profile.css">
+        <link rel="stylesheet" href="/css/review-profile.css">
+        <link rel="stylesheet" href="/css/editProfileModal.css">
+    </head>
+    <body>
+        <!-- ============================== HEADER y SIDEBAR ============================== -->
+        <div th:insert="~{fragments/header :: header}"></div>
+        <div th:insert="~{fragments/sidebar :: sidebar}"></div>
+        <div th:replace="~{fragments/modal-edit-profile :: modalEditProfile}"></div>
+        <div th:insert="~{fragments/modal-review :: modalReview}"></div>
+        <div th:replace="~{fragments/modal-error :: modalError}"></div>
+
+        <!-- ============================== LAYOUT PRINCIPAL ============================== -->
+        <main class="user-profile-layout">
+
+            <!-- ============================== PANEL IZQUIERDO ============================== -->
+            <aside class="user-left-panel">
+                <img class="user-picture"
+                     th:src="${user.profilePictureUrl != null ? user.profilePictureUrl : '/img/user.png'}"
+                     alt="Foto de perfil" />
+                <h2 class="user-username" th:text="${user.username}">Nombre Usuario</h2>
+                <p class="user-description" th:text="${user.description}">Fanático del cine noir y de los gatos detectives.</p>
+                <!-- Boton Show Edit Profile Modal -->
+                <button class="edit-profile-btn" onclick="showEditProfileModal()">Edit Profile</button>
+            </aside>
+
+            <!-- ============================== PANEL CENTRAL ============================== -->
+            <section class="user-main-content">
+
+                <!-- FAVORITAS (EJEMPLO)-->
+                <div class="favorites-container">
+                    <h3 class="favorites-title">Favoritas del Usuario</h3>
+                    <div class="favorites-row">
+                        <div class="favorite-card visible">
+                            <img src="/img/default-poster.jpg" alt="Película Favorita" />
+                            <div class="favorite-info">Título 1</div>
+                        </div>
+                        <div class="favorite-card visible">
+                            <img src="/img/default-poster.jpg" alt="Película Favorita" />
+                            <div class="favorite-info">Título 2</div>
+                        </div>
+                        <div class="favorite-card visible">
+                            <img src="/img/default-poster.jpg" alt="Película Favorita" />
+                            <div class="favorite-info">Título 3</div>
+                        </div>
+                        <div class="favorite-card visible">
+                            <img src="/img/default-poster.jpg" alt="Película Favorita" />
+                            <div class="favorite-info">Título 4</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TABS -->
+                <div class="tabs-container">
+                    <div class="tabs">
+                        <button class="tab selected reviews-tab" data-tab="reviews">Reviews</button>
+                        <button class="tab lists-tab" data-tab="lists">Lists</button>
+                    </div>
+
+                    <!-- Contenido de las Tabs -->
+                    <div class="tab-wrapper">
+                        <div id="reviews" class="tab-content reviews-box">
+                            <!-- Aquí el JS insertará las reviews -->
+                        </div>
+
+                        <div id="lists" class="tab-content lists-box" style="display: none;">
+                            <p>Las listas estarán disponibles próximamente.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <!-- ============================== FOOTER ============================== -->
+        <footer>© 2025 | Common Room | Fenoy Rivas, Francano y Perez</footer>
+
+        <!-- ============================== JS ============================== -->
+        <script src="/js/profile/modalEditProfile.js"></script>
+        <script src="/js/profile/userProfileReviews.js"></script>
+        <script src="/js/profile/userProfileTabs.js"></script>
+        <script src="/js/movies/modalReview.js"></script>
+        <script src="/js/modalError.js"></script>
+        <script src="/js/header.js"></script>
+    </body>
+</html>

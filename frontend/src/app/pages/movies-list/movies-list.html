@@ -1,0 +1,40 @@
+<div class="movies-container">
+
+    <!-- * ========== Titulo ========== -->
+    <section class="title-section">
+        <h2>Welcome to the Cinema</h2>
+    </section>
+    
+    <!-- * ========== Listado de Peliculas ========== -->
+    <section class="movies-section">
+        @for (movie of movies; track movie.id) {
+            <div class="movie-card" [routerLink]="[movie.id]">
+                <div class="img-wrapper">
+                    <img
+                        [src]="movie.posterUrl || 'assets/img/default-poster.jpg'"
+                        alt="{{ movie.title || 'Poster not available' }}"
+                        (error)="onImgError($event)"
+                    />
+
+                    <div class="info-overlay">
+                        <h1>{{ movie.title }}</h1>
+                        <h3>{{movie.releaseDate}}</h3>
+                        <p>{{ movie.synopsis }}</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </section>
+
+    <!-- * ========== Botones de paginacion ========== -->
+    <section class="pagination-section">
+        <button (click) = "previousPage()" 
+        [disabled]="currentPage === 1">←</button>
+
+        <span>Page {{currentPage}}</span>
+
+        <button (click) = "nextPage()"
+        [disabled]="!hasMorePages">→</button>
+    </section>
+
+</div>

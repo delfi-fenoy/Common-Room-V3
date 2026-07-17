@@ -1,0 +1,182 @@
+/* ------------------ Reset general ------------------ */
+/* Reinicia márgenes, paddings y box-sizing */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ------------------ Estilos del cuerpo ------------------ */
+/* Fondo, fuente general y comportamiento del body */
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to bottom right, #9cab86, #3b5445);
+  font-family: 'Grenze', 'Helvetica Neue', Helvetica, sans-serif;
+  color: #f0f0f0;
+  overflow-x: hidden;
+}
+
+/* ------------------ Contenido principal ------------------ */
+/* Sección centrada con padding interno */
+.main-content {
+  padding: 110px 20px 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ------------------ Sección del logo ------------------ */
+/* Contenedor centrado para el logo */
+.logo-section {
+  position: relative;
+  text-align: center;
+  margin-bottom: 50px;
+  z-index: 0;
+}
+
+/* Imagen principal del logo */
+.main-logo {
+  width: 550px;
+  height: auto;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto 10px;
+  z-index: 0;
+}
+
+/* ------------------ Sección de carruseles ------------------ */
+/* Título de cada carrusel */
+.carousel-section h3 {
+  font-family: sans-serif;
+  font-size: 2rem;
+  color: #1d3327;
+  font-weight: bold;
+  text-decoration: underline #1d3327;
+  text-align: center;
+}
+
+/* Contenedor general del carrusel */
+.carousel-container {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+/* Carrusel con padding y fondo */
+.carousel-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #2d5d3c;
+  padding: 25px;
+  border-radius: 10px;
+  overflow-x: auto;
+  width: 100%;
+  max-width: 1100px;
+  box-sizing: border-box;
+}
+
+/* Sección contenedora del carrusel */
+.carousel-section {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+/* Carrusel horizontal con scroll suave */
+.carousel {
+  display: flex;
+  gap: 25px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  flex-grow: 1;
+  flex-wrap: nowrap;
+  scrollbar-width: none;
+  padding: 10px 0;
+  justify-content: center;
+  background-color: #23422d;
+  border-radius: 10px;
+}
+
+/* Oculta el scrollbar en navegadores WebKit */
+.carousel::-webkit-scrollbar {
+  display: none;
+}
+
+/* Botones para mover el carrusel */
+.carousel-btn {
+  background-color: #BFBC8F;
+  color: #ffffff;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  left: 20px;
+  padding: 5px;
+  transition: background-color 0.4s;
+}
+
+.carousel-btn:hover {
+  background-color: #3C4022;
+}
+
+/* ------------------ Tarjetas de película ------------------ */
+/* Tarjeta base con animación de entrada */
+.movie-card {
+  position: relative;
+  border-radius: 8px;
+  flex: 0 0 auto;
+  width: 200px;
+  height: 300px;
+  text-align: center;
+  opacity: 0;
+  border: 2px solid #000000;
+  transform: translateX(15px);
+  transition: opacity 0.5s ease, transform 0.3s ease;
+  overflow: hidden;
+}
+
+/* Tarjeta visible (tras animación) */
+.movie-card.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Imagen dentro de la tarjeta */
+.movie-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+/* Efecto de zoom y oscurecimiento al pasar el mouse */
+.movie-card:hover img {
+  transform: scale(1.05) translateY(-5px);
+  filter: brightness(30%);
+}
+
+/* Texto centrado que aparece al hacer hover */
+.movie-info {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+}
+
+/* Muestra el texto al hacer hover en la tarjeta */
+.movie-card:hover .movie-info {
+  opacity: 1;
+}

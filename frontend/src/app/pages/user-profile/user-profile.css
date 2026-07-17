@@ -1,0 +1,484 @@
+/* * ======== Container General ======== */
+.user-profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+
+    width: 100%;
+    padding: 1.25rem;
+
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+/* * ======== User | Section ======== */
+.user-section {
+    background: var(--green-dark);
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    width: 80%;
+    border: 0.1875rem solid var(--brown-mid);
+}
+
+.user-container{
+    display: flex;
+    align-items: center;
+}
+
+.img-wrapper {
+    width: 12rem;
+    height: 12rem;
+    border-radius: 0.75rem;
+    margin-right: 1rem;
+    overflow: hidden;
+    border: 0.25rem solid var(--brown-mid);
+    flex-shrink: 0;
+}
+
+.img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* * ======== Info | Section ======== */
+.info-wrapper {
+    color: var(--text-light);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.info-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.info-header h3{
+    font-size: 3rem;
+}
+
+.info-header h4{
+    font-style: italic;
+    opacity: 0.7;
+}
+
+.info-body{
+    margin: 1rem 0 1rem 0;
+    width: 80%;
+    height: 100%;
+    flex: 1;    
+}
+
+.info-body p{
+    font-size: 1.2rem;
+}
+
+.info-footer{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.info-footer h3{
+    font-style: italic;
+    opacity: 0.7;
+}
+
+.username-text{
+    font-size: 3rem;
+}
+
+.profile-button{
+    display: flex;
+    gap: 2rem;
+}
+
+.profile-edit-button{
+    align-self: center;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    color: var(--text-light);
+    border: none;
+    border-radius: 1rem;
+    background: var(--green-mid);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 6px 16px rgba(37, 50, 34, 0.18);
+}
+
+.profile-edit-button:hover{
+    transform: scale(1.2);
+    color: var(--brown-dark);
+    background-color: var(--green-light);
+}
+
+/* * ======== Review | Section ======== */
+.reviews-section {
+    background: var(--green-dark);
+    padding: 1.5rem;
+    padding-bottom: 3rem;
+    border-radius: 0.75rem;
+    width: 80%;
+    border: 0.1875rem solid var(--brown-mid);
+}
+
+.reviews-title {
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    letter-spacing: -2px;
+    word-break: break-word;
+    color: var(--text-light);
+    transition: 0.7s ease;
+    text-shadow:
+        1px 1px 0 var(--green-dark),
+        -1px -1px 0 var(--green-dark),
+        1px -1px 0 var(--green-dark),
+        -1px 1px 0 var(--green-dark);
+}
+
+.reviews-title:hover{
+    letter-spacing: 1px;
+    color: var(--brown-light);
+    text-decoration: underline;
+    font-variation-settings: "wght" 582;
+}
+
+.reviews-container {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem;
+}
+
+/* ! No Reviews Message */
+.no-reviews {
+    color: var(--text-light);
+    font-size: 1.2rem;
+    opacity: 0.8;
+}
+
+/* * ======== Review | Card ======== */
+.review-card {
+    display: flex;
+    height: 100%;
+    color: var(--text-light);
+    background-color: var(--brown-mid);
+    border: 0.5rem solid var(--brown-dark);
+    border-radius: 1rem;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+/* ? ------- Review | Poster ------- */
+.review-image {
+    width: 9rem;
+    height: 100%;
+    flex-shrink: 0;
+    background: black;
+    border-right: 0.5rem solid var(--brown-dark);
+    cursor: pointer;
+}
+
+.review-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ? ------- Review | Body ------- */
+.review-body {
+    width: 9rem;
+    flex: 1;    
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    color: var(--text-light);
+}
+
+/* --- Review | Movie Title --- */
+.review-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgb(73, 53, 53);
+    margin-bottom: 0.5rem;
+    padding: 0.2rem;
+}
+
+.review-header h2 {
+    width: 75%;
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin: 0.7rem 0rem 0.7rem 0.7rem;
+    color: var(--text-light);
+    cursor: pointer;
+
+    /* === Recorte con "..." === */
+    white-space: nowrap;      
+    overflow: hidden;         
+    text-overflow: ellipsis;  
+    transition: all 0.3s ease;
+}
+
+.review-header h2:hover {
+    text-decoration: underline;
+    letter-spacing: 0.1rem;
+    color: var(--green-light);
+    text-decoration: underline;
+    font-variation-settings: "wght" 582;
+}
+
+/* --- Review | Buttons --- */
+.buttons-container {
+    margin-left: auto;
+    display: flex;
+    gap: 0.3rem;
+}
+
+.review-header button {
+    background-color: var(--brown-mid);
+    padding: 0.5rem;
+    margin: 0.2rem;
+    border-radius: 50%;
+    border: 0.2rem var(--brown-dark) solid;
+    transition: background-color 0.2s ease;
+    z-index: 10;
+}
+
+.review-header button:hover{
+    background-color: var(--green-light);
+    
+}
+
+/* ? ------- Review | Info general ------- */
+.review-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+/* --- Review | Stars --- */
+.stars-container {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    font-size: 1.1rem;
+    color: rgb(230, 230, 108);
+    background-color: rgb(73, 53, 53);
+}
+
+/* --- Review | Comment --- */
+.comment-container {
+    flex: 1;
+    padding: 0.5rem;
+    background-color: var(--brown-light);
+    height: 100%;
+    overflow-y: auto;     
+    max-height: 4rem;   
+}
+
+.comment-container p {
+    flex: 1;
+    font-size: 1rem;
+    color: var(--text-dark);
+}
+
+/* ? ------- Review | Footer ------- */
+.review-footer {
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.7rem 1rem;
+    font-size: 1em;
+    color: var(--text-light);
+    background-color: rgb(73, 53, 53);
+}
+
+.review-footer h3 {
+    font-weight: normal;
+    text-decoration: underline;
+}
+
+.review-footer h2 {
+    font-size: 0.9em;
+    font-weight: bold;
+    text-align: right;
+}
+
+/* ---------------- Responsive ---------------- */
+/* ---------------- Responsive Revisado ---------------- */
+
+/* 🌐 Breakpoint 900px — Tablets grandes */
+@media (max-width: 900px) {
+
+    /* USER SECTION */
+    .user-section {
+        width: 80%;
+        text-align: center;
+    }
+
+    .user-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .img-wrapper {
+        width: 10rem;
+        height: 10rem;
+        margin-right: 0;
+    }
+
+    .info-wrapper {
+        width: 100%;
+        align-items: center;
+    }
+
+    .info-header h3 {
+        font-size: 2.2rem;
+    }
+
+    .info-header h4 {
+        font-size: 1.1rem;
+    }
+
+    .info-body {
+        width: 100%;
+        text-align: center;
+    }
+
+    .info-body p {
+        font-size: 1.1rem;
+    }
+
+    .info-footer {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .profile-button {
+        justify-content: center;
+    }
+
+    /* REVIEWS GRID */
+    .reviews-container {
+        grid-template-columns: 1fr;
+        width: 100%;
+    }
+
+    .review-card {
+        flex-direction: row;
+        height: auto;
+    }
+
+    .review-image {
+        width: 7rem;
+        height: auto;
+    }
+}
+
+/* 📱 Breakpoint 600px — Tablets chicas / Mobile grande */
+@media (max-width: 600px) {
+
+    /* USER */
+    .img-wrapper {
+        width: 8rem;
+        height: 8rem;
+    }
+
+    .info-header h3 {
+        font-size: 1.9rem;
+    }
+
+    .info-body p {
+        font-size: 1rem;
+    }
+
+    /* REVIEW CARD — versión vertical */
+    .review-card {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .review-image {
+        width: 100%;
+        height: 230px;
+        border-right: none;
+        border-bottom: 0.4rem solid var(--brown-dark);
+    }
+
+    .review-header h2 {
+        font-size: 1rem;
+    }
+
+    .stars-container {
+        font-size: 0.95rem;
+    }
+
+    .comment-container p {
+        font-size: 0.95rem;
+    }
+
+    .review-footer {
+        flex-direction: column;
+        gap: 0.2rem;
+        font-size: 0.9rem;
+        text-align: center;
+    }
+}
+
+/* 📱 Breakpoint 420px — Mobile chico */
+@media (max-width: 420px) {
+
+    /* USER */
+    .info-header h3 {
+        font-size: 1.6rem;
+    }
+
+    .username-text {
+        font-size: 1.6rem;
+    }
+
+    .info-body p {
+        font-size: 0.95rem;
+    }
+
+    .profile-button {
+        flex-direction: column;
+        width: 100%;
+        gap: 1rem;
+    }
+
+    .profile-edit-button {
+        width: 100%;
+    }
+
+    /* REVIEWS */
+    .review-image {
+        height: 200px;
+    }
+
+    .reviews-title {
+        font-size: 1.6rem;
+        text-align: center;
+    }
+
+    .stars-container {
+        font-size: 0.85rem;
+    }
+
+    .review-header h2 {
+        font-size: 0.95rem;
+    }
+
+    .comment-container p {
+        font-size: 0.9rem;
+    }
+}
+

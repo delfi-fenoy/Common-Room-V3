@@ -1,0 +1,30 @@
+# Compilación Maven
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Logs y archivos temporales
+*.log
+*.tmp
+*.swp
+
+# Variables de entorno y configuración local
+.env
+*.local
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Archivos temporales de Office (como el ~$Document.docx)
+~$*
+
+# Evitar subir binarios o builds dentro del código fuente (por si acaso)
+/build/
+!**/src/main/**/build/
+!**/src/test/**/build/

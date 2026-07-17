@@ -1,0 +1,30 @@
+<header>
+    <div class="header-container">
+        <!-- * ============ Logo ============ -->
+        <div class="logo-container" routerLink="">
+            <img src="assets/img/iconLetter.png" alt="App logo" class="logo-img" />
+        </div>
+    
+        <!-- * ============ Search bar ============ -->
+        <form class="search-container" [formGroup]="searchForm" (submit)="onSearch()">
+            <input type="text" class="search-bar" placeholder="Search..." formControlName="searchQuery"/>
+            <button type="submit" class="search-icon" title="Buscar">🔍</button>
+        </form>
+    
+        <!-- * ============ Otras Rutas | Usuario ============ -->
+        <div class="info-container">
+            @if (isLoggedIn) {
+                <ul>    
+                    <li [routerLink]="['/users', currentUser]">Profile</li>
+                    <li (click)="logout()">Logout</li>
+                </ul>
+            }
+            @else {
+                <ul>
+                    <li routerLink="/login">Login</li>
+                    <li routerLink="/register">Register</li>
+                </ul>
+            }
+        </div>
+    </div>
+</header>

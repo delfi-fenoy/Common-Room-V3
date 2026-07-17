@@ -1,0 +1,180 @@
+/* * ======== Section | Logo ======== */
+.logo-section {
+    position: relative;
+    text-align: center;
+    user-select: none;
+    pointer-events: none;
+}
+
+.main-logo {
+    width: clamp(14rem, 50vw, 40rem);
+    margin: 2% auto;
+    pointer-events: none;
+    user-select: none;
+    display: block;
+}
+
+/* * ======== Section | Carousel ======== */
+.carousel-section {
+    position: relative;
+    width: 100%;
+    max-width: 70rem;
+    margin: 0 auto 3rem auto;
+    padding: 0 1.5rem;
+}
+
+.carousel-section h3 {
+    text-align: center;
+    padding: 0.5rem;
+    margin-bottom: 1.2rem;
+    font-size: clamp(1.4rem, 4vw, 2.5rem);
+    color: var(--brown-light);
+    background-color: var(--green-semi-dark);
+    border-radius: 10px;
+    border: 0.5rem solid var(--brown-dark);
+}
+
+/* ? ------- Carousel Wrapper ------- */
+.carousel-wrapper {
+    position: relative;
+    border: 0.5rem solid var(--brown-dark);
+    border-radius: 1rem;
+    background-color: var(--green-semi-dark);
+    padding: 1.2rem;
+    overflow: hidden;
+}
+
+/* * ======== Elemento | Carousel ======== */
+.carousel {
+    display: flex;
+    gap: 1rem;
+    padding: 1.2rem;
+    background-color: var(--brown-mid);
+    border: 0.5rem solid var(--brown-dark);
+    border-radius: 1rem;
+    transition: transform 0.8s ease-in-out;
+    overflow: hidden;
+    white-space: nowrap;
+    will-change: transform;
+}
+
+/* * ======== Elemento | Movie Card ======== */
+.movie-card {
+    flex: 1 1 calc(25% - 1rem);
+    max-width: calc(25% - 1rem);
+    min-width: 10rem;
+    border: 4px solid var(--brown-dark);
+    border-radius: 0.8rem;
+    background-color: var(--brown-dark);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.movie-card:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+/* ? ------- Image Wrapper ------- */
+.img-wrapper {
+    position: relative;
+    aspect-ratio: 2/3;
+    overflow: hidden;
+}
+
+.img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ? ------- Information ------- */
+.info-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 4px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.movie-card:hover .info-overlay {
+    opacity: 1;
+}
+
+/* * ======== Elemento | Navigation Buttons ======== */
+.nav-btn {
+    position: absolute;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    top: 45%;
+    z-index: 7;
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.6rem;
+    text-align: center;
+    background-color: var(--brown-dark);
+    color: var(--brown-light);
+    border: none;
+    border-radius: 50%;
+    opacity: 0.9;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.nav-btn:hover {
+    background-color: var(--brown-light);
+    color: var(--brown-dark);
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.nav-btn.left {
+    left: 0.4rem;
+}
+
+.nav-btn.right {
+    right: 0.4rem;
+}
+
+/* ! __________ Responsive __________ */
+@media (max-width: 64rem) {
+    .movie-card {
+        flex: 1 1 calc(33% - 1rem);
+        max-width: calc(33% - 1rem);
+    }
+}
+
+@media (max-width: 48rem) {
+    .carousel-section {
+        padding: 0 1rem;
+    }
+
+    .movie-card {
+        flex: 1 1 calc(50% - 1rem);
+        max-width: calc(50% - 1rem);
+    }
+
+    .nav-btn {
+        top: 42%;
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+}
+
+@media (max-width: 30rem) {
+    .movie-card {
+        flex: 1 1 100%;
+        max-width: 100%;
+    }
+
+    .nav-btn {
+        top: 40%;
+        width: 2.2rem;
+        height: 2.2rem;
+        font-size: 1.3rem;
+    }
+}

@@ -1,0 +1,111 @@
+<div class="register-container">
+    <!-- ? Estrellas de fondo -->
+    <div class="stars"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+
+    <!-- ? Botón volver a Home -->
+    <div class="back-button" routerLink="/">
+        <img src="assets/img/iconLetter.png" alt="App logo" class="logo-img" />
+    </div>
+
+    <!-- ? Formulario-->
+    <form [formGroup]="registerForm" (submit)="onSubmit()">
+        
+        <h1 class="register-title">Register</h1>
+
+        <!-- * ========== Username Input ========== -->
+        <div>
+            <label for="username">Username</label>
+            <input type="text" id="username" formControlName="username">
+
+            <!-- ! === Validaciones === -->
+            @if(
+                registerForm.get('username')?.touched && 
+                registerForm.get('username')?.hasError('required'))
+            {
+                <p>Username is required.</p>
+            } @else if (
+                (registerForm.get('username')?.hasError('minlength') || 
+                registerForm.get('username')?.hasError('maxlength')) && 
+                registerForm.get('username')?.touched) 
+            {
+                <p>Username must be between 5 and 20 characters.</p>
+            }
+        </div>
+
+        <!-- * ========== Password Input ========== -->
+        <div>
+            <label for="password">Password</label>
+            <input type="password" id="password" formControlName="password">
+
+            <!-- ! === Validaciones === -->
+            @if(
+                registerForm.get('password')?.touched && 
+                registerForm.get('password')?.hasError('required'))
+            {
+                <p>Password is required.</p>
+            } @else if (
+                registerForm.get('password')?.hasError('minlength') && 
+                registerForm.get('password')?.touched) 
+            {
+                <p>Password must be at least 8 characters long.</p>
+            }
+        </div>
+
+        <!-- * ========== Email Input ========== -->
+        <div>
+            <label for="email">Email</label>
+            <input type="email" id="email" formControlName="email">
+
+            <!-- ! === Validaciones === -->
+            @if(
+                registerForm.get('email')?.touched && 
+                registerForm.get('email')?.hasError('required'))
+            {
+                <p>Email is required.</p>
+            } @else if (
+                registerForm.get('email')?.hasError('maxlength') && 
+                registerForm.get('email')?.touched) 
+            {
+                <p>Email cannot be longer than 50 characters.</p>
+            } @else if (
+                registerForm.get('email')?.hasError('email') && 
+                registerForm.get('email')?.touched) 
+            {
+                <p>Enter a valid email address.</p>
+            }
+        </div>
+
+        <!-- * ========== Profile Picture Input ========== -->
+        <div>
+            <label for="picture">Profile Picture</label>
+            <input type="url" id="picture" formControlName="profilePictureUrl">
+
+            <!-- ! === Validaciones === -->
+            @if(
+                registerForm.get('profilePictureUrl')?.touched && 
+                registerForm.get('profilePictureUrl')?.hasError('pattern'))
+            {
+                <p>Enter a valid URL (e.g. https://example.com).</p>
+            }
+        </div>
+
+        <!-- * ========== Button Submit ========== -->
+        <button type="submit" [disabled]="registerForm.invalid">Register</button>
+
+        <!-- ? ----- Go to Login ----- -->
+        <p>
+            Already have an account?
+            <a routerLink="/login">Login</a>
+        </p>
+
+    </form>
+
+</div>
+
+

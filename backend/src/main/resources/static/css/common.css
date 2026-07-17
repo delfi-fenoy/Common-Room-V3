@@ -1,0 +1,392 @@
+/* ------------------ Reset general ------------------ */
+/* Reinicio de márgenes, paddings y box-sizing */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Fuente general y desborde horizontal oculto */
+body {
+    font-family: 'DM Sans', sans-serif;
+    color: #f0f0f0;
+    overflow-x: hidden;
+}
+
+/* ------------------ Barra superior (Header) ------------------ */
+/* Contenedor principal del header */
+.top-header {
+    background-color: #1c3a2a;
+    font-family: 'DM Sans', sans-serif;
+    padding: 10px 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 90px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    z-index: 10;
+}
+
+/* Contenedor del logo */
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Imagen del logo */
+.logo-img {
+    width: 55px;
+    height: 55px;
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+/* Efecto hover en el logo */
+.logo-container :hover {
+    transform: scale(1.1);
+    filter: brightness(120%);
+}
+
+/* ------------------ Barra de búsqueda ------------------ */
+/* Contenedor de la barra de búsqueda */
+.search-container {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    gap: 10px;
+}
+
+/* Nuevo contenedor para posicionar ícono dentro del input */
+.search-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+/* Input con padding derecho extra para no tapar el texto */
+.search-bar {
+    width: 100%;
+    padding: 11px 40px 11px 12px; /* espacio a la derecha para la lupa */
+    border: none;
+    border-radius: 4px;
+    background: #a2b18a;
+    color: #1d3327;
+    font-size: 1rem;
+}
+
+/* Botón-lupa dentro del input */
+.search-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 1rem;
+    color: #1d3327;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.3s ease;
+}
+
+/* Hover opcional */
+.search-icon:hover {
+    color: #2b402f;
+}
+
+/* ------------------ Botones de usuario ------------------ */
+/* Contenedor de botones Sign In, Register, Perfil, Cerrar sesión */
+.user-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Estilo base para cada botón */
+.user-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: #a2b18a;
+    padding: 10px 12px;
+    border-radius: 5px;
+    border: none;
+    font-weight: 600;
+    color: #1a1a1a;
+    text-decoration: none;
+    min-width: 120px;
+    height: 45px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Hover en botón de usuario */
+.user-section:hover {
+    background-color: #8a9a75;
+}
+
+/* Tamaño de texto para Sign In */
+.sign-in-text {
+    font-size: 1rem;
+}
+
+/* Ajuste adicional para botones con foto de perfil */
+.user-profile {
+    padding-left: 8px;
+    padding-right: 12px;
+}
+
+/* Imagen de usuario (foto circular) */
+.user-photo {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* ------------------ Menú lateral (Sidebar) ------------------ */
+/* Contenedor lateral izquierdo */
+.sidebar {
+    position: fixed;
+    top: 80px;
+    left: 0;
+    background-color: #355f49;
+    width: 90px;
+    height: 100%;
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 9;
+}
+
+/* Item de menú */
+.sidebar-item {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1.6rem 0;
+    cursor: pointer;
+}
+
+/* Estilo del ícono del sidebar */
+.sidebar .icon {
+    width: 55px;
+    height: 55px;
+    object-fit: contain;
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+/* Imagen dentro del ícono */
+.sidebar .icon img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Hover en íconos del sidebar */
+.sidebar .icon:hover {
+    transform: scale(1.1);
+    filter: brightness(150%);
+}
+
+/* Hover en ítem del sidebar (para mostrar algo antes) */
+.sidebar-item:hover::before {
+    opacity: 1;
+}
+
+/* ------------------ Pie de página (Footer) ------------------ */
+/* Estilo del footer inferior */
+footer {
+    position: relative;
+    text-align: center;
+    padding: 1rem;
+    color: #aaa;
+    font-size: 0.9rem;
+    margin-top: 3rem;
+    z-index: 10;
+    background: #1c3a2a;
+}
+
+/* ------------------ Modal del Error ------------------ */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6); /* Oscurecer el fondo */
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    animation: fadeIn 0.3s ease forwards;
+}
+
+.modal-box {
+    background-color: #1f1f1f;
+    border-radius: 15px;
+    padding: 0;
+    width: 90%;
+    max-width: 600px;
+    color: #f0f0f0;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transform: translateY(100vh);
+    animation: slideUp 0.5s ease forwards;
+}
+
+/* Animación al entrar */
+@keyframes slideIn {
+    from {
+        transform: translateY(100vh);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+.animate-in {
+    animation: slideIn 0.4s ease forwards;
+}
+
+/* Animación al salir */
+@keyframes slideOut {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(-100vh);
+        opacity: 0;
+    }
+}
+.animate-out {
+    animation: slideOut 0.4s ease forwards;
+}
+
+/* ------------------ Estructura interna ------------------ */
+.modal-header {
+    background-color: #2d2d2d;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 20px;
+    border-bottom: 2px solid #3a3a3a;
+}
+
+.modal-icon {
+    width: 35px;
+    height: 35px;
+}
+
+.modal-title {
+    background: #a52b2b;
+    padding: 6px 15px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: white;
+    flex-grow: 1;
+    text-align: center;
+    margin: 0 10px;
+}
+
+.modal-close {
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Cuerpo del modal */
+.modal-body {
+    padding: 30px 20px;
+    text-align: center;
+}
+
+.modal-body p {
+    font-style: italic;
+    color: #eee;
+    font-size: 1.1rem;
+}
+
+/* Footer con botón */
+.modal-footer {
+    padding: 15px 20px;
+    border-top: 2px solid #3a3a3a;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-accept {
+    background-color: #a52b2b;
+    color: white;
+    padding: 8px 20px;
+    border: none;
+    font-style: italic;
+    font-weight: bold;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.btn-accept:hover {
+    transform: scale(1.05);
+    filter: brightness(120%);
+}
+
+
+/* ------------------ Clases reutilizables ------------------ */
+/* Centrado de texto */
+.text-center {
+    text-align: center;
+}
+
+/* Margen superior */
+.mt-3 {
+    margin-top: 3rem;
+}
+
+/* Margen inferior */
+.mb-2 {
+    margin-bottom: 2rem;
+}
+
+/* Padding interno */
+.p-1 {
+    padding: 1rem;
+}
+
+/* Bordes circulares */
+.rounded-full {
+    border-radius: 50%;
+}
+
+/* Fondo oscuro */
+.bg-dark {
+    background-color: #2c2c2c;
+}
+
+/* Texto desaturado */
+.text-muted {
+    color: #aaa;
+}
+
+/* Fuente pequeña */
+.fs-small {
+    font-size: 0.9rem;
+}

@@ -1,0 +1,17 @@
+<!-- =================== MODAL DE ERROR =================== -->
+<!-- Fragmento Thymeleaf con clases específicas para error -->
+<div th:fragment="modalError" id="error-modal" class="error-modal-overlay">
+  <div class="error-modal-box animate-in">
+    <div class="error-modal-header">
+      <img src="/img/iconLetter.png" alt="Icono" class="error-modal-icon" />
+      <h2 class="error-modal-title">Ups... Ocurrió un error</h2>
+      <span class="error-modal-close" onclick="closeErrorModal()">X</span>
+    </div>
+    <div class="error-modal-body">
+      <p id="error-message">Texto error</p>
+    </div>
+    <div class="error-modal-footer">
+      <button class="error-btn-accept" onclick="closeErrorModal()">Understood</button>
+    </div>
+  </div>
+</div>

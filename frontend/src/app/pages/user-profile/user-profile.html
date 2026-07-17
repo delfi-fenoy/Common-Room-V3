@@ -1,0 +1,141 @@
+<div class="user-profile-container">
+    <!-- ! Si el usuario existe -->
+    @if(selectedUser){
+        <!-- * ========== Informacion del usuario ========== -->
+        <section class="user-section">
+            <div class="user-container">
+                <!-- ? === Profile Picture === -->
+                <div class="img-wrapper">
+                    @if (selectedUser.role === 'ADMIN') {
+                        <img
+                            [src]="selectedUser.profilePictureUrl || 'assets/img/userAdmin.jpg'"
+                            alt="{{ selectedUser.username || 'Poster not available' }}"
+                            (error)="noProfilePicture($event)"
+                        />
+                    } @else {
+                        <img
+                            [src]="selectedUser.profilePictureUrl || 'assets/img/userv2.jpg'"
+                            alt="{{ selectedUser.username || 'Poster not available' }}"
+                            (error)="noProfilePicture($event)"
+                        />
+                    }  
+                </div>
+                <!-- ? === Info del Uusuario === -->
+                <div class="info-wrapper">
+                    <div class="info-header">
+                        @if (selectedUser.role === 'ADMIN') {
+                            <h3>{{ selectedUser.username }} ⭐</h3>
+                        } @else {
+                            <h3>{{ selectedUser.username }}</h3>
+                        }
+                        <h4>Active since {{selectedUser.createdAt}}</h4>
+                    </div>
+                    <div class="info-body">
+                        <p>{{ selectedUser.description }}</p>
+                    </div>
+                    <div class="info-footer">
+                        <h3>Total Reviews : {{ reviews.length}}</h3>
+                        <div class="profile-button">
+                        @if (isMyProfile) {
+                                <button (click) = "openEditProfileModal()" class="profile-edit-button">Edit Profile</button>
+                                <button (click) = "openChangePasswordModal()" class="profile-edit-button">Edit Password</button>
+                                <button (click)= "deleteUser()" class="profile-edit-button" title="Delete User">❌</button>
+                                @if (modalState() === 'editProfile') {
+                                    <app-modify-user-modal
+                                        (close) = "closeModal()"
+                                        (submitted) = "refreshUser()"
+                                        [user] = "selectedUser"
+                                    ></app-modify-user-modal>
+                                }
+                                @if (modalState() === 'changePassword') {
+                                    <app-change-password-modal
+                                        (close) = "closeModal()"
+                                        (submitted) = "refreshUser()"
+                                        [user] = "selectedUser"
+                                    ></app-change-password-modal>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- * ========== Reviews del usuario ========== -->
+        <section class="reviews-section">
+            <h2 class="reviews-title">{{selectedUser.username}}'s thoughts...</h2>
+            <div class="reviews-container">
+                @if (reviews.length === 0) {
+                    <h2 class="no-reviews">No reviews yet...</h2>
+                } @else {
+                    @for (review of reviews; track review.id) {
+                        <div class="review-card">
+                            <!-- === Movie Poster === -->
+                            <div class="review-image" [routerLink]="['/movies', review.moviePreview.id]" title="Go to {{review.moviePreview.title}}">
+                                <img
+                                    [src]="review.moviePreview.posterUrl || 'assets/img/default-poster.jpg'"
+                                    alt="{{ review.moviePreview.title || 'Poster not available' }}"
+                                    (error)="onImgError($event)"
+                                />
+                            </div>
+                            
+                            <!-- === Review Body === -->
+                            <div class="review-body">
+                                <!-- === Movie Title === -->
+                                <div class="review-header">
+                                    <h2 [routerLink]="['/movies', review.moviePreview.id]" title="Go to {{review.moviePreview.title}}" >{{review.moviePreview.title}}</h2>
+                                    <div class="buttons-container">
+                                        <!-- === Buttons Review === -->
+                                        @if (isAdmin || isMyProfile) {
+                                            <button (click)="onDeleteReview(review.id)" title="Delete Review">🗑️</button>
+                                        }
+                                        @if (isMyProfile) {
+                                            <button (click)="openEditReviewModal(review)" title="Edit Review">✏️</button>
+                                            @if (modalState() === "editReview") {
+                                                <app-review-modal (close)="closeModal()" (submitted)="refreshReviews()" [movie]="review.moviePreview" [review]="review"></app-review-modal>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                                
+                                <!-- === Review Information === -->
+                                <div class="review-info">
+                                    <!-- === Stars Rating === -->
+                                    <div class="stars-container">
+                                        @for (i of [1,2,3,4,5]; track i) {
+                                            @if (i <= review.rating) {
+                                                <span class="star">★</span>
+                                            }
+                                            @else if (i - review.rating === 0.5) {
+                                                <span class="half-star">⯪</span>
+                                            } 
+                                            @else {
+                                                <span class="empty-star">☆</span>
+                                            }
+                                        }
+                                    </div>
+                                    <!-- === Comment === -->
+                                    <div class="comment-container">
+                                        @if (review.comment == null) {
+                                            <p><em>No comment provided</em></p>
+                                        } @else {
+                                            <p>{{review.comment}}</p>
+                                        }
+                                    </div>
+                                </div>
+                                <!-- === Review Date === -->
+                                <div class="review-footer">
+                                    <h3>Reviewed on</h3>
+                                    <h2>{{review.createdAt}}</h2>
+                                </div>
+
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </section>
+    } @else{
+        <h3>User not found</h3>
+    }
+</div>

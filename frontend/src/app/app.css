@@ -1,0 +1,26 @@
+main {
+    align-items: center;
+    padding: 1.25rem;
+    transition: margin-left 0.35s ease;
+    margin-top: 4.5rem;
+    margin-left: 5em;
+    min-height: calc(100vh - 4.5rem - 6rem); 
+}
+
+/* ! __________ Responsive __________ */
+@media (max-width: 768px) {
+    main {
+        margin-top: 4rem;          
+        margin-left: 4.2rem;       
+    }
+
+    .sidebar:hover ~ main {
+        margin-left: 4.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    main {
+        margin-left: 3.5rem;       
+    }
+}

@@ -1,0 +1,140 @@
+<div class="movie-sheet-container">
+  <!-- ! Si la pelicula existe -->
+  @if (chosenMovie) {
+  <!-- ? --- Fondo Personalizado --- -->
+  @if (chosenMovie.backdropUrl) {
+  <div class="bg-wrapper">
+    <img [src]="chosenMovie.backdropUrl" alt="Movie backdropUrl" class="bg-img" />
+  </div>
+  }
+
+  <!-- * ========== Informacion de Pelicula ========== -->
+  <section class="movie-section">
+    <div class="poster-container">
+      <div class="img-wrapper">
+        <img
+          [src]="chosenMovie.posterUrl || 'assets/img/default-poster.jpg'"
+          alt="{{ chosenMovie.title || 'Poster not available' }}"
+          (error)="onImgError($event)"
+        />
+      </div>
+      <div class="info-wrapper">
+        <h2>{{ chosenMovie.title }}</h2>
+        <h4>Average Rating : {{ chosenMovie.voteAverage }}</h4>
+      </div>
+    </div>
+  </section>
+
+  <!-- * ========== Detalles de Pelicula ========== -->
+  <section class="details-section">
+    <div class="synopsis-container">
+      <h1>Synopsis</h1>
+      <p>{{ chosenMovie.synopsis }}</p>
+    </div>
+
+    <div class="info-movie-container">
+      <h1>Details</h1>
+      <p>Release Date : {{ chosenMovie.releaseDate }}</p>
+      <p>Duration : {{ chosenMovie.duration }}</p>
+      <p>Genres : {{ chosenMovie.genres?.join(', ') }}</p>
+      <p>Revenue : {{ chosenMovie.revenue }}$</p>
+      <p>Budget : {{ chosenMovie.budget }}$</p>
+    </div>
+  </section>
+
+  <!-- * ========== Seccion de Reviews ========== -->
+  <section class="reviews-section">
+    <!-- ? === Titulo de reseñas === -->
+    <h2 class="title-reviews">People's thoughts</h2>
+    @if (!isLoggedIn) {
+      <p class="login-text">You must be logged in to add a review...</p>
+    }
+    <!-- ? === Boton "Nueva reseña" === -->
+    @if (isLoggedIn && !currentUserReview) {
+      <button (click)="openCreateModal()" class="addReview-button">Review +</button>
+
+      <!-- ! === Modal "New Review" | "Edit Review" === -->
+      @if (modalState() === "create") {
+      <!-- Se le pasa al modal de crear reseña la info de la peli -->
+        <app-review-modal
+          (close)="closeModal()"
+          (submitted)="refreshReviews()"
+          [movie]="chosenMovie"
+        ></app-review-modal>
+      } 
+    }
+
+    <!-- ? === Listado de Reviews === -->
+    <div class="reviews-container">
+      @if (reviews.length === 0) {
+      <h2 class="no-reviews">No reviews yet...</h2>
+      } @else { @for (review of reviews; track review.id) {
+      <div class="review-card">
+        <!-- === Review Header === -->
+        <div class="review-header">
+          @if (review.userPreview.role === 'ADMIN') {
+          <img
+            [src]="review.userPreview.profilePictureUrl || 'assets/img/userAdmin.jpg'"
+            alt="{{ review.userPreview.username || 'Poster not available' }}"
+            (error)="noProfilePicture($event)"
+          />
+          } @else {
+          <img
+            [src]="review.userPreview.profilePictureUrl || 'assets/img/userv2.jpg'"
+            alt="{{ review.userPreview.username || 'Poster not available' }}"
+            (error)="noProfilePicture($event)"
+          />
+          }
+          <h2 [routerLink]="['/users', review.userPreview.username]">
+            Review By <strong>{{ review.userPreview.username }}</strong>
+          </h2>
+          <!-- === Buttons Review === -->
+          @if (currentUsername && review.userPreview.username === this.currentUsername) { <!-- Si la reseña es del user actual -->
+            <button (click)="openEditModal(review)" title="Edit Review">✏️</button>
+            @if (modalState() === "edit") {
+              <app-review-modal
+                (close)="closeModal()"
+                (submitted)="refreshReviews()"  
+                [movie]="chosenMovie"
+                [review]="review"
+              ></app-review-modal>
+            }
+          }
+          @if ((currentUsername && review.userPreview.username === this.currentUsername) || isAdmin) {
+            <button (click)="onDeleteReview(review.id)" title="Delete Review">🗑️</button>
+          }
+        </div>
+
+        <!-- === Review Body === -->
+        <div class="review-body">
+          <!-- === Stars Rating === -->
+          <div class="star-container">
+            @for (i of [1,2,3,4,5]; track i) { @if (i <= review.rating) {
+            <span class="star">★</span>
+            } @else if (i - review.rating === 0.5) {
+            <span class="half-star">⯪</span>
+            } @else {
+            <span class="empty-star">☆</span>
+            } }
+          </div>
+          <div class="comment-section">
+            @if (review.comment == null) {
+            <p><em>No comment provided</em></p>
+            } @else {
+            <p>{{ review.comment }}</p>
+            }
+          </div>
+        </div>
+        <!-- === Review Footer === -->
+        <div class="review-footer">
+          <h3>Reviewed on</h3>
+          <h2>{{ review.createdAt }}</h2>
+        </div>
+      </div>
+      } }
+    </div>
+  </section>
+  } @else {
+  <h3>No movie was found with that title</h3>
+  }
+</div>
