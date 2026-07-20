@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -54,30 +55,31 @@ public class ReviewService {
     @Transactional
     public ReviewResponseDTO modifyReview(Long reviewId, ReviewUpdateDTO reviewUpdateDTO){
         // Obtener review antigua completa y usuario autenticado
-        Review review = getReviewById(reviewId);
+        Review originalReview = getReviewById(reviewId);
         User currentUser = userService.getCurrentUser();
 
         // Comprobar que la reseña a modificar pertenezca al usuario autenticado
-        if(!review.getUser().equals(currentUser))
+        if(!originalReview.getUser().equals(currentUser))
             throw new AccessDeniedException("You are not allowed to edit this review");
 
         // Validar rating y comment
         validateReview(reviewUpdateDTO.getRating(), reviewUpdateDTO.getComment());
 
         // Settear valores y guardar en bdd
-        if(reviewUpdateDTO.getRating() != null){
-            review.setRating(reviewUpdateDTO.getRating());
+        if(!Objects.equals(reviewUpdateDTO.getRating(), originalReview.getRating())){
+            originalReview.setRating(reviewUpdateDTO.getRating());
         }
-        if(reviewUpdateDTO.getComment() != null){
-            review.setComment(reviewUpdateDTO.getComment());
+        if(!Objects.equals(reviewUpdateDTO.getComment(), originalReview.getComment())){
+            originalReview.setComment(reviewUpdateDTO.getComment());
         }
-        reviewRepository.save(review);
+
+        // Al usar @Transactional, los cambios de la reseña se guardan automaticamente
 
         // Devolver response de review
-        MoviePreviewDTO moviePreviewDTO = movieService.findMoviePreviewById(review.getMovieId());
-        return ReviewMapper.entityToResponseDTO(review,
+        MoviePreviewDTO moviePreviewDTO = movieService.findMoviePreviewById(originalReview.getMovieId());
+        return ReviewMapper.entityToResponseDTO(originalReview,
                                             moviePreviewDTO,
-                                            UserMapper.toPreviewDTO(review.getUser()));
+                                            UserMapper.toPreviewDTO(originalReview.getUser()));
     }
 
     // ========== OBTENER REVIEWS ==========
