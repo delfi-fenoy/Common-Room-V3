@@ -40,4 +40,11 @@ public class PlaylistController {
     public void deletePlaylist(@PathVariable Long playlistId){
         playlistService.deletePlaylist(playlistId);
     }
+
+    @PutMapping("/playlists/{playlistId}")
+    public ResponseEntity<PlaylistResponseDTO> modifyPlaylist(@PathVariable Long playlistId, @Valid @RequestBody PlaylistRequestDTO playlistUpdate){
+        PlaylistResponseDTO playlistResponseDTO = playlistService.modifyPlaylist(playlistId, playlistUpdate);
+
+        return ResponseEntity.ok(playlistResponseDTO);
+    }
 }
