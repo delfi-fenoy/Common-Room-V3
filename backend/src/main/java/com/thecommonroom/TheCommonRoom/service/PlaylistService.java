@@ -3,6 +3,7 @@ package com.thecommonroom.TheCommonRoom.service;
 import com.thecommonroom.TheCommonRoom.dto.PlaylistRequestDTO;
 import com.thecommonroom.TheCommonRoom.dto.PlaylistResponseDTO;
 import com.thecommonroom.TheCommonRoom.dto.UserPreviewDTO;
+import com.thecommonroom.TheCommonRoom.exception.PlaylistNotFoundException;
 import com.thecommonroom.TheCommonRoom.mapper.PlaylistMapper;
 import com.thecommonroom.TheCommonRoom.mapper.UserMapper;
 import com.thecommonroom.TheCommonRoom.model.Playlist;
@@ -30,5 +31,15 @@ public class PlaylistService {
 
         UserPreviewDTO userPreviewDTO = UserMapper.toPreviewDTO(currentUser);
         return PlaylistMapper.entityToResponseDTO(playlist, userPreviewDTO);
+    }
+
+    @Transactional
+    public void deletePlaylist(Long playlistId){
+        playlistRepository.deleteById(playlistId);
+    }
+
+    public Playlist getPlaylistById(Long playlistId){
+        return playlistRepository.findById(playlistId)
+                .orElseThrow(() -> new PlaylistNotFoundException("Playlist does not exist."));
     }
 }

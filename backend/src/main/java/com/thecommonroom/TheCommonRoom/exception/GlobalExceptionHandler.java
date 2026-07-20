@@ -167,6 +167,16 @@ public class GlobalExceptionHandler {
                 .body(error);
     }
 
+    // |=== EXCEPCIONES DE PLAYLISTS ===|
+    @ExceptionHandler(PlaylistNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handlePlaylistNotFound(PlaylistNotFoundException ex){
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(error);
+    }
+
     // |=== EXCEPCIONES DE ENTRADA DE DATOS ===|
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
