@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import MovieBase from '../models/MovieBase';
 import { MovieDetails } from '../models/MovieDetails';
@@ -19,8 +19,24 @@ export class MovieService {
   }
 
   /* ------ Metodo para acceder a todas las peliculas ------ */
-  getAllMovies(page : number = 1) {
-    return this.http.get<MovieBase[]>(`${this.API_URL}/all?page=${page}`)
+  // Agregamos los parámetros genero y año opcionales
+  getAllMovies(page : number = 1, genre?:string, year?:string) {
+
+    let params = new HttpParams().set('page', page)
+
+    // Si hay género entonces lo agrego al parámetro
+    if(genre)
+    {
+      params = params.set('genre',genre)
+    }
+
+    // Si hay año entonces lo agrego al parámetro
+    if(year)
+    {
+      params = params.set('year', year)
+    }
+
+    return this.http.get<MovieBase[]>(`${this.API_URL}/all`, {params: params})
   }
 
   /* ------ Metodo para acceder a las peliculas populares ------ */
@@ -38,8 +54,21 @@ export class MovieService {
     return this.http.get<MovieBase[]>(`${this.API_URL}/upcoming?page=${page}`)
   }
 
-  //Metodo para buscar peliculas
-  searchMovies(query: string, page: number = 1) {
-    return this.http.get<MovieBase[]>(`${this.API_URL}/search/${query}?page=${page}`)
+  //Metodo para buscar peliculas (con filtros)
+  searchMovies(query: string, page: number = 1, genre?: string, year?: string) {
+
+    let params = new HttpParams().set('page', page)
+
+    if(genre)
+    {
+      params = params.set('genre', genre)
+    }
+
+    if(year)
+    {
+      params = params.set('year', year)
+    }
+
+    return this.http.get<MovieBase[]>(`${this.API_URL}/search/${query}`, {params:params})
   }
 }

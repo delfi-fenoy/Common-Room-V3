@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * Clase que contiene todos los datos de una película que devuelve la API. Se mapeará a MovieDetailsDTO para
- * guardar solamente la informacion que nos interesa.
+ * guardar solamente la información que nos interesa.
  */
 @Schema(description = "DTO que representa todos los datos de una película recibidos desde la API " +
         "externa, antes de mapearlos a la entidad interna.")
@@ -29,6 +29,9 @@ public class RawMovieDTO {
     private String poster_path;
     private String backdrop_path;
     private List<GenreDTO> genres;
+
+    // Agregamos para reconocer el género que nos pasa el usuario
+    private List<Integer> genre_ids;
 
     @Getter
     @Setter
