@@ -1,6 +1,8 @@
 package com.thecommonroom.TheCommonRoom.auth.access;
 
+import com.thecommonroom.TheCommonRoom.model.Playlist;
 import com.thecommonroom.TheCommonRoom.model.Review;
+import com.thecommonroom.TheCommonRoom.service.PlaylistService;
 import com.thecommonroom.TheCommonRoom.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Component;
 public class UserSecurity {
 
     private final ReviewService reviewService;
+    private final PlaylistService playlistService;
 
     // Un usuario puede eliminar una reseña si es el dueño de ella, o es un administrador
     public boolean canDeleteReview(Long reviewId, Authentication authentication){
@@ -27,5 +30,14 @@ public class UserSecurity {
         // Devolver true si puede eliminar reseña, o false en caso contrario
         return review.getUser().getUsername().equals(username) // La reseña debe pertenecer al usuario autenticado
                 || authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")); // O el usuairo debe ser admin
+    }
+
+    // Un usuario puede eliminar una lista si es el dueño de ella
+    public boolean canDeletePlaylist(Long playlistId, Authentication authentication){
+        Playlist playlist = playlistService.getPlaylistById(playlistId);
+        String username = authentication.getName();
+
+        // Devuelve true si el usuario puede borrar la lista
+        return playlist.getUser().getUsername().equals(username); // COmparar dueño de lista con user logueado
     }
 }
