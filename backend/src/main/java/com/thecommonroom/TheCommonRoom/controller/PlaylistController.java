@@ -1,5 +1,6 @@
 package com.thecommonroom.TheCommonRoom.controller;
 
+import com.thecommonroom.TheCommonRoom.dto.MovieListResponseDTO;
 import com.thecommonroom.TheCommonRoom.dto.PlaylistRequestDTO;
 import com.thecommonroom.TheCommonRoom.dto.PlaylistResponseDTO;
 import com.thecommonroom.TheCommonRoom.service.PlaylistService;
@@ -18,6 +19,8 @@ import java.net.URI;
 public class PlaylistController {
 
     private final PlaylistService playlistService;
+
+    // ----- ABM LISTAS -----
 
     @PostMapping("/playlists")
     public ResponseEntity<PlaylistResponseDTO> createPlaylist(@Valid @RequestBody PlaylistRequestDTO playlistRequestDTO){
@@ -47,4 +50,14 @@ public class PlaylistController {
 
         return ResponseEntity.ok(playlistResponseDTO);
     }
+
+    // ----- AGREGAR/ELIMINAR PELICULAS DE LISTAS -----
+
+    @PostMapping("/playlists/{playlistId}/movies/{movieId}")
+    public ResponseEntity<MovieListResponseDTO> addMovieToPlaylist(@PathVariable Long playlistId, @PathVariable Long movieId){
+        MovieListResponseDTO movieListResponseDTO = playlistService.addMovieToPlaylist(playlistId, movieId);
+        return ResponseEntity.ok(movieListResponseDTO);
+    }
+
+    // ----- LISTADO/BUSQUEDA DE LISTAS -----
 }

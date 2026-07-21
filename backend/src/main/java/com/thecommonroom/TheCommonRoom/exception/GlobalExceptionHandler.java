@@ -177,6 +177,15 @@ public class GlobalExceptionHandler {
                 .body(error);
     }
 
+    @ExceptionHandler(MovieAlreadyInPlaylistException.class)
+    public ResponseEntity<Map<String, String>> handleMovieAlreadyInPlaylist(MovieAlreadyInPlaylistException ex){
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(error);
+    }
+
     // |=== EXCEPCIONES DE ENTRADA DE DATOS ===|
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
