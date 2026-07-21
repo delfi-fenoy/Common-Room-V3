@@ -34,7 +34,7 @@ public class ReviewService {
         User currentUser = userService.getCurrentUser();
 
         // Validaciones
-        validateMovieExists(reviewRequestDTO.getMovieId());
+        movieService.validateMovieExists(reviewRequestDTO.getMovieId());
         validateUserHasNotReviewedMovie(currentUser.getId(), reviewRequestDTO.getMovieId());
         validateReview(reviewRequestDTO.getRating(), reviewRequestDTO.getComment()); // Validar rating y comment
 
@@ -142,12 +142,6 @@ public class ReviewService {
     }
 
     // ========== VALIDACIONES ==========
-
-    public void validateMovieExists(Long movieId){
-        // Comprobar existencia de película
-        if(!movieService.existsMovieById(movieId))
-            throw new MovieNotFoundException("Movie does not exist");
-    }
 
     @Transactional(readOnly = true)
     public void validateUserHasNotReviewedMovie(Long userId, Long movieId){
