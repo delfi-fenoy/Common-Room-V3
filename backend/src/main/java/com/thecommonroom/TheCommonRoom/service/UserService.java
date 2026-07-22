@@ -165,13 +165,59 @@ public class UserService {
 
     // Busqueda de usuarios paginados
     @Transactional(readOnly = true)
-    public Page<UserPreviewDTO> searchUsers(String query, int page)
+    public Page<UserPreviewDTO> searchUsers(String query, String roleStr, int page)
     {
-        // 10 usuarios por pagina
-        Pageable pageable = PageRequest.of(page -1, 10);
+        Pageable pageable = PageRequest.of(page - 1, 10);
+        Page<User> entityPage;
 
-        // Busca los usuarios en la bdd
-        Page<User> entityPage = userRepository.findByUsernameContainingIgnoreCaseAndIsBannedFalse(query, pageable);
+        if (roleStr != null && !roleStr.isBlank())
+        {
+            Role role = Role.valueOf(roleStr.toUpperCase());
+            entityPage = userRepository.findByUsernameContainingIgnoreCaseAndRoleAndIsBannedFalse(query, role, pageable);
+        }
+        else
+        {
+            entityPage = userRepository.findByUsernameContainingIgnoreCaseAndIsBannedFalse(query, pageable);
+        }
+
+        return entityPage.map(UserMapper::toPreviewDTO);
+    }
+
+    // Lista todos los usuarios paginados
+    @Transactional(readOnly = true)
+    public Page<UserPreviewDTO> getAllUsersPaged(String roleStr, int page)
+    {
+        Pageable pageable = PageRequest.of(page - 1, 10);
+        Page<User> entityPage;
+
+        if (roleStr != null && !roleStr.isBlank())
+        {
+            Role role = Role.valueOf(roleStr.toUpperCase());
+            entityPage = userRepository.findByRoleAndIsBannedFalse(role, pageable);
+        }
+        else
+        {
+            entityPage = userRepository.findByIsBannedFalse(pageable);
+        }
+
+        return entityPage.map(UserMapper::toPreviewDTO);
+    }
+
+    // Lista todos los usuarios ban, para admins
+    @Transactional(readOnly = true)
+    public Page<UserPreviewDTO> getBannedUsers(String query, int page)
+    {
+        Pageable pageable = PageRequest.of(page - 1, 10);
+        Page<User> entityPage;
+
+        if (query != null && !query.isBlank())
+        {
+            entityPage = userRepository.findByUsernameContainingIgnoreCaseAndIsBannedTrue(query, pageable);
+        }
+        else
+        {
+            entityPage = userRepository.findByIsBannedTrue(pageable);
+        }
 
         return entityPage.map(UserMapper::toPreviewDTO);
     }

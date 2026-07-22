@@ -49,10 +49,36 @@ export class UserService {
     return this.http.delete<void>(`${this.URL}/${username}`)
   }
 
-  //Buscar usuarios (sin los baneados) paginados
-  searchUsers(query: string, page: number = 1): Observable<any>
+  // Obtener usuarios paginados (para seccion users)
+  getUsersPaged(page: number = 1, role?: string): Observable<any> 
   {
     let params = new HttpParams().set('page', page)
-    return this.http.get<any>(`${this.URL}/search/${query}`, {params:params})
+    if (role) 
+    {
+      params = params.set('role', role)
+    }
+    return this.http.get<any>(`${this.URL}/paged`, { params: params })
+  }
+
+  // Buscar usuarios por nombre (busqueda general)
+  searchUsers(query: string, page: number = 1, role?: string): Observable<any> 
+  {
+    let params = new HttpParams().set('page', page)
+    if (role) 
+    {
+      params = params.set('role', role)
+    }
+    return this.http.get<any>(`${this.URL}/search/${query}`, { params: params })
+  }
+
+  //ADMIN Listar o buscar usuarios baneados
+  getBannedUsers(page: number = 1, query?: string): Observable<any> 
+  {
+    let params = new HttpParams().set('page', page)
+    if (query) 
+    {
+      params = params.set('query', query)
+    }
+    return this.http.get<any>(`${this.URL}/banned`, { params: params })
   }
 }

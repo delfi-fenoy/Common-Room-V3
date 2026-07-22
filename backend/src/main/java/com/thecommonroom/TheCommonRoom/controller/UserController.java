@@ -137,14 +137,32 @@ public class UserController {
     }
 
 
-    @Operation(
-            summary = "Buscar usuarios",
-            description = "Devuelve una lista de usuarios cuyo nombre coincida con la búsqueda y que no estén baneados."
-    )
-    @GetMapping("/search/{query}")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Page<UserPreviewDTO>> searchUsers(@PathVariable String query, @RequestParam(defaultValue = "1") int page)
+    // Listar usuarios paginados, seccion users
+    @GetMapping("/paged")
+    public ResponseEntity<Page<UserPreviewDTO>> getUsersPaged(
+            @RequestParam(required = false) String role,
+            @RequestParam(defaultValue = "1") int page)
     {
-        return ResponseEntity.ok(userService.searchUsers(query, page));
+        return ResponseEntity.ok(userService.getAllUsersPaged(role, page));
+    }
+
+    // Buscar usuarios por nombre
+    @GetMapping("/search/{query}")
+    public ResponseEntity<Page<UserPreviewDTO>> searchUsers(
+            @PathVariable String query,
+            @RequestParam(required = false) String role,
+            @RequestParam(defaultValue = "1") int page)
+    {
+        return ResponseEntity.ok(userService.searchUsers(query, role, page));
+    }
+
+    // Seccion admin
+    // Solo los admins pueden buscar usuarios ban
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/banned")
+    public ResponseEntity<Page<UserPreviewDTO>> getBannedUsers(
+            @RequestParam(required = false) String query,
+            @RequestParam(defaultValue = "1") int page) {
+        return ResponseEntity.ok(userService.getBannedUsers(query, page));
     }
 }
