@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -135,4 +136,15 @@ public class UserController {
                 .build();
     }
 
+
+    @Operation(
+            summary = "Buscar usuarios",
+            description = "Devuelve una lista de usuarios cuyo nombre coincida con la búsqueda y que no estén baneados."
+    )
+    @GetMapping("/search/{query}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Page<UserPreviewDTO>> searchUsers(@PathVariable String query, @RequestParam(defaultValue = "1") int page)
+    {
+        return ResponseEntity.ok(userService.searchUsers(query, page));
+    }
 }

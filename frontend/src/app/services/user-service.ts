@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import UserPreview from '../models/UserPreview';
 import { Observable } from 'rxjs';
@@ -47,5 +47,12 @@ export class UserService {
   //Eliminar perfil
   deleteUser(username: string): Observable<void>{
     return this.http.delete<void>(`${this.URL}/${username}`)
+  }
+
+  //Buscar usuarios (sin los baneados) paginados
+  searchUsers(query: string, page: number = 1): Observable<any>
+  {
+    let params = new HttpParams().set('page', page)
+    return this.http.get<any>(`${this.URL}/search/${query}`, {params:params})
   }
 }
