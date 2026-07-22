@@ -10,6 +10,9 @@ import com.thecommonroom.TheCommonRoom.model.Role;
 import com.thecommonroom.TheCommonRoom.model.User;
 import com.thecommonroom.TheCommonRoom.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -158,5 +161,18 @@ public class UserService {
                 throw new EmailAlreadyExistsException
                         ("El email " + email + " ya está en uso.");
         }
+    }
+
+    // Busqueda de usuarios paginados
+    @Transactional(readOnly = true)
+    public Page<UserPreviewDTO> searchUsers(String query, int page)
+    {
+        // 10 usuarios por pagina
+        Pageable pageable = PageRequest.of(page -1, 10);
+
+        // Busca los usuarios en la bdd
+        Page<User> entityPage = userRepository.findByUsernameContainingIgnoreCaseAndIsBannedFalse(query, pageable);
+
+        return entityPage.map(UserMapper::toPreviewDTO);
     }
 }
