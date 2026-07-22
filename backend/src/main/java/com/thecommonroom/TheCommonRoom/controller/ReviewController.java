@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @Tag(
         name = "Reseñas",
@@ -72,25 +72,21 @@ public class ReviewController {
     // Obtener reseñas por usuario
     @Operation(
             summary = "Obtener reseñas de un usuario",
-            description = "Devuelve una lista con todas las reseñas creadas por un usuario específico, " +
-                    "identificado por su nombre de usuario."
+            description = "Devuelve una lista paginada con todas las reseñas creadas por un usuario."
     )
     @GetMapping("/users/{username}/reviews")
-    public ResponseEntity<List<ReviewResponseDTO>> getUserReviews(@PathVariable String username){
-        List<ReviewResponseDTO> reviews = reviewService.getReviewsByUsername(username);
-        return ResponseEntity.ok(reviews);
+    public ResponseEntity<Page<ReviewResponseDTO>> getUserReviews(@PathVariable String username, @RequestParam(defaultValue = "1") int page){
+        return ResponseEntity.ok(reviewService.getReviewsByUsername(username, page));
     }
 
     // Obtener reseñas por película
     @Operation(
             summary = "Obtener reseñas de una película",
-            description = "Devuelve una lista con todas las reseñas asociadas a una película, " +
-                    "identificada por su ID."
+            description = "Devuelve una lista paginada con todas las reseñas asociadas a una película."
     )
     @GetMapping("/movies/{id}/reviews")
-    public ResponseEntity<List<ReviewResponseDTO>> getMovieReviews(@PathVariable Long id){
-        List<ReviewResponseDTO> reviews = reviewService.getReviewsByMovieId(id);
-        return ResponseEntity.ok(reviews);
+    public ResponseEntity<Page<ReviewResponseDTO>> getMovieReviews(@PathVariable Long id, @RequestParam(defaultValue = "1") int page){
+        return ResponseEntity.ok(reviewService.getReviewsByMovieId(id, page));
     }
 
     @GetMapping("users/{username}/reviews/{movieId}")
