@@ -68,4 +68,7 @@ public class User {
     // Un user puede tener muchas reseñas
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Review> reviews;
+
+    // Por default ningun usuario se crea baneado
+    private boolean isBanned = false;
 }
