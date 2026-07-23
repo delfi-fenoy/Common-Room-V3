@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface MovieListRepository extends JpaRepository<MovieList, Long> {
 
     boolean existsByPlaylistIdAndMovieId(Long playlistId, Long movieId);
+    void deleteByPlaylistIdAndMovieId(Long playlistId, Long movieId);
 }

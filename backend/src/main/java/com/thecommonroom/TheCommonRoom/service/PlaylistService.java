@@ -5,6 +5,7 @@ import com.thecommonroom.TheCommonRoom.dto.PlaylistRequestDTO;
 import com.thecommonroom.TheCommonRoom.dto.PlaylistResponseDTO;
 import com.thecommonroom.TheCommonRoom.dto.UserPreviewDTO;
 import com.thecommonroom.TheCommonRoom.exception.MovieAlreadyInPlaylistException;
+import com.thecommonroom.TheCommonRoom.exception.MovieNotInPlaylistException;
 import com.thecommonroom.TheCommonRoom.exception.PlaylistNotFoundException;
 import com.thecommonroom.TheCommonRoom.mapper.MovieListMapper;
 import com.thecommonroom.TheCommonRoom.mapper.PlaylistMapper;
@@ -89,12 +90,26 @@ public class PlaylistService {
         validateOwnership(playlist, currentUser.getId(),
                 "You are not allowed to add movies to this playlist");
 
-        movieService.validateMovieExists(movieId); // Verificar existencia de pelicula, lanzar excepcion en caso contrario
         validateMovieNotInPlaylist(playlistId, movieId);
+        movieService.validateMovieExists(movieId); // Verificar existencia de pelicula, lanzar excepcion en caso contrario
+        // Por ultimo la peticion a la API por tema de rendimiento
 
         // Guardar MovieList y devolver dto
         MovieList movieList = movieListRepository.save(MovieListMapper.toEntity(movieId, playlist));
         return MovieListMapper.entityToResponseDTO(movieList);
+    }
+
+    @Transactional
+    public void deleteMovieFromPlaylist(Long playlistId, Long movieId){
+        // Comprobaciones
+        Playlist playlist = getPlaylistById(playlistId);
+        User currentUser = userService.getCurrentUser();
+        validateOwnership(playlist, currentUser.getId(),
+                "You are not allowed to delete movies from this playlist");
+        validateMovieInPlaylist(playlistId, movieId);
+
+        // Eliminar pelicula
+        movieListRepository.deleteByPlaylistIdAndMovieId(playlistId, movieId);
     }
 
     // ----- LISTADO/BUSQUEDA DE LISTAS -----
@@ -118,6 +133,12 @@ public class PlaylistService {
         // Verificar que la pelicula no este en la playlist
         if(movieListRepository.existsByPlaylistIdAndMovieId(playlistId, movieId)){
             throw new MovieAlreadyInPlaylistException("This movie is already in the playlist");
+        }
+    }
+
+    public void validateMovieInPlaylist(Long playlistId, Long movieId){
+        if(!movieListRepository.existsByPlaylistIdAndMovieId(playlistId, movieId)){
+            throw new MovieNotInPlaylistException("This movie is not in the playlist");
         }
     }
 }

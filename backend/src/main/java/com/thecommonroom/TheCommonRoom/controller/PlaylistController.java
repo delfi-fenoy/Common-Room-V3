@@ -59,5 +59,11 @@ public class PlaylistController {
         return ResponseEntity.ok(movieListResponseDTO);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/playlists/{playlistId}/movies/{movieId}")
+    public void deleteMovieFromPlaylist(@PathVariable Long playlistId, @PathVariable Long movieId){
+        playlistService.deleteMovieFromPlaylist(playlistId, movieId);
+    }
+
     // ----- LISTADO/BUSQUEDA DE LISTAS -----
 }
