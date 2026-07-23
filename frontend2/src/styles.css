@@ -1,1 +1,44 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+    /* Primary | Green (60%) */
+    --green-100: #D3E29E;
+    --green-200: #ACB981;
+    --green-300: #889265;
+    --green-400: #656D4A;
+    --green-500: #444A31;
+    --green-600: #26291A;
+    --green-700: #101209;
+
+    /* Secondary | Brown (30%) */
+    --brown-100: #EFD9BF;
+    --brown-200: #D2AF80;
+    --brown-300: #A68A64;
+    --brown-400: #7C674A;
+    --brown-500: #554631;
+    --brown-600: #31271A;
+    --brown-700: #161009;
+
+    /* Tertiary | Purple (10%) */
+    --purple-100: #EFEEF2;
+    --purple-200: #C8C4D2;
+    --purple-300: #A39CB4;
+    --purple-400: #807596;
+    --purple-500: #5D5271;
+    --purple-600: #3A3348;
+    --purple-700: #1B1722;
+}
+
+body {
+    background-image: url('/assets/img/Test2.png');
+    background-repeat: repeat;
+    background-size: auto;
+    background-position: top center;
+}
+
+*{
+    padding: 0;
+    margin: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
