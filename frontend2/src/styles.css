@@ -27,13 +27,6 @@
     --purple-700: #1B1722;
 }
 
-body {
-    background-image: url('/assets/img/Test2.png');
-    background-repeat: repeat;
-    background-size: auto;
-    background-position: top center;
-}
-
 *{
     padding: 0;
     margin: 0;
@@ -41,4 +34,11 @@ body {
 
 html {
     scroll-behavior: smooth;
+}
+
+body {
+    background-image: url('/assets/img/background/Test2.png');
+    background-repeat: repeat;
+    background-size: auto;
+    background-position: top center;
 }
