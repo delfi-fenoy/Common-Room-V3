@@ -13,10 +13,10 @@ export * from './movies/movie-base';
 export * from './movies/movie-details';
 
 /* ------ Modulo de Reseñas ------ */
-export * from './reviews/Review';
+export * from './reviews/review';
 
 /* ------ Modulo de Usuarios ------ */
-export * from './users/User';
+export * from './users/user';
 export * from './users/user-preview';
 
 /* ------ Modulo Compartido / General ------ */

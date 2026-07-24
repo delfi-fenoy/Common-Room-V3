@@ -1,4 +1,4 @@
-import { Role, User } from "./User"
+import { Role, User } from "./user";
 
 export interface UserPreview extends User{
     id: number
