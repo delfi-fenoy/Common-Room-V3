@@ -1,6 +1,12 @@
 <!-- Encabezado Fijo -->
 <app-header (toggleSidebarEvent)="onToggleSidebar()"></app-header>
 
+<!-- Menú Lateral / Sidebar -->
+<app-sidebar 
+    [isOpen]="isSidebarOpen()" 
+    (closeSidebarEvent)="closeSidebar()">
+</app-sidebar>
+
 <!-- Contenido de las páginas según la ruta -->
 <main>
     <router-outlet></router-outlet>
