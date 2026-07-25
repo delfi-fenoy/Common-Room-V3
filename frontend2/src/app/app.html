@@ -1,1 +1,7 @@
-<router-outlet></router-outlet>
+<!-- Encabezado Fijo -->
+<app-header (toggleSidebarEvent)="onToggleSidebar()"></app-header>
+
+<!-- Contenido de las páginas según la ruta -->
+<main>
+    <router-outlet></router-outlet>
+</main>

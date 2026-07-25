@@ -9,6 +9,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideRouter(routes),
+    // provideZoneChangeDetection({eventCoalescing: true}), <- Revisar
     provideHttpClient(withInterceptors([tokenInterceptor])),
   ],
 };

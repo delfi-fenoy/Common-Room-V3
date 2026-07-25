@@ -9,6 +9,7 @@ import { Token } from '@angular/compiler'; // Ver si es importante, sino elimina
 @Injectable({
   providedIn: 'root',
 })
+
 export class AuthService {
   private API_URL = 'http://localhost:8080/auth';
   private loggedInSubject = new BehaviorSubject<boolean>(this.isLoggedIn()); // guarda el estado actual (logueado o no)
