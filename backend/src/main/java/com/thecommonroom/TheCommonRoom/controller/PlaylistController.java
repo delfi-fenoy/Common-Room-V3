@@ -1,6 +1,7 @@
 package com.thecommonroom.TheCommonRoom.controller;
 
 import com.thecommonroom.TheCommonRoom.dto.MovieListResponseDTO;
+import com.thecommonroom.TheCommonRoom.dto.PlaylistPreviewDTO;
 import com.thecommonroom.TheCommonRoom.dto.PlaylistRequestDTO;
 import com.thecommonroom.TheCommonRoom.dto.PlaylistResponseDTO;
 import com.thecommonroom.TheCommonRoom.service.PlaylistService;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -66,4 +68,18 @@ public class PlaylistController {
     }
 
     // ----- LISTADO/BUSQUEDA DE LISTAS -----
+
+    // Listado de listas propias
+    @GetMapping("/users/{username}/playlists")
+    public ResponseEntity<List<PlaylistPreviewDTO>> getUserPlaylists(@PathVariable String username){
+        List<PlaylistPreviewDTO> playlistPreviewDTOList = playlistService.getUserPlaylists(username);
+        return ResponseEntity.ok(playlistPreviewDTOList);
+    }
+
+    @GetMapping("/users/me/playlists")
+    public ResponseEntity<List<PlaylistPreviewDTO>> getMyPlaylists(){
+        List<PlaylistPreviewDTO> playlistPreviewDTOList = playlistService.getMyPlaylists();
+        return ResponseEntity.ok(playlistPreviewDTOList);
+    }
+
 }

@@ -1,9 +1,6 @@
 package com.thecommonroom.TheCommonRoom.service;
 
-import com.thecommonroom.TheCommonRoom.dto.MovieListResponseDTO;
-import com.thecommonroom.TheCommonRoom.dto.PlaylistRequestDTO;
-import com.thecommonroom.TheCommonRoom.dto.PlaylistResponseDTO;
-import com.thecommonroom.TheCommonRoom.dto.UserPreviewDTO;
+import com.thecommonroom.TheCommonRoom.dto.*;
 import com.thecommonroom.TheCommonRoom.exception.MovieAlreadyInPlaylistException;
 import com.thecommonroom.TheCommonRoom.exception.MovieNotInPlaylistException;
 import com.thecommonroom.TheCommonRoom.exception.PlaylistNotFoundException;
@@ -20,7 +17,9 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -114,10 +113,47 @@ public class PlaylistService {
 
     // ----- LISTADO/BUSQUEDA DE LISTAS -----
 
+    @Transactional(readOnly = true)
     public Playlist getPlaylistById(Long playlistId){
         return playlistRepository.findById(playlistId)
                 .orElseThrow(() -> new PlaylistNotFoundException("Playlist does not exist."));
     }
+
+    // Devuelve listado de PREVIEW DTO de las playlists
+    @Transactional(readOnly = true)
+    public List<PlaylistPreviewDTO> getUserPlaylists(String username){
+        // Comprobaciones
+        userService.validateUserExists(username); // Que el usuario exista
+
+        Optional<User> currentUser = userService.findCurrentUser();
+        // Verificar si el user logueado (si es que hay) es el mismo que el que se busca
+        boolean isOwner = currentUser
+                .map(user -> username.equalsIgnoreCase(user.getUsername()))
+                .orElse(false);
+
+        List<Playlist> playlists = findUserPlaylists(username, isOwner); // Conseguir las listas
+        // Devolver listas mapeadas al dto
+        return PlaylistMapper.entityToPreviewDTOList(playlists);
+    }
+
+    // Devuelve las playlists
+    private List<Playlist> findUserPlaylists(String username, boolean isOwner){
+        // Si es el dueño de la lista, devuelve todas
+        if(isOwner){
+            return playlistRepository.findByUserUsername(username);
+        }
+        // Si no es el dueño de la lista, devuelve solo las publicas
+        return playlistRepository.findByUserUsernameAndIsPrivateFalse(username);
+    }
+
+    // Devuelve listado de PREVIEW DTO de las playlists del user logueado (si es que hay)
+    public List<PlaylistPreviewDTO> getMyPlaylists(){
+        User currentUser = userService.getCurrentUser();
+        return PlaylistMapper.entityToPreviewDTOList( // Devolver la lista mapeada a PreviewDTO
+                findUserPlaylists(currentUser.getUsername(), true));
+    }
+
+    // ----- COMPROBACIONES -----
 
     public boolean isOwnedBy(Playlist playlist, Long userId){
         return Objects.equals(playlist.getUser().getId(), userId);
@@ -129,6 +165,7 @@ public class PlaylistService {
         }
     }
 
+    @Transactional(readOnly = true)
     public void validateMovieNotInPlaylist(Long playlistId, Long movieId){
         // Verificar que la pelicula no este en la playlist
         if(movieListRepository.existsByPlaylistIdAndMovieId(playlistId, movieId)){
@@ -136,6 +173,7 @@ public class PlaylistService {
         }
     }
 
+    @Transactional(readOnly = true)
     public void validateMovieInPlaylist(Long playlistId, Long movieId){
         if(!movieListRepository.existsByPlaylistIdAndMovieId(playlistId, movieId)){
             throw new MovieNotInPlaylistException("This movie is not in the playlist");
