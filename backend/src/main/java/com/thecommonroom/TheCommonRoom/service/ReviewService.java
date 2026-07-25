@@ -106,6 +106,11 @@ public class ReviewService {
         return responseReviews;
     }
 
+    public List<ReviewResponseDTO> getMyReviews(){
+        User currentUser = userService.getCurrentUser();
+        return getReviewsByUsername(currentUser.getUsername());
+    }
+
     @Transactional(readOnly = true)
     public List<ReviewResponseDTO> getReviewsByMovieId(Long movieId){
         List<Review> entityReviews = reviewRepository.findByMovieId(movieId); // Obtener reseñas completas de película
