@@ -1,4 +1,4 @@
-import { MovieBase }  from "./movie-base";
+import { MovieBase } from './movie-base';
 
 export interface MovieDetails extends MovieBase {
     duration?: number;

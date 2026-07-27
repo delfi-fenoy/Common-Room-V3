@@ -14,7 +14,9 @@
     backdrop-filter: blur(2px);
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    transition:
+        opacity 0.3s ease,
+        visibility 0.3s ease;
     z-index: 1090; /* Por encima del Header (1000) */
     pointer-events: none;
 }
@@ -47,6 +49,14 @@
     transform: translateX(280px); /* Movimiento hacia la vista */
 }
 
+/* * ========== General Images / Icons Styles ========== */
+.logo-img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 /* * ========== Sidebar Header ========== */
 .sidebar-header {
     display: flex;
@@ -63,13 +73,7 @@
     color: var(--purple-100);
 }
 
-.logo-img {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
+/* ? --- Buttons Styles --- */
 .close-btn {
     background-color: var(--green-300);
     border: 3px solid var(--green-600);

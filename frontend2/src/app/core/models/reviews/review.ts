@@ -1,5 +1,5 @@
-import { MovieDetails } from "../movies/movie-details";
-import { User } from "../users/user";
+import { MovieDetails } from '../movies/movie-details';
+import { User } from '../users/user';
 
 export interface Review {
     id: number;

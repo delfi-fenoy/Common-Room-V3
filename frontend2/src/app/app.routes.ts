@@ -21,8 +21,18 @@ export const routes: Routes = [
     { path: '', component: HomePage, title: 'Home | Common Room' },
 
     /* ------ Autenticación y Registro ------ */
-    { path: 'login', component: LoginPage, title: 'Login | Common Room', canActivate: [guestGuard] },
-    { path: 'register', component: RegisterPage, title: 'Register | Common Room', canActivate: [guestGuard] },
+    {
+        path: 'login',
+        component: LoginPage,
+        title: 'Login | Common Room',
+        canActivate: [guestGuard],
+    },
+    {
+        path: 'register',
+        component: RegisterPage,
+        title: 'Register | Common Room',
+        canActivate: [guestGuard],
+    },
 
     /* ------ Modulo de Películas ------ */
     { path: 'movies', component: MoviesList, title: 'Movies | Common Room' },
@@ -36,5 +46,5 @@ export const routes: Routes = [
 
     /* ------ Modulo Errores y Redirecciones ------ */
     { path: '404', component: NotFound, title: '404 | Not Found' },
-    { path: '**', redirectTo: '/404' }
+    { path: '**', redirectTo: '/404' },
 ];

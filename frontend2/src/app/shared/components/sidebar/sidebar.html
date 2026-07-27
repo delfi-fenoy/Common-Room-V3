@@ -1,22 +1,17 @@
 <!-- ? --- Fondo Oscuro / Backdrop --- -->
-<div 
-    class="sidebar-overlay" 
-    [class.active]="isOpen" 
-    (click)="closeSidebar()">
-</div>
+<div class="sidebar-overlay" [class.active]="isOpen" (click)="closeSidebar()"></div>
 
 <!-- ? --- Contenedor Principal del Sidebar --- -->
 <aside class="sidebar" [class.open]="isOpen">
-    
     <!-- ! ====== Encabezado del Sidebar ====== -->
     <div class="sidebar-header">
         <div class="sidebar-title">
-        <img src="assets/img/CR-icon1.png" alt="Common Room Logo" class="logo-img" />
+            <img src="assets/img/CR-icon1.png" alt="Common Room Logo" class="logo-img" />
         </div>
 
         <!-- ? --- Botón de Cerrar --- -->
         <button class="close-btn" (click)="closeSidebar()" aria-label="Cerrar menú">
-        <img src="assets/img/buttons-icons/close-button.png" alt="Close" class="buttons-img" />
+            <img src="assets/img/buttons-icons/close-button.png" alt="Close" class="buttons-img" />
         </button>
     </div>
 
@@ -26,7 +21,11 @@
     <nav class="sidebar-nav">
         <!-- ? --- Movies List Button --- -->
         <a routerLink="/movies" class="nav-btn" (click)="closeSidebar()">
-            <img src="assets/img/buttons-icons/movies-button.png" alt="Movies" class="buttons-img" />
+            <img
+                src="assets/img/buttons-icons/movies-button.png"
+                alt="Movies"
+                class="buttons-img"
+            />
             <span>Movies List</span>
         </a>
 
@@ -38,11 +37,14 @@
 
         <!-- ? --- Playlists List Button --- -->
         <a routerLink="/playlists" class="nav-btn" (click)="closeSidebar()">
-            <img src="assets/img/buttons-icons/playlists-button.png" alt="Playlists" class="buttons-img" />
+            <img
+                src="assets/img/buttons-icons/playlists-button.png"
+                alt="Playlists"
+                class="buttons-img"
+            />
             <span>Playlists List</span>
         </a>
 
         <!-- ! --- ADMIN BAN USER LIST Button (PROXIMO) --- -->
     </nav>
-
 </aside>

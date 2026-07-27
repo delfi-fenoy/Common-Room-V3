@@ -1,1 +1,93 @@
-<p>register-page works!</p>
+<div class="auth-container">
+    <!-- ? Background Stars -->
+    <div class="stars"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+
+    <!-- ? --- Button Home --- -->
+    <div class="back-button" routerLink="/" title="Go to home">
+        <img src="assets/img/CR-icon2.png" alt="App logo" class="logo-img" />
+    </div>
+
+    <!-- ! ====== Form Register ====== -->
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <h1 class="auth-title">Register</h1>
+
+        <!-- ? --- Username Input --- -->
+        <div class="field-container">
+            <label for="username">Username</label>
+            <input type="text" id="username" formControlName="username" autocomplete="username"/>
+            
+            <!-- ! === Validators === -->
+            @if (f.username.touched && f.username.hasError('required')) {
+                <p class="error-text">Username is required.</p>
+            } @else if (
+                f.username.touched &&
+                (f.username.hasError('minlength') || f.username.hasError('maxlength'))
+            ) {
+                <p class="error-text">Username must be between 5 and 20 characters.</p>
+            }
+        </div>
+
+        <!-- ? --- Password Input --- -->
+        <div class="field-container">
+            <label for="password">Password</label>
+            <input
+                type="password"
+                id="password"
+                formControlName="password"
+                autocomplete="new-password"
+            />
+
+            <!-- ! === Validators === -->
+            @if (f.password.touched && f.password.hasError('required')) {
+                <p class="error-text">Password is required.</p>
+            } @else if (f.password.touched && f.password.hasError('minlength')) {
+                <p class="error-text">Password must be at least 8 characters long.</p>
+            }
+        </div>
+
+        <!-- ? --- Email Input --- -->
+        <div class="field-container">
+            <label for="email">Email</label>
+            <input type="email" id="email" formControlName="email" autocomplete="email" />
+
+            <!-- ! === Validators === -->
+            @if (f.email.touched && f.email.hasError('required')) {
+                <p class="error-text">Email is required.</p>
+            } @else if (f.email.touched && f.email.hasError('email')) {
+                <p class="error-text">Enter a valid email address.</p>
+            } @else if (f.email.touched && f.email.hasError('maxlength')) {
+                <p class="error-text">Email cannot be longer than 50 characters.</p>
+            }
+        </div>
+
+        <!-- ? --- Profile Picture Input --- -->
+        <div class="field-container">
+            <label for="picture">Profile Picture (URL)</label>
+            <input
+                type="url"
+                id="picture"
+                formControlName="profilePictureUrl"
+                placeholder="https://..."
+            />
+
+            @if (f.profilePictureUrl.touched && f.profilePictureUrl.hasError('pattern')) {
+                <p class="error-text">Enter a valid URL (e.g. https://example.com/photo.jpg).</p>
+            }
+        </div>
+
+        <!-- ? --- Button Submit --- -->
+        <button type="submit" [disabled]="registerForm.invalid || isSubmitting()">
+            {{ isSubmitting() ? 'Registering...' : 'Register' }}
+        </button>
+
+        <!-- ? ----- Go to Login ----- -->
+        <p class="auth-switch">
+            Already have an account?
+            <a routerLink="/login">Login</a>
+        </p>
+    </form>
+</div>

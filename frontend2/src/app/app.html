@@ -1,13 +1,17 @@
 <!-- Encabezado Fijo -->
-<app-header (toggleSidebarEvent)="onToggleSidebar()"></app-header>
+@if (showLayout()) {
+    <app-header (toggleSidebarEvent)="onToggleSidebar()"></app-header>
 
-<!-- Menú Lateral / Sidebar -->
-<app-sidebar 
-    [isOpen]="isSidebarOpen()" 
-    (closeSidebarEvent)="closeSidebar()">
-</app-sidebar>
+    <!-- Menú Lateral / Sidebar -->
+    <app-sidebar [isOpen]="isSidebarOpen()" (closeSidebarEvent)="closeSidebar()"> </app-sidebar>
+}
 
 <!-- Contenido de las páginas según la ruta -->
-<main>
+<main [class.no-layout]="!showLayout()">
     <router-outlet></router-outlet>
 </main>
+
+<!-- Footer Fijo -->
+@if (showLayout()) {
+    <app-footer></app-footer>
+}
