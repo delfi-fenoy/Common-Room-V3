@@ -1,12 +1,14 @@
-import { Component, EventEmitter, Output, inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { filter } from 'rxjs';
 import { AuthService } from '../../../core/services/auth-service';
+import { Modal } from '../modal/modal';
+import { ModalService } from '../../services/modal.services';
 
 @Component({
     selector: 'app-header',
-    imports: [RouterLink, FormsModule],
+    imports: [RouterLink, FormsModule, Modal],
     templateUrl: './header.html',
     styleUrl: './header.css',
 })
@@ -14,6 +16,8 @@ export class Header implements OnInit {
     // * ---- Inyección de Dependencias ----
     private router = inject(Router); // <-- Otra forma de aplicar Inyección de Dependencias en lugar de pasarlas por el constructor(...)
     private authService = inject(AuthService);
+    private modalService = inject(ModalService);
+    private cdr = inject(ChangeDetectorRef); // Para prevenir error ExpressionChangedAfterItHasBeenCheckedError
 
     // * ---- Variables de Estado de Búsqueda ----
     searchQuery: string = '';
@@ -31,11 +35,13 @@ export class Header implements OnInit {
         // Escucha el estado de sesión del usuario
         this.authService.loggedIn$.subscribe((value) => {
             this.isLoggedIn = value;
+            this.cdr.detectChanges(); // Previene error ExpressionChangedAfterItHasBeenCheckedError
         });
 
         // Escucha el nombre del usuario logueado
         this.authService.username$.subscribe((username) => {
             this.currentUser = username;
+            this.cdr.detectChanges(); // Previene error ExpressionChangedAfterItHasBeenCheckedError
         });
 
         // Escucha los cambios de ruta para limpiar la barra si no está en búsquedas
@@ -72,8 +78,15 @@ export class Header implements OnInit {
         this.toggleSidebarEvent.emit();
     }
 
+    // <----- Modal de Confirmación para Logout ----->
     logout(): void {
-        this.authService.logout();
-        this.router.navigate(['/login']);
+        this.modalService.openConfirm(
+            'Log Out',
+            'Are you sure you want to log out of your account?',
+            () => {
+                this.authService.logout();
+                this.router.navigate(['/login']);
+            }
+        );
     }
 }

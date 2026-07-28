@@ -2,10 +2,12 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth-service';
+import { Modal } from '../../../shared/components/modal/modal';
+import { ModalService } from '../../../shared/services/modal.services';
 
 @Component({
     selector: 'app-register-page',
-    imports: [ReactiveFormsModule, RouterLink],
+    imports: [ReactiveFormsModule, RouterLink, Modal],
     templateUrl: './register-page.html',
     styleUrl: '../styles/auth-forms.css',
 })
@@ -14,6 +16,7 @@ export class RegisterPage {
     private fb = inject(FormBuilder);
     private authService = inject(AuthService);
     private router = inject(Router);
+    private modalService = inject(ModalService);
 
     // * ---- Estados Reactivos con Signals ----
     // Permite deshabilitar el botón mostrando un "spinner" en el mouse, mientras se procesa la solicitud.
@@ -50,7 +53,9 @@ export class RegisterPage {
 
         this.authService.register(this.registerForm.getRawValue()).subscribe({
             next: () => {
-                alert('Registration successful!');
+                // <----- New Modal Success Alert ----->
+                this.modalService.openAlert('Success', 'Registration successful! You can now log in.', 'success');
+                
                 this.registerForm.reset();
                 this.isSubmitting.set(false);
                 this.router.navigate(['/login']);
@@ -58,6 +63,10 @@ export class RegisterPage {
             error: (e) => {
                 console.error(e);
                 this.isSubmitting.set(false);
+
+                // <----- New Modal Error Alert ----->
+                const errorMessage = e?.error?.message || 'Error creating account. Please try again later.';
+                this.modalService.openAlert('Registration Error', errorMessage, 'error');
             },
         });
     }

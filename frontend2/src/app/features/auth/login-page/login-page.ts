@@ -2,10 +2,12 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth-service';
+import { Modal } from '../../../shared/components/modal/modal';
+import { ModalService } from '../../../shared/services/modal.services';
 
 @Component({
     selector: 'app-login-page',
-    imports: [ReactiveFormsModule, RouterLink],
+    imports: [ReactiveFormsModule, RouterLink, Modal],
     templateUrl: './login-page.html',
     styleUrl: '../styles/auth-forms.css',
 })
@@ -14,6 +16,7 @@ export class LoginPage {
     private fb = inject(FormBuilder);
     private authService = inject(AuthService);
     private router = inject(Router);
+    private modalService = inject(ModalService);
 
     // * ---- Estados Reactivos con Signals ----
     loginError = signal<boolean>(false);
@@ -40,8 +43,11 @@ export class LoginPage {
             },
             error: (e) => {
                 console.error(e);
-                this.loginError.set(true);
                 this.isSubmitting.set(false);
+                
+                // <----- New Modal Alert ----->
+                const errorMessage = e?.error?.message || 'Invalid access. Please check your credentials and try again.';
+                this.modalService.openAlert('Login Failed', errorMessage, 'error');
             },
         });
     }

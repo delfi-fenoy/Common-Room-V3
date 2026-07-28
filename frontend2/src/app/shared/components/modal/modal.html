@@ -1,0 +1,37 @@
+<!-- ? Si se abre el modal -->
+@if (modalService.isOpen()) {
+    <!-- ? --- Overlay que previene que se cierre al hacer click dentro del contenido --- -->
+    <div class="modal-backdrop" (click)="modalService.close()">
+        <!-- ! ====== Estructura del Modal ====== -->
+        <div class="modal-container" (click)="$event.stopPropagation()">
+            <!-- ? --- Header --- -->
+            <div class="modal-header" [class]="modalService.type()">
+                <h3>{{ modalService.title() }}</h3>
+                <button class="close-btn" (click)="modalService.close()">&times;</button>
+            </div>
+
+            <!-- ? --- Body | Puede tener 2 caminos --- -->
+            <div class="modal-body">
+                <!-- Si es ('success','error','confirm') mostrara el mensaje -->
+                @if (modalService.type() !== 'custom') {
+                    <p class="modal-message">{{ modalService.message() }}</p>
+                } @else {
+                    <!-- Si no, mostrar contenido proyectado (custom) ej: formularios -->
+                    <ng-content></ng-content>
+                }
+            </div>
+
+            <!-- ? --- Footer (Botones) | Mismo que el Body, dependiendo del tipo --- -->
+            @if (modalService.type() === 'confirm') {
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" (click)="modalService.close()">Cancel</button>
+                    <button class="btn btn-primary" (click)="modalService.confirm()">Confirm</button>
+                </div>
+            } @else if (modalService.type() === 'success' || modalService.type() === 'error') {
+                <div class="modal-footer">
+                    <button class="btn btn-primary" (click)="modalService.close()">Accept</button>
+                </div>
+            }
+        </div>
+    </div>
+}
