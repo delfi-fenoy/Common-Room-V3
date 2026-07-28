@@ -1,5 +1,5 @@
 /* Auth Forms Styles, estilo compartido de ambas paginas */
-/* * ======== Contenedor de Autenticación ======== */
+/* * ========== Auth Container ========== */
 .auth-container {
     position: fixed;
     top: 0;
@@ -14,7 +14,7 @@
     background: linear-gradient(to bottom, #0b0b2b, #1b2735 70%, #090a0f);
 }
 
-/* * ======== Botón Volver ======== */
+/* * ========== Back Button ========== */
 .back-button {
     position: absolute;
     top: 1rem;
@@ -39,7 +39,7 @@
     transform: scale(1.15);
 }
 
-/* * ======== Formulario ======== */
+/* * ========== Form ========== */
 .auth-container form {
     width: 100%;
     max-width: 23.75rem;
@@ -60,7 +60,7 @@
     color: var(--green-semi-dark, #1c3a2a);
 }
 
-/* Mensajes de Error */
+/* ? Error Message (provisional hasta el model) */
 .error-message {
     font-size: 0.9rem;
     text-align: center;
@@ -107,7 +107,7 @@
     border-bottom-color: #8fa072;
 }
 
-/* Botón Principal */
+/* ? Botón Principal */
 .auth-container button[type='submit'] {
     width: 100%;
     padding: 0.7rem;
@@ -133,7 +133,7 @@
     background-color: #8fa072;
 }
 
-/* Switch Login/Register */
+/* ? Switch Login/Register */
 .auth-switch {
     margin-top: 1.2rem;
     text-align: center;
@@ -219,7 +219,7 @@
     animation-delay: 2.4s;
 }
 
-/* Responsive */
+/* ? Responsive */
 @media (max-width: 480px) {
     .auth-container form {
         max-width: 18rem;

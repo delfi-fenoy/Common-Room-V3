@@ -18,8 +18,8 @@
         <!-- ? --- Username Input --- -->
         <div class="field-container">
             <label for="username">Username</label>
-            <input type="text" id="username" formControlName="username" autocomplete="username"/>
-            
+            <input type="text" id="username" formControlName="username" autocomplete="username" />
+
             <!-- ! === Validators === -->
             @if (f.username.touched && f.username.hasError('required')) {
                 <p class="error-text">Username is required.</p>

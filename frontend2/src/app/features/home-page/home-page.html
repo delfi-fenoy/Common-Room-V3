@@ -1,54 +1,26 @@
-<main class="test-container">
-    <h1>🧪 Panel de Prueba de Rutas (Dev)</h1>
-    <p>Hacé clic en los botones para verificar la resolución de rutas y Guards:</p>
+<div class="home-container">
+    <!-- ! ====== Title ====== -->
+    <section class="logo-section">
+        <img src="assets/img/CR-Title.png" alt="Common Room Logo" class="main-logo" />
+    </section>
 
-    <div class="test-grid">
-        <!-- ------ Sección Autenticación ------ -->
-        <section class="test-card">
-            <h2>Auth & Guesses</h2>
-            <div class="btn-group">
-                <a routerLink="/login" class="btn btn-auth">Ir a /login (guestGuard)</a>
-                <a routerLink="/register" class="btn btn-auth">Ir a /register (guestGuard)</a>
-            </div>
-        </section>
+    <!-- ! ====== Carousels ====== -->
+    <app-movie-carousel title="Popular Movies" [movies]="popularMovies()" />
+    <app-movie-carousel title="Recent Movies" [movies]="recentMovies()" />
+    <app-movie-carousel title="Upcoming Movies" [movies]="upcomingMovies()" />
 
-        <!-- ------ Sección Películas ------ -->
-        <section class="test-card">
-            <h2>Películas</h2>
-            <div class="btn-group">
-                <a routerLink="/movies" class="btn btn-movie">Ir a /movies</a>
-                <a [routerLink]="['/movies', sampleMovieId]" class="btn btn-movie"
-                    >Ir a /movies/1</a
-                >
-                <a [routerLink]="['/movies/search', sampleSearchQuery]" class="btn btn-movie"
-                    >Buscar /movies/search/batman</a
-                >
-            </div>
-        </section>
+    <!-- ! ====== Future Sections ====== -->
+    <section class="placeholder-section">
+        <div class="carousel-header">
+            <h3 class="header-title">Recent Reviews</h3>
+        </div>
+        <div class="placeholder-content"></div>
+    </section>
 
-        <!-- ------ Sección Usuarios ------ -->
-        <section class="test-card">
-            <h2>Usuarios (Prueba de Precedencia)</h2>
-            <div class="btn-group">
-                <a routerLink="/users" class="btn btn-user">Ir a /users</a>
-                <a routerLink="/users/me" class="btn btn-user-me"
-                    >⭐ Probar /users/me (Mi Perfil)</a
-                >
-                <a [routerLink]="['/users', sampleUsername]" class="btn btn-user"
-                    >Probar /users/ianfrancano</a
-                >
-            </div>
-        </section>
-
-        <!-- ------ Sección Errores ------ -->
-        <section class="test-card">
-            <h2>Manejo de Errores</h2>
-            <div class="btn-group">
-                <a routerLink="/404" class="btn btn-error">Ir a /404 direct</a>
-                <a routerLink="/ruta-inexistente-xyz" class="btn btn-error"
-                    >Probar Wildcard (Ruta Rota)</a
-                >
-            </div>
-        </section>
-    </div>
-</main>
+    <section class="placeholder-section">
+        <div class="carousel-header">
+            <h3 class="header-title">Top Active Users</h3>
+        </div>
+        <div class="placeholder-content"></div>
+    </section>
+</div>
