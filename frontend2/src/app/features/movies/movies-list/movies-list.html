@@ -1,1 +1,60 @@
-<p>movies-list works!</p>
+<div class="movies-container">
+    <!-- ! ====== Filters Section ====== -->
+    <section class="filters-section">
+        <div class="filters-container">
+            <label for="filter-select">Sort by:</label>
+            
+            <!-- ? --- Relevance Filter --- -->
+            <select 
+                id="filter-select" 
+                class="filter-dropdown" 
+                [value]="selectedFilter" 
+                (change)="onFilterSelect($event)">
+                <option value="relevance">Relevance</option>
+                <option value="popular">Popular</option>
+                <option value="recent">Recent</option>
+                <option value="upcoming">Upcoming</option>
+            </select>
+
+            <!-- ! --- Others Filter --- -->
+        </div>
+    </section>
+    
+    <!-- ! === Movies Section === -->
+    <section class="movies-section">
+        @for (movie of movies; track movie.id) {
+            <!-- ? --- Movie Card --- -->
+            <div class="movie-card" [routerLink]="[movie.id]">
+                <div class="img-wrapper">
+                    <img
+                        [src]="movie.posterUrl || 'assets/img/default-img/movie-noimg.jpg'"
+                        alt="{{ movie.title || 'Poster not available' }}"
+                        (error)="onImgError($event)"
+                    />
+
+                    <div class="info-overlay">
+                        <h1>{{ movie.title }}</h1>
+                        <h3>{{ movie.releaseDate }}</h3>
+                        <p>{{ movie.synopsis }}</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </section>
+
+    <!-- ? --- Loading Spinner --- -->
+    @if (isLoading) {
+        <div class="loading-indicator">
+            <div class="spinner"></div>
+            <span>Loading more movies...</span>
+        </div>
+    }
+
+    <!-- ? --- Button to Top --- -->
+    @if (showScrollTopBtn) {
+        <button class="scroll-top-btn" (click)="scrollToTop()" aria-label="Scroll to top">
+            <img src="assets/img/buttons-icons/arrow-button.png" alt="Scroll to top"/>
+        </button>
+    }
+
+</div>
