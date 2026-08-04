@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -135,4 +136,33 @@ public class UserController {
                 .build();
     }
 
+
+    // Listar usuarios paginados, seccion users
+    @GetMapping("/paged")
+    public ResponseEntity<Page<UserPreviewDTO>> getUsersPaged(
+            @RequestParam(required = false) String role,
+            @RequestParam(defaultValue = "1") int page)
+    {
+        return ResponseEntity.ok(userService.getAllUsersPaged(role, page));
+    }
+
+    // Buscar usuarios por nombre
+    @GetMapping("/search/{query}")
+    public ResponseEntity<Page<UserPreviewDTO>> searchUsers(
+            @PathVariable String query,
+            @RequestParam(required = false) String role,
+            @RequestParam(defaultValue = "1") int page)
+    {
+        return ResponseEntity.ok(userService.searchUsers(query, role, page));
+    }
+
+    // Seccion admin
+    // Solo los admins pueden buscar usuarios ban
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/banned")
+    public ResponseEntity<Page<UserPreviewDTO>> getBannedUsers(
+            @RequestParam(required = false) String query,
+            @RequestParam(defaultValue = "1") int page) {
+        return ResponseEntity.ok(userService.getBannedUsers(query, page));
+    }
 }
