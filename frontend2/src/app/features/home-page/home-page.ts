@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { MovieBase } from '../../core/models/movies/movie-base';
+import { MovieBase } from '../../core/models';
 import { MovieService } from '../../core/services/movie-service';
 import { MovieCarouselComponent } from '../../shared/components/movie-carousel/movie-carousel';
 

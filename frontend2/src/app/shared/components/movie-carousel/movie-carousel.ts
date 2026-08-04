@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, OnDestroy, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { MovieBase } from '../../../core/models/movies/movie-base';
+import { MovieBase } from '../../../core/models';
 
 @Component({
     selector: 'app-movie-carousel',

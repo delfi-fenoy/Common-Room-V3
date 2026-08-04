@@ -110,13 +110,13 @@
 /* Título de la película */
 .info-overlay h1 {
     font-size: 1.25rem; 
-    color: var(--brown-100);
+    color: var(--purple-200);
 }
 
 /* Fecha */
 .info-overlay h3 {
     margin-bottom: 0.5rem; 
-    color: var(--brown-200); 
+    color: var(--purple-300); 
 }
 
 /* Sinopsis */
