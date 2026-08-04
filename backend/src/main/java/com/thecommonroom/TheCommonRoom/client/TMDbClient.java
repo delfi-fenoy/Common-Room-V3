@@ -57,12 +57,19 @@ public class TMDbClient {
     }
 
     ///  BARRA DE BUSQUEDA | Llama a la API de TMDb y devuelve las peliculas que contengan la query en el nombre
-    public RawMovieListDTO searchMovies(String query, int page) {
-        String url = String.format(
-                "%s/search/movie?api_key=%s&query=%s&page=%d&language=en-US",
-                baseUrl, key, query, page
+    // Mandamos año porque es lo único que soporta tmdb
+    public RawMovieListDTO searchMovies(String query, int page, String year) {
+
+        StringBuilder url = new StringBuilder(
+                String.format("%s/search/movie?api_key=%s&query=%s&page=%d&language=en-US",
+                baseUrl, key, query, page)
         );
-        return restTemplate.getForObject(url, RawMovieListDTO.class);
+
+        if(year != null && !year.isEmpty())
+        {
+            url.append("&year=").append(year);
+        }
+        return restTemplate.getForObject(url.toString(), RawMovieListDTO.class);
     }
 
 }

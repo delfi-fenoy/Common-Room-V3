@@ -71,4 +71,7 @@ public class User {
 
     // Por default ningun usuario se crea baneado
     private boolean isBanned = false;
+  
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Playlist> playlists;
 }

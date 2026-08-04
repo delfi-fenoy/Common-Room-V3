@@ -80,9 +80,10 @@ public class MovieController {
         return movieService.getUpcomingMovies(page);
     }
 
+    // Agregamos parámetro año y género, opcionales
     @GetMapping("/search/{query}")
     @ResponseStatus(HttpStatus.OK)
-    public List<MoviePreviewDTO> searchMovies(@PathVariable String query, @RequestParam(defaultValue = "1") int page) {
-        return movieService.searchMovies(query, page);
+    public List<MoviePreviewDTO> searchMovies(@PathVariable String query, @RequestParam(defaultValue = "1") int page, @RequestParam(required = false) String year, @RequestParam(required = false) String genre) {
+        return movieService.searchMovies(query, page, year, genre);
     }
 }
