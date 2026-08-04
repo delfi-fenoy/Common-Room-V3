@@ -138,42 +138,7 @@ public class UserService {
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
     }
 
-    // ========== OBTENER USUARIO ACTUAL (authorization) ==========
-
-    public User getCurrentUser(){
-        return findCurrentUser()
-                .orElseThrow(() -> new UserNotFoundException("You must be authenticated"));
-    }
-
-    public Optional<User> findCurrentUser(){
-        Authentication auth = AuthService.getAuthetication();
-
-        if (auth == null || !auth.isAuthenticated()) {
-            return Optional.empty();
-        }
-
-        return userRepository.findByUsername(auth.getName());
-    }
-
-    // ========== VALIDACIONES ==========
-
-    public boolean doesUserExistByUsername(String username){
-        return userRepository.existsByUsername(username);
-    }
-
-    public void validateUsername(String username){
-        if(doesUserExistByUsername(username)){
-            throw new UsernameAlreadyExistsException
-                    ("El nombre de usuario " + username + " ya está en uso.");
-        }
-    }
-
-    public void validateEmail(String email){
-        if(userRepository.existsByEmail(email)){
-                throw new EmailAlreadyExistsException
-                        ("El email " + email + " ya está en uso.");
-        }
-    }
+    // ========== BUSQUEDA / FILTROS ==========
 
     // Busqueda de usuarios paginados
     @Transactional(readOnly = true)
@@ -217,21 +182,56 @@ public class UserService {
 
     // Lista todos los usuarios ban, para admins
     @Transactional(readOnly = true)
-    public Page<UserPreviewDTO> getBannedUsers(String query, int page)
-    {
+    public Page<UserPreviewDTO> getBannedUsers(String query, int page) {
         Pageable pageable = PageRequest.of(page - 1, 10);
         Page<User> entityPage;
 
-        if (query != null && !query.isBlank())
-        {
+        if (query != null && !query.isBlank()) {
             entityPage = userRepository.findByUsernameContainingIgnoreCaseAndIsBannedTrue(query, pageable);
-        }
-        else
-        {
+        } else {
             entityPage = userRepository.findByIsBannedTrue(pageable);
         }
 
         return entityPage.map(UserMapper::toPreviewDTO);
+    }
+
+    // ========== OBTENER USUARIO ACTUAL (authorization) ==========
+
+    public User getCurrentUser(){
+        return findCurrentUser()
+                .orElseThrow(() -> new UserNotFoundException("You must be authenticated"));
+    }
+
+    public Optional<User> findCurrentUser(){
+        Authentication auth = AuthService.getAuthetication();
+
+        if (auth == null || !auth.isAuthenticated()) {
+            return Optional.empty();
+        }
+
+        return userRepository.findByUsername(auth.getName());
+    }
+
+    // ========== VALIDACIONES ==========
+
+    public boolean doesUserExistByUsername(String username){
+        return userRepository.existsByUsername(username);
+    }
+
+    public void validateUsername(String username){
+        if(doesUserExistByUsername(username)){
+            throw new UsernameAlreadyExistsException
+                    ("El nombre de usuario " + username + " ya está en uso.");
+        }
+    }
+
+    public void validateEmail(String email){
+        if(userRepository.existsByEmail(email)){
+                throw new EmailAlreadyExistsException
+                        ("El email " + email + " ya está en uso.");
+        }
+    }
+
     public void validateUserExists(String username){
         if(!doesUserExistByUsername(username)){
             throw new UserNotFoundException("User not found");
