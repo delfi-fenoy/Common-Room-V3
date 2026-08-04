@@ -79,6 +79,12 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.getReviewsByUsername(username, page));
     }
 
+    @GetMapping("/users/me/reviews")
+    public ResponseEntity<List<ReviewResponseDTO>> getMyReviews(){
+        List<ReviewResponseDTO> reviews = reviewService.getMyReviews();
+        return ResponseEntity.ok(reviews);
+    }
+
     // Obtener reseñas por película
     @Operation(
             summary = "Obtener reseñas de una película",
