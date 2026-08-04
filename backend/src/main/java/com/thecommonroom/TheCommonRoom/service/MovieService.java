@@ -5,6 +5,7 @@ import com.thecommonroom.TheCommonRoom.dto.MovieDetailsDTO;
 import com.thecommonroom.TheCommonRoom.dto.MoviePreviewDTO;
 import com.thecommonroom.TheCommonRoom.dto.RawMovieDTO;
 import com.thecommonroom.TheCommonRoom.dto.RawMovieListDTO;
+import com.thecommonroom.TheCommonRoom.exception.MovieNotFoundException;
 import com.thecommonroom.TheCommonRoom.exception.PageOutOfBoundsException;
 import com.thecommonroom.TheCommonRoom.mapper.MovieMapper;
 import lombok.RequiredArgsConstructor;
@@ -42,12 +43,11 @@ public class MovieService {
 
     // ========== COMPROBACIÓN ==========
 
-    public boolean existsMovieById(Long id){
+    public void validateMovieExists(Long movieId){
         try {
-            api.getMovieById(id);
-            return true; // Si existe (no lanza error), retorna verdadero
+            api.getMovieById(movieId);
         } catch (HttpClientErrorException.NotFound ex){
-            return false; // Si no existe (lanza error not found), retorna falso
+            throw new MovieNotFoundException("Movie does not exist");
         }
     }
 

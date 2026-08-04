@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -137,17 +138,28 @@ public class UserService {
     // ========== OBTENER USUARIO ACTUAL (authorization) ==========
 
     public User getCurrentUser(){
-        Authentication auth = AuthService.getAuthetication();
-        System.out.println("Service | GetCurrentUser = " + auth.getName());
-        return userRepository.findByUsername(auth.getName())
+        return findCurrentUser()
                 .orElseThrow(() -> new UserNotFoundException("You must be authenticated"));
     }
 
+    public Optional<User> findCurrentUser(){
+        Authentication auth = AuthService.getAuthetication();
+
+        if (auth == null || !auth.isAuthenticated()) {
+            return Optional.empty();
+        }
+
+        return userRepository.findByUsername(auth.getName());
+    }
 
     // ========== VALIDACIONES ==========
 
+    public boolean doesUserExistByUsername(String username){
+        return userRepository.existsByUsername(username);
+    }
+
     public void validateUsername(String username){
-        if(userRepository.existsByUsername(username)){
+        if(doesUserExistByUsername(username)){
             throw new UsernameAlreadyExistsException
                     ("El nombre de usuario " + username + " ya está en uso.");
         }
@@ -157,6 +169,12 @@ public class UserService {
         if(userRepository.existsByEmail(email)){
                 throw new EmailAlreadyExistsException
                         ("El email " + email + " ya está en uso.");
+        }
+    }
+
+    public void validateUserExists(String username){
+        if(!doesUserExistByUsername(username)){
+            throw new UserNotFoundException("User not found");
         }
     }
 }
