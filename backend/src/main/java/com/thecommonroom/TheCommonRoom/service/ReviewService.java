@@ -16,8 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -93,10 +91,9 @@ public class ReviewService {
         User foundUser = userService.findUserByUsername(username); // Obtener usuario buscado
         userService.validateUserNotBanned(username, // Verificar que el user no este baneado
                 "Cannot view reviews for this user as their account has been suspended.");
-        List<Review> entityReviews = reviewRepository.findByUser(foundUser); // Obtener reseñas completas (entidad) de usuario
 
         Pageable pageable = PageRequest.of(page -1, 20);
-        Page<Review> entityPage = reviewRepository.findByUser(foundUser, pageable);
+        Page<Review> entityPage = reviewRepository.findByUser(foundUser, pageable); // Obtener reseñas completas (entidad) de usuario
 
         return entityPage.map(review -> {
             MoviePreviewDTO moviePreviewDTO = movieService.findMoviePreviewById(review.getMovieId());
@@ -105,9 +102,10 @@ public class ReviewService {
         });
     }
 
-    public List<ReviewResponseDTO> getMyReviews(){
+    public Page<ReviewResponseDTO> getMyReviews(int page){
+        // Conseguir al user actual (logueado)
         User currentUser = userService.getCurrentUser();
-        return getReviewsByUsername(currentUser.getUsername());
+        return getReviewsByUsername(currentUser.getUsername(), page);
     }
 
     // Obtener reseñas por película (paginado)

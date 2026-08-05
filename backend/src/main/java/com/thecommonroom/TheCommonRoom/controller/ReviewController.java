@@ -80,8 +80,8 @@ public class ReviewController {
     }
 
     @GetMapping("/users/me/reviews")
-    public ResponseEntity<List<ReviewResponseDTO>> getMyReviews(){
-        List<ReviewResponseDTO> reviews = reviewService.getMyReviews();
+    public ResponseEntity<Page<ReviewResponseDTO>> getMyReviews(@RequestParam(defaultValue = "1") int page){
+        Page<ReviewResponseDTO> reviews = reviewService.getMyReviews(page);
         return ResponseEntity.ok(reviews);
     }
 
