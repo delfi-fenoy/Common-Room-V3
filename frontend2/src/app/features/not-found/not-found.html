@@ -1,1 +1,17 @@
-<p>not-found works!</p>
+<div class="container-404">
+    <!-- Botón volver al Home -->
+    <a routerLink="/" class="home-button">
+        <img src="assets/img/CR-icon2.png" alt="Home button">
+    </a>
+
+    @if (selectedItem(); as item) {
+        <!-- ? Imagen de fondo -->
+        <img [src]="item.imagePath" [alt]="item.release" class="background">
+
+        <!-- ? Mensaje principal -->
+        <div class="message-container">
+            <h3>{{ item.phrase }}</h3>
+            <h3>{{ item.release }}</h3>
+        </div>
+    }
+</div>
