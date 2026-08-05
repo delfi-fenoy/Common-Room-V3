@@ -90,4 +90,10 @@ public class PlaylistController {
         Page<PlaylistPreviewDTO> playlists = playlistService.getPublicPlaylists(page);
         return ResponseEntity.ok(playlists);
     }
+
+    @GetMapping("/playlists/{playlistId}")
+    public ResponseEntity<PlaylistResponseDTO> getPlaylistResponseById(@PathVariable Long playlistId){
+        PlaylistResponseDTO playlistResponse = playlistService.getPlaylistResponseById(playlistId);
+        return ResponseEntity.ok(playlistResponse);
+    }
 }

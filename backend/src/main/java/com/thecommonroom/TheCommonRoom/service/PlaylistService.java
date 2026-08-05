@@ -174,6 +174,21 @@ public class PlaylistService {
         return PlaylistMapper.entityToPreviewDTOPage(playlists, pageable, totalElements);
     }
 
+    @Transactional(readOnly = true)
+    public PlaylistResponseDTO getPlaylistResponseById(Long playlistId){
+        Playlist playlist = getPlaylistById(playlistId); // Obtener los datos de la playlist
+
+        // Si la playlist es privada
+        if(playlist.isPrivate()){
+            Long currentUserId = userService.findCurrentUser()
+                    .map(User::getId)
+                    .orElse(null);
+            // Validar que el usuario logueado sea el dueño de la playlist
+            validateOwnership(playlist, currentUserId, "You do not have permission to view this private playlist.");
+        }
+        return PlaylistMapper.entityToResponseDTO(playlist, UserMapper.toPreviewDTO(playlist.getUser()));
+    }
+
     // ----- COMPROBACIONES -----
 
     public boolean isOwnedBy(Playlist playlist, Long userId){
