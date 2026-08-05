@@ -1,3 +1,5 @@
+// src/app/core/services/user-service.ts
+
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { User, TokenResponse, ChangePassword, UserPreview, PageResponse } from '../models';
@@ -18,13 +20,23 @@ export class UserService {
         size: number = 10,
         role?: string,
     ): Observable<PageResponse<UserPreview>> {
-        let params = new HttpParams().set('page', page.toString());
+        let params = new HttpParams()
+            .set('page', page.toString())
+            .set('size', size.toString());
 
         if (role && role !== 'all') {
             params = params.set('role', role);
         }
 
-        return this.http.get<PageResponse<UserPreview>>(`${this.URL}/all`, { params }); // <----- Añadido /all
+        return this.http.get<PageResponse<UserPreview>>(`${this.URL}/all`, { params });
+    }
+
+    /* ------ Metodo para buscar usuarios paginados ------ */
+    searchUsers(query: string, role?: string, page: number = 1): Observable<PageResponse<UserPreview>> {
+        let params = new HttpParams().set('query', query).set('page', page.toString());
+        if (role && role !== 'all') params = params.set('role', role);
+
+        return this.http.get<PageResponse<UserPreview>>(`${this.URL}/search`, { params });
     }
 
     /* ------ Metodo para acceder al perfil publico de un usuario ------ */
