@@ -54,11 +54,11 @@ export class RegisterPage {
         this.authService.register(this.registerForm.getRawValue()).subscribe({
             next: () => {
                 // <----- New Modal Success Alert ----->
-                this.modalService.openAlert('Success', 'Registration successful! You can now log in.', 'success');
+                this.modalService.openAlert('Success', 'Registration successful!', 'success');
                 
                 this.registerForm.reset();
                 this.isSubmitting.set(false);
-                this.router.navigate(['/login']);
+                this.router.navigate(['/']);
             },
             error: (e) => {
                 console.error(e);

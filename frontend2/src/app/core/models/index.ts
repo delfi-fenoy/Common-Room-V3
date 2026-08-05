@@ -21,3 +21,4 @@ export * from './users/user-preview';
 
 /* ------ Modulo Compartido / General ------ */
 export * from './common/not-found-item';
+export * from './common/page-response';

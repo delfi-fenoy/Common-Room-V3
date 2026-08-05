@@ -37,6 +37,9 @@ export class LoginPage {
 
         this.authService.login(this.loginForm.getRawValue()).subscribe({
             next: () => {
+                // <----- New Modal Success Alert ----->
+                this.modalService.openAlert('Success', 'Login successful!', 'success');
+                
                 this.loginForm.reset();
                 this.isSubmitting.set(false);
                 this.router.navigate(['/']);
