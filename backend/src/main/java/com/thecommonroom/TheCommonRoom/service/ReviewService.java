@@ -87,6 +87,8 @@ public class ReviewService {
     @Transactional(readOnly = true) // Para mayor rendimiento
     public List<ReviewResponseDTO> getReviewsByUsername(String username){
         User foundUser = userService.findUserByUsername(username); // Obtener usuario buscado
+        userService.validateUserNotBanned(username, // Verificar que el user no este baneado
+                "Cannot view reviews for this user as their account has been suspended.");
         List<Review> entityReviews = reviewRepository.findByUser(foundUser); // Obtener reseñas completas (entidad) de usuario
 
         List<ReviewResponseDTO> responseReviews = new ArrayList<>(); // Lista de reseñas a devolver
@@ -113,7 +115,8 @@ public class ReviewService {
 
     @Transactional(readOnly = true)
     public List<ReviewResponseDTO> getReviewsByMovieId(Long movieId){
-        List<Review> entityReviews = reviewRepository.findByMovieId(movieId); // Obtener reseñas completas de película
+        // Obtener reseñas completas de película (de usuarios no baneados)
+        List<Review> entityReviews = reviewRepository.findByMovieIdAndUserIsBannedFalse(movieId);
 
         return entityReviews.stream()
                 .map(review ->
@@ -133,9 +136,9 @@ public class ReviewService {
 
     @Transactional(readOnly = true)
     public Optional<ReviewResponseDTO> getUserReviewForMovie(String username, Long movieId){
-        /*
-        validar user - validar movie - buscar review - mapear review
-         */
+        userService.validateUserExists(username); // Validar que el usuario exista
+        userService.validateUserNotBanned(username, // Validar que el usuario no este baneado
+                "Cannot view this review as the user's account has been suspended.");
 
         UserPreviewDTO userPreview = userService.getUserPreview(username);
         MoviePreviewDTO moviePreview = movieService.findMoviePreviewById(movieId);
