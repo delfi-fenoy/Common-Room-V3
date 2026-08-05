@@ -7,13 +7,18 @@ import com.thecommonroom.TheCommonRoom.mapper.UserMapper;
 import com.thecommonroom.TheCommonRoom.model.Review;
 import com.thecommonroom.TheCommonRoom.model.User;
 import com.thecommonroom.TheCommonRoom.repository.ReviewRepository;
+
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -33,7 +38,7 @@ public class ReviewService {
         User currentUser = userService.getCurrentUser();
 
         // Validaciones
-        validateMovieExists(reviewRequestDTO.getMovieId());
+        movieService.validateMovieExists(reviewRequestDTO.getMovieId());
         validateUserHasNotReviewedMovie(currentUser.getId(), reviewRequestDTO.getMovieId());
         validateReview(reviewRequestDTO.getRating(), reviewRequestDTO.getComment()); // Validar rating y comment
 
@@ -48,75 +53,72 @@ public class ReviewService {
 
     @Transactional
     public void deleteReview(Long reviewId){
-        Review review = getReviewById(reviewId);
-        reviewRepository.delete(review);
+        reviewRepository.deleteById(reviewId);
     }
 
     @Transactional
     public ReviewResponseDTO modifyReview(Long reviewId, ReviewUpdateDTO reviewUpdateDTO){
         // Obtener review antigua completa y usuario autenticado
-        Review review = getReviewById(reviewId);
+        Review originalReview = getReviewById(reviewId);
         User currentUser = userService.getCurrentUser();
 
         // Comprobar que la reseña a modificar pertenezca al usuario autenticado
-        if(!review.getUser().equals(currentUser))
+        if(!originalReview.getUser().equals(currentUser))
             throw new AccessDeniedException("You are not allowed to edit this review");
 
         // Validar rating y comment
         validateReview(reviewUpdateDTO.getRating(), reviewUpdateDTO.getComment());
 
         // Settear valores y guardar en bdd
-        if(reviewUpdateDTO.getRating() != null){
-            review.setRating(reviewUpdateDTO.getRating());
+        if(!Objects.equals(reviewUpdateDTO.getRating(), originalReview.getRating())){
+            originalReview.setRating(reviewUpdateDTO.getRating());
         }
-        if(reviewUpdateDTO.getComment() != null){
-            review.setComment(reviewUpdateDTO.getComment());
+        if(!Objects.equals(reviewUpdateDTO.getComment(), originalReview.getComment())){
+            originalReview.setComment(reviewUpdateDTO.getComment());
         }
-        reviewRepository.save(review);
+
+        // Al usar @Transactional, los cambios de la reseña se guardan automaticamente
 
         // Devolver response de review
-        MoviePreviewDTO moviePreviewDTO = movieService.findMoviePreviewById(review.getMovieId());
-        return ReviewMapper.entityToResponseDTO(review,
+        MoviePreviewDTO moviePreviewDTO = movieService.findMoviePreviewById(originalReview.getMovieId());
+        return ReviewMapper.entityToResponseDTO(originalReview,
                                             moviePreviewDTO,
-                                            UserMapper.toPreviewDTO(review.getUser()));
+                                            UserMapper.toPreviewDTO(originalReview.getUser()));
     }
 
     // ========== OBTENER REVIEWS ==========
-
+    // Obtener reseñas por username (paginado)
     @Transactional(readOnly = true) // Para mayor rendimiento
-    public List<ReviewResponseDTO> getReviewsByUsername(String username){
+    public Page<ReviewResponseDTO> getReviewsByUsername(String username, int page){
         User foundUser = userService.findUserByUsername(username); // Obtener usuario buscado
-        List<Review> entityReviews = reviewRepository.findByUser(foundUser); // Obtener reseñas completas (entidad) de usuario
 
-        List<ReviewResponseDTO> responseReviews = new ArrayList<>(); // Lista de reseñas a devolver
+        Pageable pageable = PageRequest.of(page -1, 20);
+        Page<Review> entityPage = reviewRepository.findByUser(foundUser, pageable);
 
-        // Iterar cada reseña de usuario
-        for (Review review : entityReviews){
-            // Obtener pre-visualización de película reseñada
+        return entityPage.map(review -> {
             MoviePreviewDTO moviePreviewDTO = movieService.findMoviePreviewById(review.getMovieId());
             UserPreviewDTO userPreviewDTO = UserMapper.toPreviewDTO(foundUser);
-            // Mapearla a dto (reseña + moviePreview + userPreview)
-            responseReviews.add(
-                    ReviewMapper.entityToResponseDTO(
-                            review,
-                            moviePreviewDTO,
-                            userPreviewDTO)); // (front necesita estos datos)
-        }
-        return responseReviews;
+            return ReviewMapper.entityToResponseDTO(review, moviePreviewDTO, userPreviewDTO);
+        });
     }
 
-    @Transactional(readOnly = true)
-    public List<ReviewResponseDTO> getReviewsByMovieId(Long movieId){
-        List<Review> entityReviews = reviewRepository.findByMovieId(movieId); // Obtener reseñas completas de película
+    public List<ReviewResponseDTO> getMyReviews(){
+        User currentUser = userService.getCurrentUser();
+        return getReviewsByUsername(currentUser.getUsername());
+    }
 
-        return entityReviews.stream()
-                .map(review ->
-                        ReviewMapper.entityToResponseDTO( // Mapear reseñas a ReviewResponseDTO para visualización
-                                review, // Pasar la reseña
-                                null, // Movie null, para menor redundancia (es siempre la misma)
-                                UserMapper.toPreviewDTO(review.getUser()) // Mapear user a su preview, y pasar
-                        ))
-                .toList();
+    // Obtener reseñas por película (paginado)
+    @Transactional(readOnly = true)
+    public Page<ReviewResponseDTO> getReviewsByMovieId(Long movieId, int page){
+        Pageable pageable = PageRequest.of(page -1, 20);
+        Page<Review> entityPage = reviewRepository.findByMovieId(movieId, pageable);
+
+        return entityPage.map(review ->
+                ReviewMapper.entityToResponseDTO(
+                        review,
+                        null,
+                        UserMapper.toPreviewDTO(review.getUser())
+                ));
     }
 
     @Transactional(readOnly = true) // Operación solo de lectura
@@ -141,12 +143,6 @@ public class ReviewService {
     }
 
     // ========== VALIDACIONES ==========
-
-    public void validateMovieExists(Long movieId){
-        // Comprobar existencia de película
-        if(!movieService.existsMovieById(movieId))
-            throw new MovieNotFoundException("Movie does not exist");
-    }
 
     @Transactional(readOnly = true)
     public void validateUserHasNotReviewedMovie(Long userId, Long movieId){
