@@ -1,0 +1,205 @@
+/* Movie Carousel Styles */
+
+/* * ========== Carousel Section ========== */
+.carousel-section {
+    position: relative;
+    width: 100%;
+    margin-bottom: 2.5rem;
+}
+
+/* ? Header del Carrusel */
+.carousel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--brown-300);
+    padding: 0.8rem 1.5rem;
+    border-bottom: 2px solid var(--brown-400);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    margin-bottom: 1rem;
+}
+
+.header-title {
+    font-family: 'Georgia', serif;
+    font-size: 1.5rem;
+    color: var(--brown-500);
+    margin: 0;
+}
+
+.header-counter {
+    font-family: 'Georgia', serif;
+    font-size: 1.2rem;
+    color: var(--brown-500);
+    opacity: 0.8;
+}
+
+/* ? Viewport y Track */
+.carousel-viewport {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 1.5rem 0 2.5rem 0;
+}
+
+.carousel-track {
+    display: flex;
+    align-items: center;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    will-change: transform;
+}
+
+/* * ========== Movies-Card ========== */
+.movie-card {
+    flex: 0 0 33.333%;
+    max-width: 33.333%;
+    padding: 0 1rem;
+    box-sizing: border-box;
+    cursor: pointer;
+    opacity: 0.6;
+    transform: scale(0.8);
+    transition:
+        transform 0.5s ease,
+        opacity 0.5s ease,
+        z-index 0.5s ease;
+    z-index: 1;
+}
+
+/* ? Principal Card */
+.movie-card.active {
+    opacity: 1;
+    transform: scale(1.12);
+    z-index: 5;
+}
+
+/* ? Movie Poster */
+.img-wrapper {
+    position: relative;
+    aspect-ratio: 2/3;
+    border-radius: 1.2rem;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: box-shadow 0.5s ease;
+}
+
+.movie-card.active .img-wrapper {
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.6);
+}
+
+.img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* ? Movie Information */
+.info-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1rem 0.8rem;
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.95) 0%,
+        rgba(0, 0, 0, 0.6) 60%,
+        transparent 100%
+    );
+    color: #ffffff;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.movie-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem 0;
+    line-height: 1.2;
+}
+
+.movie-date {
+    font-size: 0.6rem;
+    opacity: 0.8;
+    margin: 0;
+    font-weight: 400;
+}
+
+/* * ========== Navigation Buttons ========== */
+.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: var(--purple-500);
+    color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.nav-btn img {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.nav-btn:hover {
+    background-color: var(--purple-600);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.nav-btn.left {
+    left: 0.5rem;
+}
+
+.nav-btn.right {
+    right: 0.5rem;
+}
+
+/* * ========== Carousel Indicators ========== */
+.carousel-indicators {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 1rem;
+}
+
+.indicator-dash {
+    width: 1.2rem;
+    height: 0.25rem;
+    background-color: var(--brown-300);
+    border-radius: 2px;
+    opacity: 0.5;
+    transition: all 0.3s ease;
+}
+
+.indicator-dash.active {
+    width: 2rem;
+    background-color: var(--brown-600);
+    opacity: 1;
+}
+
+/* ? Responsive */
+@media (max-width: 48rem) {
+    .movie-card {
+        padding: 0 0.4rem;
+    }
+
+    .movie-card.active {
+        transform: scale(1.08);
+    }
+
+    .header-title {
+        font-size: 1.2rem;
+    }
+}

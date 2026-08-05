@@ -7,11 +7,15 @@ import com.thecommonroom.TheCommonRoom.mapper.UserMapper;
 import com.thecommonroom.TheCommonRoom.model.Review;
 import com.thecommonroom.TheCommonRoom.model.User;
 import com.thecommonroom.TheCommonRoom.repository.ReviewRepository;
+
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -83,29 +87,22 @@ public class ReviewService {
     }
 
     // ========== OBTENER REVIEWS ==========
-
+    // Obtener reseñas por username (paginado)
     @Transactional(readOnly = true) // Para mayor rendimiento
-    public List<ReviewResponseDTO> getReviewsByUsername(String username){
+    public Page<ReviewResponseDTO> getReviewsByUsername(String username, int page){
         User foundUser = userService.findUserByUsername(username); // Obtener usuario buscado
         userService.validateUserNotBanned(username, // Verificar que el user no este baneado
                 "Cannot view reviews for this user as their account has been suspended.");
         List<Review> entityReviews = reviewRepository.findByUser(foundUser); // Obtener reseñas completas (entidad) de usuario
 
-        List<ReviewResponseDTO> responseReviews = new ArrayList<>(); // Lista de reseñas a devolver
+        Pageable pageable = PageRequest.of(page -1, 20);
+        Page<Review> entityPage = reviewRepository.findByUser(foundUser, pageable);
 
-        // Iterar cada reseña de usuario
-        for (Review review : entityReviews){
-            // Obtener pre-visualización de película reseñada
+        return entityPage.map(review -> {
             MoviePreviewDTO moviePreviewDTO = movieService.findMoviePreviewById(review.getMovieId());
             UserPreviewDTO userPreviewDTO = UserMapper.toPreviewDTO(foundUser);
-            // Mapearla a dto (reseña + moviePreview + userPreview)
-            responseReviews.add(
-                    ReviewMapper.entityToResponseDTO(
-                            review,
-                            moviePreviewDTO,
-                            userPreviewDTO)); // (front necesita estos datos)
-        }
-        return responseReviews;
+            return ReviewMapper.entityToResponseDTO(review, moviePreviewDTO, userPreviewDTO);
+        });
     }
 
     public List<ReviewResponseDTO> getMyReviews(){
@@ -113,19 +110,19 @@ public class ReviewService {
         return getReviewsByUsername(currentUser.getUsername());
     }
 
+    // Obtener reseñas por película (paginado)
     @Transactional(readOnly = true)
-    public List<ReviewResponseDTO> getReviewsByMovieId(Long movieId){
+    public Page<ReviewResponseDTO> getReviewsByMovieId(Long movieId, int page){
+        Pageable pageable = PageRequest.of(page -1, 20);
         // Obtener reseñas completas de película (de usuarios no baneados)
-        List<Review> entityReviews = reviewRepository.findByMovieIdAndUserIsBannedFalse(movieId);
+        Page<Review> entityPage = reviewRepository.findByMovieIdAndUserIsBannedFalse(movieId, pageable);
 
-        return entityReviews.stream()
-                .map(review ->
-                        ReviewMapper.entityToResponseDTO( // Mapear reseñas a ReviewResponseDTO para visualización
-                                review, // Pasar la reseña
-                                null, // Movie null, para menor redundancia (es siempre la misma)
-                                UserMapper.toPreviewDTO(review.getUser()) // Mapear user a su preview, y pasar
-                        ))
-                .toList();
+        return entityPage.map(review ->
+                ReviewMapper.entityToResponseDTO(
+                        review,
+                        null,
+                        UserMapper.toPreviewDTO(review.getUser())
+                ));
     }
 
     @Transactional(readOnly = true) // Operación solo de lectura

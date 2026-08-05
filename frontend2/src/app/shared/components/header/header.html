@@ -1,0 +1,99 @@
+<app-modal/>
+<header class="header">
+    <!-- ! ====== Seccion izquieda ====== -->
+    <div class="header-left">
+        <!-- ? --- Sidebar Button --- -->
+        <button class="menu-btn" (click)="toggleSidebar()" aria-label="Abrir menú">
+            <img
+                src="assets/img/buttons-icons/sidebar-button.png"
+                alt="Common Room Logo"
+                class="buttons-img"
+            />
+        </button>
+
+        <!-- ? --- Home Button --- -->
+        <a routerLink="/" class="brand">
+            <img src="assets/img/CR-icon1.png" alt="Common Room Logo" class="logo-img" />
+            <div class="brand-text">
+                <span>Common</span>
+                <span>Room</span>
+            </div>
+        </a>
+    </div>
+
+    <!-- ! ====== Seccion Central ====== -->
+    <div class="header-center">
+        <div class="search-box" [class.is-focused]="isSearchFocused">
+            <!-- ? --- Search Input --- -->
+            <input
+                type="text"
+                placeholder="Search..."
+                [(ngModel)]="searchQuery"
+                (keyup.enter)="onSearch()"
+                (focus)="onSearchFocus()"
+                (blur)="onSearchBlur()"
+            />
+
+            <!-- ? --- Search Button --- -->
+            <button class="search-btn" (click)="onSearch()" aria-label="Buscar">
+                <img
+                    src="assets/img/buttons-icons/search-button.png"
+                    alt="Common Room Logo"
+                    class="buttons-img"
+                />
+            </button>
+        </div>
+    </div>
+
+    <!-- ! ====== Seccion derecha ====== -->
+    <div class="header-right">
+        @if (isLoggedIn) {
+            <!-- ? --- Profile Button --- -->
+            <a [routerLink]="['/users', currentUser]" class="nav-btn profile-btn">
+                <img
+                    src="assets/img/buttons-icons/profile-button.png"
+                    alt="Profile"
+                    class="buttons-img"
+                />
+                <span>{{ currentUser }}</span>
+            </a>
+
+            <!-- ? --- Logout Button --- -->
+            <button (click)="logout()" class="nav-btn logout-btn" aria-label="Cerrar sesión">
+                <img
+                    src="assets/img/buttons-icons/log-out-button.png"
+                    alt="Logout"
+                    class="buttons-img"
+                />
+                <span>Logout</span>
+            </button>
+        } @else {
+            <!-- ? --- Login Button --- -->
+            <a routerLink="/login" class="nav-btn">
+                <img
+                    src="assets/img/buttons-icons/log-in-button.png"
+                    alt="Login"
+                    class="buttons-img"
+                />
+                <span>Login</span>
+            </a>
+
+            <!-- ? --- Register Button --- -->
+            <a routerLink="/register" class="nav-btn">
+                <img
+                    src="assets/img/buttons-icons/register-button.png"
+                    alt="Register"
+                    class="buttons-img"
+                />
+                <span>Register</span>
+            </a>
+        }
+    </div>
+</header>
+
+<!-- ? --- Search Overlay --- -->
+<div
+    class="search-overlay"
+    [class.active]="isSearchFocused"
+    (click)="isSearchFocused = false"
+></div>
