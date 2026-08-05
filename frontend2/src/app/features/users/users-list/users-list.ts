@@ -3,7 +3,6 @@ import { UserPreview } from '../../../core/models';
 import { UserService } from '../../../core/services/user-service';
 import { RouterLink } from '@angular/router';
 
-// Tipado para los filtros de usuario
 export type UserFilterType = 'all' | 'admins' | 'members';
 
 @Component({
@@ -17,10 +16,8 @@ export class UsersList implements OnInit {
     public uService = inject(UserService);
 
     // * ======== Variables de Estado ========
-    allUsers: UserPreview[] = []; // Array completo descargado
     users: UserPreview[] = []; // Array de usuarios visibles en pantalla
     currentPage = 1;
-    itemsPerPage = 15; // 15 elementos por tanda para completar filas de 5 columnas
     hasMorePages = true;
     isLoading = false;
     showScrollTopBtn = false;
@@ -31,15 +28,18 @@ export class UsersList implements OnInit {
         this.loadUsers();
     }
 
-    // ! -------- Método para cargar Usuarios --------
+    // ! -------- Método para cargar Usuarios Paginados desde Backend --------
     loadUsers(): void {
         if (this.isLoading || !this.hasMorePages) return;
         this.isLoading = true;
 
-        this.uService.getUsers().subscribe({
-            next: (data) => {
-                this.allUsers = data;
-                this.applyFilterAndAppend();
+        this.uService.getUsersPaged(this.selectedFilter, this.currentPage).subscribe({
+            next: (pageData) => {
+                // <----- Concatenar nuevos usuarios recuperados de la DB ----->
+                this.users = [...this.users, ...pageData.content];
+
+                // <----- Verificar si es la última página ----->
+                this.hasMorePages = !pageData.last;
                 this.isLoading = false;
             },
             error: (e) => {
@@ -47,29 +47,6 @@ export class UsersList implements OnInit {
                 this.isLoading = false;
             },
         });
-    }
-
-    // ! -------- Filtrado y Paginación Local --------
-    private applyFilterAndAppend(): void {
-        // 1. Aplica el filtro seleccionado
-        let filtered = [...this.allUsers];
-        if (this.selectedFilter === 'admins') {
-            filtered = filtered.filter((u) => u.role === 'ADMIN');
-        } else if (this.selectedFilter === 'members') {
-            filtered = filtered.filter((u) => u.role !== 'ADMIN');
-        }
-
-        // 2. Realiza el corte por página
-        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-        const endIndex = startIndex + this.itemsPerPage;
-        const newBatch = filtered.slice(startIndex, endIndex);
-
-        if (newBatch.length > 0) {
-            this.users = [...this.users, ...newBatch];
-            this.hasMorePages = this.users.length < filtered.length;
-        } else {
-            this.hasMorePages = false;
-        }
     }
 
     // ? --- Selector del filtro ---
@@ -82,10 +59,12 @@ export class UsersList implements OnInit {
     changeFilter(filter: UserFilterType): void {
         if (this.selectedFilter === filter) return;
         this.selectedFilter = filter;
+        
+        // <----- Reiniciar paginación y vista ----->
         this.currentPage = 1;
         this.users = [];
         this.hasMorePages = true;
-        this.applyFilterAndAppend();
+        this.loadUsers();
     }
 
     // ! -------- Listener de Scroll Global --------
@@ -102,8 +81,9 @@ export class UsersList implements OnInit {
             this.hasMorePages &&
             this.users.length > 0
         ) {
+            // <----- Solicitar siguiente página al Backend ----->
             this.currentPage++;
-            this.applyFilterAndAppend();
+            this.loadUsers();
         }
     }
 

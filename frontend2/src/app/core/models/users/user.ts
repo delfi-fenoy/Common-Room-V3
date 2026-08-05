@@ -6,6 +6,7 @@ export interface User {
     description?: string;
     role?: Role;
     createdAt?: string;
+    isBanned?: boolean;
 }
 
 export enum Role {
