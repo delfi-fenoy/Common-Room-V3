@@ -7,6 +7,7 @@ import com.thecommonroom.TheCommonRoom.dto.PlaylistResponseDTO;
 import com.thecommonroom.TheCommonRoom.service.PlaylistService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -69,16 +70,19 @@ public class PlaylistController {
 
     // ----- LISTADO/BUSQUEDA DE LISTAS -----
 
-    // Listado de listas propias
+    // Listado de playlists de usuario (publicas)
     @GetMapping("/users/{username}/playlists")
-    public ResponseEntity<List<PlaylistPreviewDTO>> getUserPlaylists(@PathVariable String username){
-        List<PlaylistPreviewDTO> playlistPreviewDTOList = playlistService.getUserPlaylists(username);
+    public ResponseEntity<Page<PlaylistPreviewDTO>> getUserPlaylists(
+            @PathVariable String username,
+            @RequestParam(defaultValue = "1") int page){
+        Page<PlaylistPreviewDTO> playlistPreviewDTOList = playlistService.getUserPlaylists(username, page);
         return ResponseEntity.ok(playlistPreviewDTOList);
     }
 
+    // Listado de playlists propias (privadas y publicas)
     @GetMapping("/users/me/playlists")
-    public ResponseEntity<List<PlaylistPreviewDTO>> getMyPlaylists(){
-        List<PlaylistPreviewDTO> playlistPreviewDTOList = playlistService.getMyPlaylists();
+    public ResponseEntity<Page<PlaylistPreviewDTO>> getMyPlaylists(@RequestParam(defaultValue = "1") int page){
+        Page<PlaylistPreviewDTO> playlistPreviewDTOList = playlistService.getMyPlaylists(page);
         return ResponseEntity.ok(playlistPreviewDTOList);
     }
 
