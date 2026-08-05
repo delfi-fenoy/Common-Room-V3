@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -75,15 +74,20 @@ public class PlaylistController {
     public ResponseEntity<Page<PlaylistPreviewDTO>> getUserPlaylists(
             @PathVariable String username,
             @RequestParam(defaultValue = "1") int page){
-        Page<PlaylistPreviewDTO> playlistPreviewDTOList = playlistService.getUserPlaylists(username, page);
-        return ResponseEntity.ok(playlistPreviewDTOList);
+        Page<PlaylistPreviewDTO> playlists = playlistService.getUserPlaylists(username, page);
+        return ResponseEntity.ok(playlists);
     }
 
     // Listado de playlists propias (privadas y publicas)
     @GetMapping("/users/me/playlists")
     public ResponseEntity<Page<PlaylistPreviewDTO>> getMyPlaylists(@RequestParam(defaultValue = "1") int page){
-        Page<PlaylistPreviewDTO> playlistPreviewDTOList = playlistService.getMyPlaylists(page);
-        return ResponseEntity.ok(playlistPreviewDTOList);
+        Page<PlaylistPreviewDTO> playlists = playlistService.getMyPlaylists(page);
+        return ResponseEntity.ok(playlists);
     }
 
+    @GetMapping("/playlists/all")
+    public ResponseEntity<Page<PlaylistPreviewDTO>> getPublicPlaylists(@RequestParam(defaultValue = "1") int page){
+        Page<PlaylistPreviewDTO> playlists = playlistService.getPublicPlaylists(page);
+        return ResponseEntity.ok(playlists);
+    }
 }

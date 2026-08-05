@@ -165,6 +165,15 @@ public class PlaylistService {
         return PlaylistMapper.entityToPreviewDTOPage(playlists, pageable, totalElements);
     }
 
+    @Transactional(readOnly = true)
+    public Page<PlaylistPreviewDTO> getPublicPlaylists(int page){
+        Pageable pageable = PageRequest.of(page-1, 20);
+        Page<Playlist> playlists = playlistRepository.findByIsPrivateFalse(pageable);
+        long totalElements = playlists.getTotalElements();
+
+        return PlaylistMapper.entityToPreviewDTOPage(playlists, pageable, totalElements);
+    }
+
     // ----- COMPROBACIONES -----
 
     public boolean isOwnedBy(Playlist playlist, Long userId){

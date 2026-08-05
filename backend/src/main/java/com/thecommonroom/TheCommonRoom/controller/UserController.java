@@ -39,18 +39,6 @@ public class UserController {
     private final JwtService jwtService;
     private final UserRepository userRepository;
 
-
-    // =========== Lista todos los usuarios en formato reducido =========== \\
-    @Operation(
-            summary = "Listar todos los usuarios",
-            description = "Devuelve una lista de todos los usuarios registrados en formato reducido."
-    )
-    @GetMapping("/all")
-    public ResponseEntity<List<UserPreviewDTO>> listUsers() {
-        List<UserPreviewDTO> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
-    }
-
     // =========== Devuelve un usuario por su nombre de usuario =========== \\
     @Operation(
             summary = "Obtener usuario por username",
@@ -133,7 +121,7 @@ public class UserController {
 
 
     // Listar usuarios paginados, seccion users
-    @GetMapping("/paged")
+    @GetMapping("/all")
     public ResponseEntity<Page<UserPreviewDTO>> getUsersPaged(
             @RequestParam(required = false) String role,
             @RequestParam(defaultValue = "1") int page)
