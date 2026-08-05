@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { filter } from 'rxjs';
 import { AuthService } from '../../../core/services/auth-service';
 import { Modal } from '../modal/modal';
-import { ModalService } from '../../services/modal.services';
+import { ModalService } from '../../services/modal-services';
 
 @Component({
     selector: 'app-header',
@@ -86,7 +86,7 @@ export class Header implements OnInit {
             () => {
                 this.authService.logout();
                 this.router.navigate(['/login']);
-            }
+            },
         );
     }
 }
