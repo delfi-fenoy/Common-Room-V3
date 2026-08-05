@@ -177,16 +177,21 @@ public class PlaylistService {
     @Transactional(readOnly = true)
     public PlaylistResponseDTO getPlaylistResponseById(Long playlistId){
         Playlist playlist = getPlaylistById(playlistId); // Obtener los datos de la playlist
+        userService.validateUserNotBanned(playlist.getUser().getUsername(), "Unable to access content from this user account.");
+        checkPlaylistAccess(playlist); // Si la playlist es privada
 
-        // Si la playlist es privada
-        if(playlist.isPrivate()){
-            Long currentUserId = userService.findCurrentUser()
-                    .map(User::getId)
-                    .orElse(null);
-            // Validar que el usuario logueado sea el dueño de la playlist
-            validateOwnership(playlist, currentUserId, "You do not have permission to view this private playlist.");
-        }
         return PlaylistMapper.entityToResponseDTO(playlist, UserMapper.toPreviewDTO(playlist.getUser()));
+    }
+
+    @Transactional(readOnly = true)
+    public Page<MoviePreviewDTO> getMovieListByPlaylistId(Long playlistId, int page){
+        Playlist playlist = getPlaylistById(playlistId); // Verificar que la playlist existe
+        userService.validateUserNotBanned(playlist.getUser().getUsername(), "Unable to access content from this user account.");
+        checkPlaylistAccess(playlist); // Si la playlist es privada
+
+        Pageable pageable = PageRequest.of(page-1, 5);
+        Page<MovieList> movies = movieListRepository.findByPlaylistId(playlistId, pageable);
+        return movies.map(movieList -> movieService.findMoviePreviewById(movieList.getMovieId()));
     }
 
     // ----- COMPROBACIONES -----
@@ -213,6 +218,17 @@ public class PlaylistService {
     public void validateMovieInPlaylist(Long playlistId, Long movieId){
         if(!movieListRepository.existsByPlaylistIdAndMovieId(playlistId, movieId)){
             throw new MovieNotInPlaylistException("This movie is not in the playlist");
+        }
+    }
+
+    @Transactional(readOnly = true)
+    private void checkPlaylistAccess(Playlist playlist){
+        if(playlist.isPrivate()){
+            Long currentUserId = userService.findCurrentUser()
+                    .map(User::getId)
+                    .orElse(null);
+            // Validar que el usuario logueado sea el dueño de la playlist
+            validateOwnership(playlist, currentUserId, "You do not have permission to view this private playlist.");
         }
     }
 }
