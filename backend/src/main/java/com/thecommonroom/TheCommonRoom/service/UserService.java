@@ -10,6 +10,9 @@ import com.thecommonroom.TheCommonRoom.model.Role;
 import com.thecommonroom.TheCommonRoom.model.User;
 import com.thecommonroom.TheCommonRoom.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -134,20 +138,88 @@ public class UserService {
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
     }
 
+    // ========== BUSQUEDA / FILTROS ==========
+
+    // Busqueda de usuarios paginados
+    @Transactional(readOnly = true)
+    public Page<UserPreviewDTO> searchUsers(String query, String roleStr, int page)
+    {
+        Pageable pageable = PageRequest.of(page - 1, 10);
+        Page<User> entityPage;
+
+        if (roleStr != null && !roleStr.isBlank())
+        {
+            Role role = Role.valueOf(roleStr.toUpperCase());
+            entityPage = userRepository.findByUsernameContainingIgnoreCaseAndRoleAndIsBannedFalse(query, role, pageable);
+        }
+        else
+        {
+            entityPage = userRepository.findByUsernameContainingIgnoreCaseAndIsBannedFalse(query, pageable);
+        }
+
+        return entityPage.map(UserMapper::toPreviewDTO);
+    }
+
+    // Lista todos los usuarios paginados
+    @Transactional(readOnly = true)
+    public Page<UserPreviewDTO> getAllUsersPaged(String roleStr, int page)
+    {
+        Pageable pageable = PageRequest.of(page - 1, 10);
+        Page<User> entityPage;
+
+        if (roleStr != null && !roleStr.isBlank())
+        {
+            Role role = Role.valueOf(roleStr.toUpperCase());
+            entityPage = userRepository.findByRoleAndIsBannedFalse(role, pageable);
+        }
+        else
+        {
+            entityPage = userRepository.findByIsBannedFalse(pageable);
+        }
+
+        return entityPage.map(UserMapper::toPreviewDTO);
+    }
+
+    // Lista todos los usuarios ban, para admins
+    @Transactional(readOnly = true)
+    public Page<UserPreviewDTO> getBannedUsers(String query, int page) {
+        Pageable pageable = PageRequest.of(page - 1, 10);
+        Page<User> entityPage;
+
+        if (query != null && !query.isBlank()) {
+            entityPage = userRepository.findByUsernameContainingIgnoreCaseAndIsBannedTrue(query, pageable);
+        } else {
+            entityPage = userRepository.findByIsBannedTrue(pageable);
+        }
+
+        return entityPage.map(UserMapper::toPreviewDTO);
+    }
+
     // ========== OBTENER USUARIO ACTUAL (authorization) ==========
 
     public User getCurrentUser(){
-        Authentication auth = AuthService.getAuthetication();
-        System.out.println("Service | GetCurrentUser = " + auth.getName());
-        return userRepository.findByUsername(auth.getName())
+        return findCurrentUser()
                 .orElseThrow(() -> new UserNotFoundException("You must be authenticated"));
     }
 
+    public Optional<User> findCurrentUser(){
+        Authentication auth = AuthService.getAuthetication();
+
+        if (auth == null || !auth.isAuthenticated()) {
+            return Optional.empty();
+        }
+
+        return userRepository.findByUsername(auth.getName());
+    }
 
     // ========== VALIDACIONES ==========
 
+    public boolean doesUserExistByUsername(String username){
+        return userRepository.existsByUsername(username);
+    }
+
     public void validateUsername(String username){
-        if(userRepository.existsByUsername(username)){
+        if(doesUserExistByUsername(username)){
             throw new UsernameAlreadyExistsException
                     ("El nombre de usuario " + username + " ya está en uso.");
         }
@@ -157,6 +229,12 @@ public class UserService {
         if(userRepository.existsByEmail(email)){
                 throw new EmailAlreadyExistsException
                         ("El email " + email + " ya está en uso.");
+        }
+    }
+
+    public void validateUserExists(String username){
+        if(!doesUserExistByUsername(username)){
+            throw new UserNotFoundException("User not found");
         }
     }
 }

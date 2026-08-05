@@ -5,6 +5,7 @@ import com.thecommonroom.TheCommonRoom.dto.MovieDetailsDTO;
 import com.thecommonroom.TheCommonRoom.dto.MoviePreviewDTO;
 import com.thecommonroom.TheCommonRoom.dto.RawMovieDTO;
 import com.thecommonroom.TheCommonRoom.dto.RawMovieListDTO;
+import com.thecommonroom.TheCommonRoom.exception.MovieNotFoundException;
 import com.thecommonroom.TheCommonRoom.exception.PageOutOfBoundsException;
 import com.thecommonroom.TheCommonRoom.mapper.MovieMapper;
 import lombok.RequiredArgsConstructor;
@@ -42,12 +43,11 @@ public class MovieService {
 
     // ========== COMPROBACIÓN ==========
 
-    public boolean existsMovieById(Long id){
+    public void validateMovieExists(Long movieId){
         try {
-            api.getMovieById(id);
-            return true; // Si existe (no lanza error), retorna verdadero
+            api.getMovieById(movieId);
         } catch (HttpClientErrorException.NotFound ex){
-            return false; // Si no existe (lanza error not found), retorna falso
+            throw new MovieNotFoundException("Movie does not exist");
         }
     }
 
@@ -75,10 +75,23 @@ public class MovieService {
     // ========== BÚSQUEDA ==========
 
     ///  BARRA DE BUSQUEDA | Devuelve una lista de películas, paginadas y con la query
-    public List<MoviePreviewDTO> searchMovies(String query, int page) {
-        RawMovieListDTO rawList = api.searchMovies(query, page);
+    public List<MoviePreviewDTO> searchMovies(String query, int page, String year, String genre) {
+        // Buscamos en tmdb el año
+        RawMovieListDTO rawList = api.searchMovies(query, page, year);
         if (page > rawList.getTotal_pages())
             throw new PageOutOfBoundsException("This page does not exist. Max page: " + rawList.getTotal_pages());
-        return MovieMapper.rawToPreviewDTOList(rawList.getResults());
+
+        var results = rawList.getResults();
+
+        // Si nos mandaron un género, acá filtramos la lista (tmdb tiene en versión número los generos)
+        if(genre != null && !genre.isEmpty())
+        {
+            int genreId = Integer.parseInt(genre);
+            results = results.stream()
+                    .filter(movie -> movie.getGenre_ids() != null && movie.getGenre_ids().contains(genreId))
+                    .toList();
+        }
+
+        return MovieMapper.rawToPreviewDTOList(results);
     }
 }

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import UserPreview from '../models/UserPreview';
 import { Observable } from 'rxjs';
@@ -47,5 +47,38 @@ export class UserService {
   //Eliminar perfil
   deleteUser(username: string): Observable<void>{
     return this.http.delete<void>(`${this.URL}/${username}`)
+  }
+
+  // Obtener usuarios paginados (para seccion users)
+  getUsersPaged(page: number = 1, role?: string): Observable<any> 
+  {
+    let params = new HttpParams().set('page', page)
+    if (role) 
+    {
+      params = params.set('role', role)
+    }
+    return this.http.get<any>(`${this.URL}/paged`, { params: params })
+  }
+
+  // Buscar usuarios por nombre (busqueda general)
+  searchUsers(query: string, page: number = 1, role?: string): Observable<any> 
+  {
+    let params = new HttpParams().set('page', page)
+    if (role) 
+    {
+      params = params.set('role', role)
+    }
+    return this.http.get<any>(`${this.URL}/search/${query}`, { params: params })
+  }
+
+  //ADMIN Listar o buscar usuarios baneados
+  getBannedUsers(page: number = 1, query?: string): Observable<any> 
+  {
+    let params = new HttpParams().set('page', page)
+    if (query) 
+    {
+      params = params.set('query', query)
+    }
+    return this.http.get<any>(`${this.URL}/banned`, { params: params })
   }
 }
