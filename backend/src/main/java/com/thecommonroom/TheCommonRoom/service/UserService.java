@@ -123,8 +123,29 @@ public class UserService {
     }    
 
     public UserResponseDTO getUserResponse(String username){
-        User user = findUserByUsername(username);
-        return UserMapper.toResponseDTO(user);
+        User targetUser = findUserByUsername(username); // Traer al usuario buscado
+
+        // Verificar que el usuario no este baneado. Si lo está, verificar que el user logueado sea admin
+        if(targetUser.isBanned()){
+            boolean isRequesterAdmin = isCurrentRequesterAdmin(); // Comprobar que user actual sea admin
+            if(!isCurrentRequesterAdmin()){ // Lanzar excepcion en caso que no
+                throw new UserBannedException(
+                        "Cannot view content for this user as their account has been suspended.");
+            }
+        }
+        return UserMapper.toResponseDTO(targetUser);
+    }
+
+    // Si el user que hace la peticion (logueado) es admin, retorna true
+    private boolean isCurrentRequesterAdmin(){
+        Authentication auth = AuthService.getAuthetication();
+
+        if (auth == null || !auth.isAuthenticated()) {
+            return false;
+        }
+
+        return auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
     }
 
     public UserPreviewDTO getUserPreview(String username){
@@ -204,12 +225,19 @@ public class UserService {
 
     public Optional<User> findCurrentUser(){
         Authentication auth = AuthService.getAuthetication();
-
         if (auth == null || !auth.isAuthenticated()) {
             return Optional.empty();
         }
 
-        return userRepository.findByUsername(auth.getName());
+        var user = userRepository.findByUsername(auth.getName());
+        // Si el usuario existe y esta baneado, lanza excpecion
+        user.ifPresent(u -> {
+            if (u.isBanned()) {
+                throw new UserBannedException(
+                        "Your account has been permanently suspended for violating our terms of service.");
+            }
+        });
+        return user;
     }
 
     // ========== VALIDACIONES ==========
@@ -235,6 +263,12 @@ public class UserService {
     public void validateUserExists(String username){
         if(!doesUserExistByUsername(username)){
             throw new UserNotFoundException("User not found");
+        }
+    }
+
+    public void validateUserNotBanned(String username, String errorMsg){
+        if(userRepository.existsByUsernameAndIsBannedTrue(username)){
+            throw new UserBannedException(errorMsg);
         }
     }
 }

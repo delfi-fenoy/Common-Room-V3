@@ -16,6 +16,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username);
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
+    boolean existsByUsernameAndIsBannedTrue(String username);
 
     //Buscar por nombre ignorando mayus y que no esten ban (paginados)
     Page<User> findByUsernameContainingIgnoreCaseAndIsBannedFalse(String query, Pageable pageable);

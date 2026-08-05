@@ -116,16 +116,11 @@ public class UserController {
             description = "Devuelve la información del usuario autenticado, extraída del token JWT " +
                     "enviado en la cabecera (header) Authorization."
     )
-    @GetMapping("/me")
-    public UserResponseDTO getCurrentUser(@RequestHeader(value = "Authorization", required = false) String authHeader) {
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No hay token JWT válido en la solicitud");
-        }
 
-        String token = authHeader.replace("Bearer ", "");
-        String username = jwtService.extractUsername(token);
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+    @GetMapping("/me")
+    public UserResponseDTO getCurrentUser() {
+        // Traer el usuario logueado (con token). Valida que no este baneado
+        User user = userService.getCurrentUser();
 
         return UserResponseDTO.builder()
                 .id(user.getId())
