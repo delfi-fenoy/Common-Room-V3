@@ -91,6 +91,9 @@ public class ReviewService {
     @Transactional(readOnly = true) // Para mayor rendimiento
     public Page<ReviewResponseDTO> getReviewsByUsername(String username, int page){
         User foundUser = userService.findUserByUsername(username); // Obtener usuario buscado
+        userService.validateUserNotBanned(username, // Verificar que el user no este baneado
+                "Cannot view reviews for this user as their account has been suspended.");
+        List<Review> entityReviews = reviewRepository.findByUser(foundUser); // Obtener reseñas completas (entidad) de usuario
 
         Pageable pageable = PageRequest.of(page -1, 20);
         Page<Review> entityPage = reviewRepository.findByUser(foundUser, pageable);
@@ -111,7 +114,8 @@ public class ReviewService {
     @Transactional(readOnly = true)
     public Page<ReviewResponseDTO> getReviewsByMovieId(Long movieId, int page){
         Pageable pageable = PageRequest.of(page -1, 20);
-        Page<Review> entityPage = reviewRepository.findByMovieId(movieId, pageable);
+        // Obtener reseñas completas de película (de usuarios no baneados)
+        Page<Review> entityPage = reviewRepository.findByMovieIdAndUserIsBannedFalse(movieId, pageable);
 
         return entityPage.map(review ->
                 ReviewMapper.entityToResponseDTO(
@@ -129,9 +133,9 @@ public class ReviewService {
 
     @Transactional(readOnly = true)
     public Optional<ReviewResponseDTO> getUserReviewForMovie(String username, Long movieId){
-        /*
-        validar user - validar movie - buscar review - mapear review
-         */
+        userService.validateUserExists(username); // Validar que el usuario exista
+        userService.validateUserNotBanned(username, // Validar que el usuario no este baneado
+                "Cannot view this review as the user's account has been suspended.");
 
         UserPreviewDTO userPreview = userService.getUserPreview(username);
         MoviePreviewDTO moviePreview = movieService.findMoviePreviewById(movieId);

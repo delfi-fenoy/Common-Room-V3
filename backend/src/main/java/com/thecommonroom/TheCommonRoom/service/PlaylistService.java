@@ -13,11 +13,13 @@ import com.thecommonroom.TheCommonRoom.model.User;
 import com.thecommonroom.TheCommonRoom.repository.MovieListRepository;
 import com.thecommonroom.TheCommonRoom.repository.PlaylistRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -119,11 +121,13 @@ public class PlaylistService {
                 .orElseThrow(() -> new PlaylistNotFoundException("Playlist does not exist."));
     }
 
-    // Devuelve listado de PREVIEW DTO de las playlists
+    // Devuelve pagina de PREVIEW DTO de las playlists
     @Transactional(readOnly = true)
-    public List<PlaylistPreviewDTO> getUserPlaylists(String username){
+    public Page<PlaylistPreviewDTO> getUserPlaylists(String username, int page){
         // Comprobaciones
-        userService.validateUserExists(username); // Que el usuario exista
+        userService.validateUserExists(username); // Validar que el usuario exista
+        userService.validateUserNotBanned(username, // Validar que el usuario no este baneado
+                "Cannot view playlists for this user as their account has been suspended.");
 
         Optional<User> currentUser = userService.findCurrentUser();
         // Verificar si el user logueado (si es que hay) es el mismo que el que se busca
@@ -131,26 +135,43 @@ public class PlaylistService {
                 .map(user -> username.equalsIgnoreCase(user.getUsername()))
                 .orElse(false);
 
-        List<Playlist> playlists = findUserPlaylists(username, isOwner); // Conseguir las listas
+        Pageable pageable = PageRequest.of(page-1, 10);
+
+        Page<Playlist> playlists = findUserPlaylists(username, isOwner, pageable); // Conseguir las listas
+        long totalElements = playlists.getTotalElements();
+
         // Devolver listas mapeadas al dto
-        return PlaylistMapper.entityToPreviewDTOList(playlists);
+        return PlaylistMapper.entityToPreviewDTOPage(playlists, pageable, totalElements);
     }
 
     // Devuelve las playlists
-    private List<Playlist> findUserPlaylists(String username, boolean isOwner){
+    private Page<Playlist> findUserPlaylists(String username, boolean isOwner, Pageable pageable){
         // Si es el dueño de la lista, devuelve todas
         if(isOwner){
-            return playlistRepository.findByUserUsername(username);
+            return playlistRepository.findByUserUsername(username, pageable);
         }
         // Si no es el dueño de la lista, devuelve solo las publicas
-        return playlistRepository.findByUserUsernameAndIsPrivateFalse(username);
+        return playlistRepository.findByUserUsernameAndIsPrivateFalse(username, pageable);
     }
 
     // Devuelve listado de PREVIEW DTO de las playlists del user logueado (si es que hay)
-    public List<PlaylistPreviewDTO> getMyPlaylists(){
+    public Page<PlaylistPreviewDTO> getMyPlaylists(int page){
         User currentUser = userService.getCurrentUser();
-        return PlaylistMapper.entityToPreviewDTOList( // Devolver la lista mapeada a PreviewDTO
-                findUserPlaylists(currentUser.getUsername(), true));
+
+        Pageable pageable = PageRequest.of(page-1, 10);
+        Page<Playlist> playlists = findUserPlaylists(currentUser.getUsername(), true, pageable);
+        long totalElements = playlists.getTotalElements();
+
+        return PlaylistMapper.entityToPreviewDTOPage(playlists, pageable, totalElements);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<PlaylistPreviewDTO> getPublicPlaylists(int page){
+        Pageable pageable = PageRequest.of(page-1, 20);
+        Page<Playlist> playlists = playlistRepository.findByIsPrivateFalse(pageable);
+        long totalElements = playlists.getTotalElements();
+
+        return PlaylistMapper.entityToPreviewDTOPage(playlists, pageable, totalElements);
     }
 
     // ----- COMPROBACIONES -----

@@ -39,18 +39,6 @@ public class UserController {
     private final JwtService jwtService;
     private final UserRepository userRepository;
 
-
-    // =========== Lista todos los usuarios en formato reducido =========== \\
-    @Operation(
-            summary = "Listar todos los usuarios",
-            description = "Devuelve una lista de todos los usuarios registrados en formato reducido."
-    )
-    @GetMapping("/all")
-    public ResponseEntity<List<UserPreviewDTO>> listUsers() {
-        List<UserPreviewDTO> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
-    }
-
     // =========== Devuelve un usuario por su nombre de usuario =========== \\
     @Operation(
             summary = "Obtener usuario por username",
@@ -116,16 +104,11 @@ public class UserController {
             description = "Devuelve la información del usuario autenticado, extraída del token JWT " +
                     "enviado en la cabecera (header) Authorization."
     )
-    @GetMapping("/me")
-    public UserResponseDTO getCurrentUser(@RequestHeader(value = "Authorization", required = false) String authHeader) {
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No hay token JWT válido en la solicitud");
-        }
 
-        String token = authHeader.replace("Bearer ", "");
-        String username = jwtService.extractUsername(token);
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+    @GetMapping("/me")
+    public UserResponseDTO getCurrentUser() {
+        // Traer el usuario logueado (con token). Valida que no este baneado
+        User user = userService.getCurrentUser();
 
         return UserResponseDTO.builder()
                 .id(user.getId())
@@ -138,7 +121,7 @@ public class UserController {
 
 
     // Listar usuarios paginados, seccion users
-    @GetMapping("/paged")
+    @GetMapping("/all")
     public ResponseEntity<Page<UserPreviewDTO>> getUsersPaged(
             @RequestParam(required = false) String role,
             @RequestParam(defaultValue = "1") int page)

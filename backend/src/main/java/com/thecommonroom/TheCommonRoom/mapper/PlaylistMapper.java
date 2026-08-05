@@ -6,9 +6,8 @@ import com.thecommonroom.TheCommonRoom.dto.PlaylistResponseDTO;
 import com.thecommonroom.TheCommonRoom.dto.UserPreviewDTO;
 import com.thecommonroom.TheCommonRoom.model.Playlist;
 import com.thecommonroom.TheCommonRoom.model.User;
-
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public class PlaylistMapper {
 
@@ -45,9 +44,7 @@ public class PlaylistMapper {
                 .build();
     }
 
-    public static List<PlaylistPreviewDTO> entityToPreviewDTOList(List<Playlist> playlists){
-        return playlists.stream()
-                .map(PlaylistMapper::entityToPreviewDTO)
-                .collect(Collectors.toList());
+    public static Page<PlaylistPreviewDTO> entityToPreviewDTOPage(Page<Playlist> playlists, Pageable pageable, long totalElements){
+        return playlists.map(PlaylistMapper::entityToPreviewDTO);
     }
 }

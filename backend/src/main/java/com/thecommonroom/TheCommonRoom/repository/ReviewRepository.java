@@ -12,8 +12,7 @@ import java.util.Optional;
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     Optional<Review> findByUserIdAndMovieId(Long userId, Long movieId);
-
     // Se cambia por page y pageable para poder paginar más facil
-    Page<Review> findByUser(User user, Pageable pageable); // Obtener listas de reseñas de un usuario determinado
-    Page<Review> findByMovieId(Long movieId, Pageable pageable); // Obtener listas de reseñas de una película determinada
+    List<Review> findByUser(User user, Pageable pageable); // Obtener listas de reseñas de un usuario determinado
+    Page<Review> findByMovieIdAndUserIsBannedFalse(Long movieId, Pageable pageable); // Obtener reseñas de una pelicula (de usuarios no baneados)
 }

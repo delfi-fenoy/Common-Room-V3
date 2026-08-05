@@ -3,11 +3,13 @@ package com.thecommonroom.TheCommonRoom.auth.service;
 import com.thecommonroom.TheCommonRoom.auth.dto.LoginRequest;
 import com.thecommonroom.TheCommonRoom.auth.dto.TokenResponse;
 import com.thecommonroom.TheCommonRoom.dto.UserRequestDTO;
+import com.thecommonroom.TheCommonRoom.exception.UserBannedException;
 import com.thecommonroom.TheCommonRoom.model.User;
 import com.thecommonroom.TheCommonRoom.repository.UserRepository;
 import com.thecommonroom.TheCommonRoom.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,8 +42,6 @@ public class AuthService {
         return new TokenResponse(jwtToken, refreshToken, savedUser.getUsername(), savedUser.getRole().name());
     }
 
-
-
     // ========== INICIAR SESIÓN ==========
     public TokenResponse login(LoginRequest request){
         // Validar el username y password enviados
@@ -55,6 +55,12 @@ public class AuthService {
         // Busca al usuario en la base de datos por su username
         var user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow();
+
+        // Si el usuario esta baneado, lanza excpecion
+        if(user.isBanned()){
+            throw new UserBannedException(
+                    "Your account has been permanently suspended for violating our terms of service.");
+        }
 
         // Genera un nuevo token JWT y refresh token para este usuario (se genera uno nuevo por cada login)
         var jwtToken = jwtService.generateToken(user);
