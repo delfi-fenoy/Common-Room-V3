@@ -1,0 +1,68 @@
+<div class="users-container">
+
+    <!-- ! ====== Filters Section ====== -->
+    <section class="filters-section">
+        <div class="filters-container">
+            <label for="filter-select">Filter users:</label>
+            
+            <!-- ? --- User Filter --- -->
+            <select 
+                id="filter-select" 
+                class="filter-dropdown" 
+                [value]="selectedFilter" 
+                (change)="onFilterSelect($event)">
+                <option value="all">All Users</option>
+                <option value="admins">Admins ⭐</option>
+                <option value="members">Members</option>
+            </select>
+        </div>
+    </section>
+
+    <!-- ! === Users Section === -->
+    <section class="users-section">
+        @for (user of users; track user.id) {
+            <!-- ? --- User Card --- -->
+            <div class="user-card" [routerLink]="[user.username]">
+                <div class="img-wrapper">
+                    @if (user.role === 'ADMIN') {
+                        <img
+                            [src]="user.profilePictureUrl || 'assets/img/default-img/admin-noimg.jpg'"
+                            alt="{{ user.username || 'User picture' }}"
+                            (error)="noProfilePicture($event, 'ADMIN')"
+                        />
+                    } @else {
+                        <img
+                            [src]="user.profilePictureUrl || 'assets/img/default-img/user-noimg.jpg'"
+                            alt="{{ user.username || 'User picture' }}"
+                            (error)="noProfilePicture($event, 'USER')"
+                        />
+                    }
+
+                    <!-- <----- Rectángulo inferior fijo con el nombre y rol ----->
+                    <div class="info-overlay">
+                        @if (user.role === 'ADMIN') {
+                            <h3>⭐</h3>
+                        }
+                        <h1>{{ user.username }}</h1>
+                    </div>
+                </div>
+            </div>
+        }
+    </section>
+
+    <!-- ? --- Loading Spinner --- -->
+    @if (isLoading) {
+        <div class="loading-indicator">
+            <div class="spinner"></div>
+            <span>Loading more users...</span>
+        </div>
+    }
+
+    <!-- ? --- Button to Top --- -->
+    @if (showScrollTopBtn) {
+        <button class="scroll-top-btn" (click)="scrollToTop()" aria-label="Scroll to top">
+            <img src="assets/img/buttons-icons/arrow-button.png" alt="Scroll to top"/>
+        </button>
+    }
+
+</div>
