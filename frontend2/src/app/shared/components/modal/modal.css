@@ -18,7 +18,7 @@
 .modal-container {
     background: var(--green-500);
     width: 90%;
-    max-width: 28rem;
+    max-width: 55rem;
     border-radius: 0.8rem;
     overflow: hidden;
     border: 2px solid var(--brown-500);

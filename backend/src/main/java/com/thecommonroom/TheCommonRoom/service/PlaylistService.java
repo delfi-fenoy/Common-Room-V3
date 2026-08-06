@@ -222,6 +222,15 @@ public class PlaylistService {
     }
 
     @Transactional(readOnly = true)
+    public Page<PlaylistPreviewDTO> searchPlaylists(String query, int page) {
+        Pageable pageable = PageRequest.of(page - 1, 10);
+
+        Page<Playlist> playlists = playlistRepository.findByNameContainingIgnoreCaseAndIsPrivateFalse(query, pageable);
+        long totalElements = playlists.getTotalElements();
+
+        return PlaylistMapper.entityToPreviewDTOPage(playlists, pageable, totalElements);
+    }
+  
     private void checkPlaylistAccess(Playlist playlist){
         if(playlist.isPrivate()){
             Long currentUserId = userService.findCurrentUser()

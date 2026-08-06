@@ -5,6 +5,8 @@ import com.thecommonroom.TheCommonRoom.dto.RawMovieListDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -69,6 +71,24 @@ public class TMDbClient {
         {
             url.append("&year=").append(year);
         }
+        return restTemplate.getForObject(url.toString(), RawMovieListDTO.class);
+    }
+
+    public RawMovieListDTO discoverMovies(int page, String year, Integer genreId) {
+
+        StringBuilder url = new StringBuilder(
+                String.format("%s/discover/movie?api_key=%s&page=%d&language=en-US",
+                        baseUrl, key, page)
+        );
+
+        if (year != null && !year.isEmpty()) {
+            url.append("&primary_release_year=").append(year);
+        }
+
+        if (genreId != null) {
+            url.append("&with_genres=").append(genreId);
+        }
+
         return restTemplate.getForObject(url.toString(), RawMovieListDTO.class);
     }
 

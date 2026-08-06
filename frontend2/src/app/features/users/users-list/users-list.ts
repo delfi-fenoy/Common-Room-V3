@@ -1,10 +1,9 @@
-import { Component, HostListener, OnInit, inject } from '@angular/core';
+import { Component, HostListener, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { UserPreview } from '../../../core/models';
 import { UserService } from '../../../core/services/user-service';
 import { RouterLink } from '@angular/router';
 
-// Tipado para los filtros de usuario
-export type UserFilterType = 'all' | 'admins' | 'members';
+export type UserFilterType = 'all' | 'ADMIN' | 'USER';
 
 @Component({
     selector: 'app-users-list',
@@ -15,61 +14,42 @@ export type UserFilterType = 'all' | 'admins' | 'members';
 export class UsersList implements OnInit {
     // * ======== Inyección de Servicios ========
     public uService = inject(UserService);
+    private cdr = inject(ChangeDetectorRef); // <----- Inyección del detector de cambios
 
     // * ======== Variables de Estado ========
-    allUsers: UserPreview[] = []; // Array completo descargado
-    users: UserPreview[] = []; // Array de usuarios visibles en pantalla
+    users: UserPreview[] = [];
     currentPage = 1;
-    itemsPerPage = 15; // 15 elementos por tanda para completar filas de 5 columnas
+    itemsPerPage = 10;
     hasMorePages = true;
     isLoading = false;
     showScrollTopBtn = false;
-    selectedFilter: UserFilterType = 'all'; // Filtro seleccionado por defecto
+    selectedFilter: UserFilterType = 'all';
 
     // * ======== Lifecycle Hooks ========
     ngOnInit(): void {
         this.loadUsers();
     }
 
-    // ! -------- Método para cargar Usuarios --------
+    // ! -------- Método para cargar Usuarios des del Backend --------
     loadUsers(): void {
         if (this.isLoading || !this.hasMorePages) return;
         this.isLoading = true;
 
-        this.uService.getUsers().subscribe({
-            next: (data) => {
-                this.allUsers = data;
-                this.applyFilterAndAppend();
+        const roleParam = this.selectedFilter !== 'all' ? this.selectedFilter : undefined;
+
+        this.uService.getUsers(this.currentPage, this.itemsPerPage, roleParam).subscribe({
+            next: (pageResponse) => {
+                this.users = [...this.users, ...pageResponse.content]; // <----- Anexa los nuevos registros
+                this.hasMorePages = !pageResponse.last; // <----- Determina si quedan páginas
                 this.isLoading = false;
+                this.cdr.detectChanges(); // <----- Fuerza actualización en caso de éxito
             },
             error: (e) => {
-                console.error(e);
+                console.error('Error al obtener la lista de usuarios:', e);
                 this.isLoading = false;
+                this.cdr.detectChanges(); // <----- Fuerza actualización en caso de error
             },
         });
-    }
-
-    // ! -------- Filtrado y Paginación Local --------
-    private applyFilterAndAppend(): void {
-        // 1. Aplica el filtro seleccionado
-        let filtered = [...this.allUsers];
-        if (this.selectedFilter === 'admins') {
-            filtered = filtered.filter((u) => u.role === 'ADMIN');
-        } else if (this.selectedFilter === 'members') {
-            filtered = filtered.filter((u) => u.role !== 'ADMIN');
-        }
-
-        // 2. Realiza el corte por página
-        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-        const endIndex = startIndex + this.itemsPerPage;
-        const newBatch = filtered.slice(startIndex, endIndex);
-
-        if (newBatch.length > 0) {
-            this.users = [...this.users, ...newBatch];
-            this.hasMorePages = this.users.length < filtered.length;
-        } else {
-            this.hasMorePages = false;
-        }
     }
 
     // ? --- Selector del filtro ---
@@ -82,11 +62,12 @@ export class UsersList implements OnInit {
     changeFilter(filter: UserFilterType): void {
         if (this.selectedFilter === filter) return;
         this.selectedFilter = filter;
-        this.currentPage = 1;
-        this.users = [];
+        this.currentPage = 1; // <----- Reinicia la página para la nueva consulta
+        this.users = []; // <----- Limpia la lista previa
         this.hasMorePages = true;
-        this.applyFilterAndAppend();
-    }
+        setTimeout(() => {
+            this.loadUsers(); // <----- Encola la ejecución para permitir que el DOM se limpie correctamente
+        }, 0);    }
 
     // ! -------- Listener de Scroll Global --------
     @HostListener('window:scroll', [])
@@ -102,8 +83,8 @@ export class UsersList implements OnInit {
             this.hasMorePages &&
             this.users.length > 0
         ) {
-            this.currentPage++;
-            this.applyFilterAndAppend();
+            this.currentPage++; // <----- Incrementa la página y solicita la siguiente tanda
+            this.loadUsers();
         }
     }
 

@@ -14,4 +14,6 @@ public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
     Page<Playlist> findByUserUsername(String username, Pageable pageable);
     Page<Playlist> findByUserUsernameAndIsPrivateFalse(String username, Pageable pageable);
     Page<Playlist> findByIsPrivateFalse(Pageable pageable);
+
+    Page<Playlist> findByNameContainingIgnoreCaseAndIsPrivateFalse(String query, Pageable pageable);
 }

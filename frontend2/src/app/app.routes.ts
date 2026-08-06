@@ -36,8 +36,8 @@ export const routes: Routes = [
 
     /* ------ Modulo de Películas ------ */
     { path: 'movies', component: MoviesList, title: 'Movies | Common Room' },
-    { path: 'movies/search/:query', component: SearchPage },
-    { path: 'movies/:id', component: MovieSheet },
+    { path: 'movies/search/:query', component: SearchPage},
+    { path: 'movies/:id', component: MovieSheet, title: 'Movie Details | Common Room' },
 
     /* ------ Modulo de Usuarios ------ */
     { path: 'users', component: UsersList, title: 'Users | Common Room' },

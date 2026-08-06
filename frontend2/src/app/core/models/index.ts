@@ -12,6 +12,10 @@ export * from './auth/token-response';
 export * from './movies/movie-base';
 export * from './movies/movie-details';
 
+/* ------ Modulo de Playlists ------ */
+export * from './playlists/playlist-request';
+export * from './playlists/playlist-response';
+
 /* ------ Modulo de Reseñas ------ */
 export * from './reviews/review';
 
@@ -21,3 +25,4 @@ export * from './users/user-preview';
 
 /* ------ Modulo Compartido / General ------ */
 export * from './common/not-found-item';
+export * from './common/page-response';
