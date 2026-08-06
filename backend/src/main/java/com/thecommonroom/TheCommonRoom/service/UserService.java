@@ -19,7 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -75,7 +74,6 @@ public class UserService {
         if(profilePictureChanged) foundUser.setProfilePictureUrl(dto.getProfilePictureUrl());
 
         userRepository.save(foundUser); // Guardar cambios del user
-        System.out.println("Service 2 - Repo");
 
         // Si se cambió el username, se debe generar un nuevo token
         if(usernameChanged){
@@ -85,7 +83,6 @@ public class UserService {
             jwtService.saveUserToken(foundUser, newToken); // Guardar token nuevo
             return new TokenResponse(newToken, newRefreshToken, foundUser.getUsername(), foundUser.getRole().name());
         }
-
         return null; // Devolver null en caso que no se haya modificado username
     }
 
@@ -110,42 +107,14 @@ public class UserService {
     }
 
     // ========== OBTENER USUARIOS ==========
-
-    @Transactional(readOnly = true)
-    // Obtiene todos los usuarios guardados en la base de datos y si no hay ninguno lanza la exception
-    // Si hay usuarios los convierte en una lista de DTOs
-    public List<UserPreviewDTO> getAllUsers(){
-        List<User> users = userRepository.findAll();
-        if(users.isEmpty()){
-            throw new NoUsersFoundException("No registered users found");
-        }
-        return UserMapper.toPreviewDTOList(users);
-    }    
-
     public UserResponseDTO getUserResponse(String username){
         User targetUser = findUserByUsername(username); // Traer al usuario buscado
 
         // Verificar que el usuario no este baneado. Si lo está, verificar que el user logueado sea admin
         if(targetUser.isBanned()){
-            boolean isRequesterAdmin = isCurrentRequesterAdmin(); // Comprobar que user actual sea admin
-            if(!isCurrentRequesterAdmin()){ // Lanzar excepcion en caso que no
-                throw new UserBannedException(
-                        "Cannot view content for this user as their account has been suspended.");
-            }
+            throw new UserBannedException("Cannot view content for this user as their account has been suspended.");
         }
         return UserMapper.toResponseDTO(targetUser);
-    }
-
-    // Si el user que hace la peticion (logueado) es admin, retorna true
-    private boolean isCurrentRequesterAdmin(){
-        Authentication auth = AuthService.getAuthetication();
-
-        if (auth == null || !auth.isAuthenticated()) {
-            return false;
-        }
-
-        return auth.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
     }
 
     public UserPreviewDTO getUserPreview(String username){

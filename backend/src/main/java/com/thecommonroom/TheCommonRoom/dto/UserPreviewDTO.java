@@ -17,4 +17,5 @@ public class UserPreviewDTO {
     private String username;
     private String profilePictureUrl;
     private Role role;
+    private boolean isBanned;
 }

@@ -1,9 +1,6 @@
 package com.thecommonroom.TheCommonRoom.controller;
 
-import com.thecommonroom.TheCommonRoom.dto.MovieListResponseDTO;
-import com.thecommonroom.TheCommonRoom.dto.PlaylistPreviewDTO;
-import com.thecommonroom.TheCommonRoom.dto.PlaylistRequestDTO;
-import com.thecommonroom.TheCommonRoom.dto.PlaylistResponseDTO;
+import com.thecommonroom.TheCommonRoom.dto.*;
 import com.thecommonroom.TheCommonRoom.service.PlaylistService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -89,5 +86,18 @@ public class PlaylistController {
     public ResponseEntity<Page<PlaylistPreviewDTO>> getPublicPlaylists(@RequestParam(defaultValue = "1") int page){
         Page<PlaylistPreviewDTO> playlists = playlistService.getPublicPlaylists(page);
         return ResponseEntity.ok(playlists);
+    }
+
+    @GetMapping("/playlists/{playlistId}")
+    public ResponseEntity<PlaylistResponseDTO> getPlaylistResponseById(@PathVariable Long playlistId){
+        PlaylistResponseDTO playlistResponse = playlistService.getPlaylistResponseById(playlistId);
+        return ResponseEntity.ok(playlistResponse);
+    }
+
+    @GetMapping("/playlists/{playlistId}/movies")
+    public ResponseEntity<Page<MoviePreviewDTO>> getMovieListByPlaylistId(@PathVariable Long playlistId,
+                                                                          @RequestParam(defaultValue = "1") int page){
+        Page<MoviePreviewDTO> movies = playlistService.getMovieListByPlaylistId(playlistId, page);
+        return ResponseEntity.ok(movies);
     }
 }
