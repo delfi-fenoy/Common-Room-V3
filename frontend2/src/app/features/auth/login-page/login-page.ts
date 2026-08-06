@@ -3,7 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth-service';
 import { Modal } from '../../../shared/components/modal/modal';
-import { ModalService } from '../../../shared/services/modal.services';
+import { ModalService } from '../../../shared/services/modal-services';
 
 @Component({
     selector: 'app-login-page',
@@ -37,6 +37,9 @@ export class LoginPage {
 
         this.authService.login(this.loginForm.getRawValue()).subscribe({
             next: () => {
+                // <----- New Modal Success Alert ----->
+                this.modalService.openAlert('Success', 'Login successful!', 'success');
+
                 this.loginForm.reset();
                 this.isSubmitting.set(false);
                 this.router.navigate(['/']);
@@ -44,9 +47,11 @@ export class LoginPage {
             error: (e) => {
                 console.error(e);
                 this.isSubmitting.set(false);
-                
+
                 // <----- New Modal Alert ----->
-                const errorMessage = e?.error?.message || 'Invalid access. Please check your credentials and try again.';
+                const errorMessage =
+                    e?.error?.message ||
+                    'Invalid access. Please check your credentials and try again.';
                 this.modalService.openAlert('Login Failed', errorMessage, 'error');
             },
         });

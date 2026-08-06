@@ -65,7 +65,7 @@
 .movie-card {
     break-inside: avoid;
     width: 100%;
-    border: var(--brown-300) 4px solid;
+    border: var(--brown-200) 4px solid;
     border-radius: 0.8rem;
     background-color: var(--green-600);
     overflow: hidden;

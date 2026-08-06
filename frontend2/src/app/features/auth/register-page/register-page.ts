@@ -3,7 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth-service';
 import { Modal } from '../../../shared/components/modal/modal';
-import { ModalService } from '../../../shared/services/modal.services';
+import { ModalService } from '../../../shared/services/modal-services';
 
 @Component({
     selector: 'app-register-page',
@@ -54,18 +54,19 @@ export class RegisterPage {
         this.authService.register(this.registerForm.getRawValue()).subscribe({
             next: () => {
                 // <----- New Modal Success Alert ----->
-                this.modalService.openAlert('Success', 'Registration successful! You can now log in.', 'success');
-                
+                this.modalService.openAlert('Success', 'Registration successful!', 'success');
+
                 this.registerForm.reset();
                 this.isSubmitting.set(false);
-                this.router.navigate(['/login']);
+                this.router.navigate(['/']);
             },
             error: (e) => {
                 console.error(e);
                 this.isSubmitting.set(false);
 
                 // <----- New Modal Error Alert ----->
-                const errorMessage = e?.error?.message || 'Error creating account. Please try again later.';
+                const errorMessage =
+                    e?.error?.message || 'Error creating account. Please try again later.';
                 this.modalService.openAlert('Registration Error', errorMessage, 'error');
             },
         });

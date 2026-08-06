@@ -1,11 +1,12 @@
-import { MovieDetails } from '../movies/movie-details';
-import { User } from '../users/user';
+import { MovieBase } from '../movies/movie-base';
+import { UserPreview } from '../users/user-preview';
 
 export interface Review {
     id: number;
+    movieId?: number;
     rating: number;
     comment?: string;
     createdAt: string;
-    moviePreview: MovieDetails;
-    userPreview: User;
+    moviePreview?: MovieBase; 
+    userPreview?: UserPreview;          
 }
