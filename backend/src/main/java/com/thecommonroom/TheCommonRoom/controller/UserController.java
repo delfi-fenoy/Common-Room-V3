@@ -129,4 +129,13 @@ public class UserController {
         UserBanResponseDTO banInfo = userBanService.getUserLastBanInfo(username);
         return ResponseEntity.ok(banInfo);
     }
+
+    // Obtener el historial de ban de un usuario
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/{username}/bans")
+    public ResponseEntity<Page<UserBanPreviewDTO>> getUserBanHistory(@PathVariable String username,
+                                                                     @RequestParam(defaultValue = "1") int page){
+        Page<UserBanPreviewDTO> bans = userBanService.getUserBanHistory(username, page);
+        return ResponseEntity.ok(bans);
+    }
 }

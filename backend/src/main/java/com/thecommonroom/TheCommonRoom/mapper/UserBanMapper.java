@@ -1,8 +1,10 @@
 package com.thecommonroom.TheCommonRoom.mapper;
 
+import com.thecommonroom.TheCommonRoom.dto.UserBanPreviewDTO;
 import com.thecommonroom.TheCommonRoom.dto.UserBanResponseDTO;
 import com.thecommonroom.TheCommonRoom.model.User;
 import com.thecommonroom.TheCommonRoom.model.UserBan;
+import org.springframework.data.domain.Page;
 
 import java.util.Optional;
 
@@ -27,6 +29,15 @@ public class UserBanMapper {
                 .unbannedByUsername(Optional.ofNullable(userBan.getUnbannedByUser())
                                 .map(User::getUsername)
                                         .orElse(null))
+                .build();
+    }
+
+    public static UserBanPreviewDTO entityToPreviewDTO(UserBan userBan){
+        return UserBanPreviewDTO.builder()
+                .id(userBan.getId())
+                .bannedByUsername(userBan.getBannedByUser().getUsername())
+                .bannedAt(userBan.getBannedAt())
+                .reason(userBan.getReason())
                 .build();
     }
 }

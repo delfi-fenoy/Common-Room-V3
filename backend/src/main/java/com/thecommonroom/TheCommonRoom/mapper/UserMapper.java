@@ -31,13 +31,6 @@ public class UserMapper {
                 .isBanned(user.isBanned())
                 .build();
     }
-
-    // Convierte una lista de User a una lista de UserPreviewDTO
-    public static List<UserPreviewDTO> toPreviewDTOList(List<User> users){
-        return users.stream()
-                .map(UserMapper::toPreviewDTO)
-                .collect(Collectors.toList());
-    }
   
     public static UserResponseDTO toResponseDTO(User user){
         return UserResponseDTO.builder()

@@ -1,5 +1,6 @@
 package com.thecommonroom.TheCommonRoom.service;
 
+import com.thecommonroom.TheCommonRoom.dto.UserBanPreviewDTO;
 import com.thecommonroom.TheCommonRoom.dto.UserBanRequestDTO;
 import com.thecommonroom.TheCommonRoom.dto.UserBanResponseDTO;
 import com.thecommonroom.TheCommonRoom.exception.IllegalOperationException;
@@ -10,6 +11,10 @@ import com.thecommonroom.TheCommonRoom.model.User;
 import com.thecommonroom.TheCommonRoom.model.UserBan;
 import com.thecommonroom.TheCommonRoom.repository.UserBanRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -71,12 +76,25 @@ public class UserBanService {
     // ----- LISTADO DE BANEOS -----
 
     // Obtener el ultimo ban de un usuario
+    @Transactional(readOnly = true)
     public UserBanResponseDTO getUserLastBanInfo(String username){
         User user = userService.findUserByUsername(username); // Chequear que el usuario exista
         // Traer el registro del ban
         UserBan banInfoEntity = userBanRepository.findFirstByBannedUserIdOrderByBannedAtDesc(user.getId())
                 .orElseThrow(() -> new UserBanNotFoundException("Ban record not found for user: " + username));
         return UserBanMapper.entityToResponseDto(banInfoEntity);
+    }
+
+    public Page<UserBanPreviewDTO> getUserBanHistory(String username, int page){
+        // Consguir al usuario
+        User user = userService.findUserByUsername(username);
+
+        // Traer los registros de ban
+        int pageNumber = Math.max(0, page-1);
+        Pageable pageable = PageRequest.of(pageNumber, 5);
+        Page<UserBan> bans = userBanRepository.findByBannedUserId(user.getId(), pageable);
+
+        return bans.map(UserBanMapper::entityToPreviewDTO); // Retornar previews de ban
     }
 
     // ----- COMPROBACIONES -----
