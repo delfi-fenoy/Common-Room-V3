@@ -77,7 +77,7 @@ public class UserService {
 
         // Si se cambió el username, se debe generar un nuevo token
         if(usernameChanged){
-            jwtService.revokeAllUserTokens(foundUser); // Eliminar tokens antiguos
+            revokeUserTokens(foundUser); // Eliminar tokens antiguos
             String newToken = jwtService.generateToken(foundUser); // Generar nuevos tokens
             String newRefreshToken = jwtService.generateRefreshToken(foundUser);
             jwtService.saveUserToken(foundUser, newToken); // Guardar token nuevo
@@ -104,6 +104,10 @@ public class UserService {
         String encodedNewPassword = passwordEncoder.encode(dto.getNewPassword());
         currentUser.setPassword(encodedNewPassword);
         userRepository.save(currentUser);
+    }
+
+    public void revokeUserTokens(User user){
+        jwtService.revokeAllUserTokens(user);
     }
 
     // ========== OBTENER USUARIOS ==========

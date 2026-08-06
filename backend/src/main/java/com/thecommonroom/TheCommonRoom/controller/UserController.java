@@ -1,11 +1,9 @@
 package com.thecommonroom.TheCommonRoom.controller;
 
 import com.thecommonroom.TheCommonRoom.auth.dto.TokenResponse;
-import com.thecommonroom.TheCommonRoom.dto.PasswordUpdateDTO;
-import com.thecommonroom.TheCommonRoom.dto.UserPreviewDTO;
-import com.thecommonroom.TheCommonRoom.dto.UserResponseDTO;
-import com.thecommonroom.TheCommonRoom.dto.UserUpdateDTO;
+import com.thecommonroom.TheCommonRoom.dto.*;
 import com.thecommonroom.TheCommonRoom.model.User;
+import com.thecommonroom.TheCommonRoom.service.UserBanService;
 import com.thecommonroom.TheCommonRoom.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,18 +18,11 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
 
-    // =========== Atributos =========== \\
     private final UserService userService;
+    private final UserBanService userBanService;
 
+    // ----- BAJA / MODIFICACION USUARIOS -----
 
-    // =========== Devuelve un usuario por su nombre de usuario =========== \\
-    @GetMapping("/{username}")
-    @ResponseStatus(HttpStatus.OK)
-    public UserResponseDTO getUserByUsername(@PathVariable String username) {
-        return userService.getUserResponse(username);
-    }
-
-    // =========== Elimina un usuario por su username =========== \\
     @PreAuthorize("#username == authentication.name or hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{username}")
@@ -60,7 +51,16 @@ public class UserController {
         userService.modifyPassword(username, passwordUpdateDTO);
     }
 
-    // =========== Devuelve el perfil del usuario autenticado (por token JWT) =========== \\
+    // ----- LISTADO / BUSQUEDA USUARIOS -----
+
+    // Devuelve un usuario por su nombre de usuario
+    @GetMapping("/{username}")
+    @ResponseStatus(HttpStatus.OK)
+    public UserResponseDTO getUserByUsername(@PathVariable String username) {
+        return userService.getUserResponse(username);
+    }
+
+    // Devuelve el perfil del usuario autenticado (por token JWT)
     @GetMapping("/me")
     public UserResponseDTO getCurrentUser() {
         // Traer el usuario logueado (con token). Valida que no este baneado
@@ -94,7 +94,8 @@ public class UserController {
         return ResponseEntity.ok(userService.searchUsers(query, role, page));
     }
 
-    // Seccion admin
+    // ----- SECCION ADMIN -----
+
     // Solo los admins pueden buscar usuarios ban
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/banned")
@@ -103,4 +104,15 @@ public class UserController {
             @RequestParam(defaultValue = "1") int page) {
         return ResponseEntity.ok(userService.getBannedUsers(query, page));
     }
+
+    // Baneo de usuarios
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/{username}/ban")
+    public ResponseEntity<UserBanResponseDTO> banUser(@PathVariable String username,
+                                                      @RequestBody @Valid UserBanRequestDTO userBanRequestDTO){
+        UserBanResponseDTO userBan = userBanService.banUser(username, userBanRequestDTO);
+        return ResponseEntity.ok(userBan);
+    }
+
+    // Desbaneo de usuarios
 }
