@@ -20,4 +20,11 @@ public interface UserBanRepository extends JpaRepository<UserBan, Long> {
             "ORDER BY b.bannedAt DESC",
             countQuery = "SELECT count(b) FROM UserBan b WHERE b.bannedUser.id = :userId")
     Page<UserBan> findByBannedUserId(@Param("userId") Long userId, Pageable pageable);
+
+    @Query("SELECT b FROM UserBan b " +
+            "JOIN FETCH b.bannedUser " +
+            "JOIN FETCH b.bannedByUser " +
+            "LEFT JOIN FETCH b.unbannedByUser " +
+            "WHERE b.id = :banId")
+    Optional<UserBan> findByIdWithDetails(@Param("banId") Long banId);
 }

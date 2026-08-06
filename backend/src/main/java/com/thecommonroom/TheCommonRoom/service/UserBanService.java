@@ -85,6 +85,7 @@ public class UserBanService {
         return UserBanMapper.entityToResponseDto(banInfoEntity);
     }
 
+    @Transactional(readOnly = true)
     public Page<UserBanPreviewDTO> getUserBanHistory(String username, int page){
         // Consguir al usuario
         User user = userService.findUserByUsername(username);
@@ -95,6 +96,13 @@ public class UserBanService {
         Page<UserBan> bans = userBanRepository.findByBannedUserId(user.getId(), pageable);
 
         return bans.map(UserBanMapper::entityToPreviewDTO); // Retornar previews de ban
+    }
+
+    @Transactional(readOnly = true)
+    public UserBanResponseDTO getBanById(Long banId){
+        UserBan ban = userBanRepository.findByIdWithDetails(banId)
+                .orElseThrow(() -> new UserBanNotFoundException("Ban record not found"));
+        return UserBanMapper.entityToResponseDto(ban);
     }
 
     // ----- COMPROBACIONES -----
