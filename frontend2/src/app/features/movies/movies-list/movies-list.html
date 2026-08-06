@@ -9,7 +9,7 @@
                 id="filter-select" 
                 class="filter-dropdown" 
                 [(ngModel)]="selectedFilter" 
-                (change)="onFilterSelect($event)">
+                (ngModelChange)="onFilterChange($event)">
                 <option value="relevance">Relevance</option>
                 <option value="popular">Popular</option>
                 <option value="recent">Recent</option>
@@ -22,10 +22,10 @@
                 id="genre-select" 
                 class="filter-dropdown" 
                 [(ngModel)]="selectedGenre" 
-                (change)="onGenreSelect($event)">
+                (ngModelChange)="onGenreChange($event)">
                 <option [ngValue]="null">All Genres</option>
                 @for (genre of genresList; track genre.id) {
-                    <option [value]="genre.id" [selected]="genre.id === selectedGenre">
+                    <option [ngValue]="genre.id">
                         {{ genre.name }}
                     </option>
                 }
@@ -37,10 +37,10 @@
                 id="year-select" 
                 class="filter-dropdown" 
                 [(ngModel)]="selectedYear" 
-                (change)="onYearSelect($event)">
+                (ngModelChange)="onYearChange($event)">
                 <option value="">All Years</option>
                 @for (year of yearsList; track year) {
-                    <option [value]="year" [selected]="year.toString() === selectedYear">
+                    <option [value]="year.toString()">
                         {{ year }}
                     </option>
                 }

@@ -78,14 +78,4 @@ public class MovieController {
         return ResponseEntity.ok(movieService.searchOrFilterMovies(query, page, year, genre));
     }
 
-    // =========== Devuelve una película por ID =========== \\
-    @Operation(
-            summary = "Obtener detalles de una película",
-            description = "Devuelve información detallada de una película según su ID."
-    )
-    @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public MovieDetailsDTO getMovieById(@PathVariable Long id) {
-        return movieService.findMovieDetailsById(id);
-    }
 }

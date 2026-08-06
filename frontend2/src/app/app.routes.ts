@@ -27,8 +27,8 @@ export const routes: Routes = [
 
     /* ------ Modulo de Películas ------ */
     { path: 'movies', component: MoviesList, title: 'Movies | Common Room' },
-    { path: 'movies/search/:query', component: SearchPage},
-    { path: 'movies/:id', component: MovieSheet, title: 'Movie Details | Common Room' },
+    { path: 'movies/search/:query', component: SearchPage, title: 'Search | Common Room' },
+    { path: 'movies/:id', component: MovieSheet },
 
     /* ------ Modulo de Usuarios ------ */
     { path: 'users', component: UsersList, title: 'Users | Common Room' },

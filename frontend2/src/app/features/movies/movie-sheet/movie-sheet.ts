@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 import { MovieService } from '../../../core/services/movie-service';
 import { ReviewService } from '../../../core/services/review-service';
@@ -29,6 +30,7 @@ export class MovieSheet implements OnInit {
     private auth = inject(AuthService);
     public modalService = inject(ModalService);
     private cdr = inject(ChangeDetectorRef);
+    private titleService = inject(Title); // <----- Inyección del servicio de título
 
     // * ======== Variables de Estado ========
     chosenMovie: MovieDetails | null = null; // La película seleccionada
@@ -87,12 +89,22 @@ export class MovieSheet implements OnInit {
         this.mService.getMovieById(id).subscribe({
             next: (data) => {
                 this.chosenMovie = data;
+                
+                // <----- Actualiza el título de la pestaña en el navegador con el nombre de la película ----->
+                if (data && data.title) {
+                    this.titleService.setTitle(`${data.title} | Common Room`);
+                }
+
                 this.isLoadingMovie = false;
                 this.cdr.markForCheck();
             },
             error: (e) => {
                 console.error('Error al cargar la película:', e);
                 this.chosenMovie = null;
+                
+                // <----- Título por defecto en caso de error ----->
+                this.titleService.setTitle('Movie Details | Common Room');
+                
                 this.isLoadingMovie = false;
                 this.cdr.markForCheck();
             },

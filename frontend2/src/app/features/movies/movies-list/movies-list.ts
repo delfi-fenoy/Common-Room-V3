@@ -27,19 +27,20 @@ export const TMDB_GENRES = [
     { id: 10770, name: 'TV Movie' },
     { id: 53, name: 'Thriller' },
     { id: 10752, name: 'War' },
-    { id: 37, name: 'Western' }
+    { id: 37, name: 'Western' },
 ];
 
 @Component({
-    selector: 'app-movies-list', 
+    selector: 'app-movies-list',
+    standalone: true,
     imports: [RouterLink, FormsModule],
-    templateUrl: './movies-list.html', 
+    templateUrl: './movies-list.html',
     styleUrl: './movies-list.css',
 })
 export class MoviesList implements OnInit {
     // * ======== Inyección de Servicios ========
     public mService = inject(MovieService);
-    private cdr = inject(ChangeDetectorRef); // <----- Inyección del detector de cambios
+    private cdr = inject(ChangeDetectorRef); // Detector de cambios
     private route = inject(ActivatedRoute);
     private router = inject(Router);
 
@@ -47,7 +48,7 @@ export class MoviesList implements OnInit {
     movies: MovieBase[] = []; // Array peliculas visibles
     currentPage = 1; // Número de página actual para la paginación del backend
     hasMorePages = true; // Boolean para saber si el backend aun tiene más páginas disponibles
-    isLoading = false; 
+    isLoading = false;
     showScrollTopBtn = false;
     selectedFilter: MovieFilterType = 'relevance'; // Por defecto
 
@@ -58,13 +59,46 @@ export class MoviesList implements OnInit {
 
     // * ======== Lifecycle Hooks ========
     ngOnInit(): void {
+        // * Escucha cambios en los QueryParams para mantener sincronizados los filtros y la URL
         this.route.queryParams.subscribe((params) => {
-            // <----- Validación limpia de género desde la URL ----->
+            // ? Validación de género en la URL
             const rawGenre = params['genre'];
-            const parsedGenre = Number(rawGenre);
-            this.selectedGenre = rawGenre && !isNaN(parsedGenre) ? parsedGenre : null;
-            
-            this.selectedYear = params['year'] || '';
+            if (rawGenre !== undefined && rawGenre !== '') {
+                const parsedGenre = Number(rawGenre);
+                const existsGenre = !isNaN(parsedGenre) && this.genresList.some((g) => g.id === parsedGenre);
+
+                // ! Si el parámetro género no existe en la lista, redirige a 404
+                if (!existsGenre) {
+                    this.router.navigate(['/404']);
+                    return;
+                }
+                this.selectedGenre = parsedGenre;
+            } else {
+                this.selectedGenre = null;
+            }
+
+            // ? Validación de año en la URL
+            const rawYear = params['year'];
+            if (rawYear !== undefined && rawYear !== '') {
+                const parsedYear = Number(rawYear);
+                const existsYear = !isNaN(parsedYear) && this.yearsList.includes(parsedYear);
+
+                // ! Si el año ingresado no es válido, redirige a 404
+                if (!existsYear) {
+                    this.router.navigate(['/404']);
+                    return;
+                }
+                this.selectedYear = rawYear;
+            } else {
+                this.selectedYear = '';
+            }
+
+            if (params['filter']) {
+                this.selectedFilter = params['filter'] as MovieFilterType;
+            } else {
+                this.selectedFilter = 'relevance';
+            }
+
             this.resetAndReload();
         });
     }
@@ -87,10 +121,15 @@ export class MoviesList implements OnInit {
             request$ = this.getMoviesByFilter(this.selectedFilter, this.currentPage);
         }
 
-        // Llama al método correspondiente según el filtro y la página actual
+        // * Llama al método correspondiente según el filtro y la página actual
         request$.subscribe({
             next: (data) => {
-                this.movies = [...this.movies, ...data]; // Concatena las 20 películas recibidas al array existente
+                // ! Evita duplicados filtrando por ID
+                const newMovies = data.filter(
+                    (newMovie) => !this.movies.some((existing) => existing.id === newMovie.id)
+                );
+
+                this.movies = [...this.movies, ...newMovies]; // Concatena las películas recibidas al array existente
                 this.hasMorePages = data.length === 20; // Verifica si agrega 20 peliculas mas, Si no llego al final
                 this.isLoading = false; // Desactiva el sppiner de cargando
                 this.cdr.detectChanges(); // Fuerza a Angular a detectar los cambios y renderizar el DOM de inmediato
@@ -98,6 +137,7 @@ export class MoviesList implements OnInit {
             error: (e) => {
                 console.error(e);
                 this.isLoading = false; // Desactiva el sppiner de cargando
+                this.hasMorePages = false; // Cancela más peticiones si el backend devuelve un error (ej: 400)
                 this.cdr.detectChanges();
             },
         });
@@ -118,29 +158,55 @@ export class MoviesList implements OnInit {
         }
     }
 
-    // ? --- Selector del filtro --- 
-    onFilterSelect(event: Event): void {
-        const selectElement = event.target as HTMLSelectElement; // Castea el elemento a HTMLSelectElement para acceder a su valor
-        this.changeFilter(selectElement.value as MovieFilterType); // Llama al método para cambiar el filtro con el valor seleccionado
+    // ? --- Evento al cambiar el Filtro General ---
+    onFilterChange(newFilter: MovieFilterType): void {
+        // * Al cambiar a un Sort By se remueven los filtros de género y año de la URL
+        this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: newFilter !== 'relevance' ? { filter: newFilter } : {},
+        });
     }
 
-    // ? --- Selector de género --- 
-    onGenreSelect(event: Event): void {
-        const val = (event.target as HTMLSelectElement).value;
-        const parsed = Number(val);
-        
-        // <----- Si el valor es vacío o NaN, se asigna null ----->
-        this.selectedGenre = val && !isNaN(parsed) ? parsed : null;
-        this.resetAndReload();
+    // ? --- Evento al cambiar el Género ---
+    onGenreChange(newGenre: number | null): void {
+        this.updateQueryParams({ genre: newGenre });
     }
 
-    // ? --- Selector de año --- 
-    onYearSelect(event: Event): void {
-        this.selectedYear = (event.target as HTMLSelectElement).value;
-        this.resetAndReload();
+    // ? --- Evento al cambiar el Año ---
+    onYearChange(newYear: string): void {
+        this.updateQueryParams({ year: newYear });
     }
-    
-    // ! -------- Método para recargar--------
+
+    // ! -------- Método para actualizar QueryParams en la URL --------
+    private updateQueryParams(updated: { genre?: number | null; year?: string }): void {
+        const queryParams: any = { ...this.route.snapshot.queryParams };
+
+        if ('genre' in updated) {
+            if (updated.genre !== null && updated.genre !== undefined) {
+                queryParams.genre = updated.genre;
+            } else {
+                delete queryParams.genre;
+            }
+        }
+
+        if ('year' in updated) {
+            if (updated.year) {
+                queryParams.year = updated.year;
+            } else {
+                delete queryParams.year;
+            }
+        }
+
+        // * Se elimina el parametro filter al aplicar filtros de género o año
+        delete queryParams.filter;
+
+        this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams,
+        });
+    }
+
+    // ! -------- Método para recargar --------
     private resetAndReload(): void {
         this.currentPage = 1;
         this.movies = [];
@@ -148,24 +214,6 @@ export class MoviesList implements OnInit {
         setTimeout(() => {
             this.loadMovies();
         }, 0);
-    }
-
-    // ! -------- Método para cambiar el filtro --------
-    changeFilter(filter: MovieFilterType): void {
-        this.selectedFilter = filter;
-
-        // <----- Reset de género y año al seleccionar un Sort By ----->
-        this.selectedGenre = null;
-        this.selectedYear = '';
-
-        // <----- Limpiar QueryParams de la URL ----->
-        this.router.navigate([], {
-            relativeTo: this.route,
-            queryParams: {},
-            replaceUrl: true
-        });
-
-        this.resetAndReload();
     }
 
     // ! -------- Listener de Scroll Global --------
@@ -177,8 +225,12 @@ export class MoviesList implements OnInit {
         const scrollPosition = window.innerHeight + window.scrollY; // Posición actual del scroll desde la parte superior de la ventana
         const threshold = document.documentElement.scrollHeight - 600; // Umbral de 600px desde el final de la página para cargar más películas
 
-        // Si sobrepasa el umbral y cumple las condiciones requeridas, pide otra tanda de películas
-        if (scrollPosition >= threshold && !this.isLoading && this.hasMorePages && this.movies.length > 0) {
+        if (
+            scrollPosition >= threshold &&
+            !this.isLoading &&
+            this.hasMorePages &&
+            this.movies.length > 0
+        ) {
             this.currentPage++;
             this.loadMovies();
         }
