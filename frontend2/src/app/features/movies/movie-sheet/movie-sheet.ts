@@ -11,6 +11,7 @@ import { MovieDetails, Review } from '../../../core/models';
 import { ReviewCard } from '../../../shared/components/review-card/review-card';
 import { ReviewFormModal } from '../../../shared/components/review-form-modal/review-form-modal';
 import { Modal } from '../../../shared/components/modal/modal';
+import { TMDB_GENRES } from '../movies-list/movies-list';
 
 @Component({
     selector: 'app-movie-sheet',
@@ -70,6 +71,15 @@ export class MovieSheet implements OnInit {
                 this.loadReviews(movieId, 1);
             }
         });
+    }
+
+    // ? ----- Genre Navigation Helper ----->
+    getGenreIdByName(genre: any): number | null {
+        if (!genre) return null;
+        if (typeof genre === 'object' && genre.id) return genre.id;
+        const genreName = String(genre).trim();
+        const found = TMDB_GENRES.find((g) => g.name.toLowerCase() === genreName.toLowerCase());
+        return found ? found.id : null;
     }
 
     // ! -------- Método para cargar la Película desde el Backend --------

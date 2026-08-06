@@ -50,10 +50,10 @@
                         <div class="genres-container">
                             <strong>Genres:</strong>
                             <div class="genres-list">
-                                @for (genre of chosenMovie.genres; track genre) {
+                                @for (genre of chosenMovie.genres; track $index) {
                                     <a
                                         [routerLink]="['/movies']"
-                                        [queryParams]="{ genre: genre }"
+                                        [queryParams]="{ genre: getGenreIdByName(genre) }"
                                         class="genre-link"
                                     >
                                         {{ genre }}
@@ -68,8 +68,8 @@
                         <h4>Additional Information:</h4>
                         <ul>
                             <li>
-                                <strong>Release Year:</strong>
-                                {{ chosenMovie.releaseDate | date: 'yyyy' }}
+                                <strong>Release date:</strong>
+                                {{ chosenMovie.releaseDate }}
                             </li>
                             <li>
                                 <strong>Revenue / Budget:</strong>

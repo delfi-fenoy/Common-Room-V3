@@ -1,5 +1,3 @@
-// src/app/core/services/review-service.ts
-
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Review, PageResponse } from '../models';

@@ -1,5 +1,3 @@
-// src/app/core/services/user-service.ts
-
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { User, TokenResponse, ChangePassword, UserPreview, PageResponse } from '../models';

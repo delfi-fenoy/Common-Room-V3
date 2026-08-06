@@ -24,31 +24,58 @@ export class MovieCarouselComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+        this.stopAutoSlide();
+    }
+
+    // * -------- Navegación del Carrusel --------
+    // Avanza a la siguiente película (bucle circular)
+    nextSlide(): void {
+        if (this.movies.length === 0) return;
+        this.currentIndex.update((i) => (i + 1) % this.movies.length);
+        this.resetAutoSlide(); // <----- Reinicia el contador de 5s tras interacción manual ----->
+    }
+
+    // Retrocede a la película anterior (bucle circular)
+    prevSlide(): void {
+        if (this.movies.length === 0) return;
+        this.currentIndex.update((i) => (i - 1 + this.movies.length) % this.movies.length);
+        this.resetAutoSlide(); // <----- Reinicia el contador de 5s tras interacción manual ----->
+    }
+
+    // <----- Control del Autoplay / Timer ----->
+    private startAutoSlide(): void {
+        this.autoSlideInterval = setInterval(() => {
+            if (this.movies.length === 0) return;
+            this.currentIndex.update((i) => (i + 1) % this.movies.length);
+        }, 5000);
+    }
+
+    private stopAutoSlide(): void {
         if (this.autoSlideInterval) {
             clearInterval(this.autoSlideInterval);
         }
     }
 
-    // * -------- Navegación del Carrusel --------
-    // Avanza a la siguiente película; si llega al final, reinicia al primer elemento (0)
-    nextSlide(): void {
-        if (this.movies.length === 0) return;
-        const next = (this.currentIndex() + 1) % this.movies.length;
-        this.currentIndex.set(next);
+    private resetAutoSlide(): void {
+        this.stopAutoSlide();
+        this.startAutoSlide();
     }
 
-    // Retrocede a la película anterior; si está en la primera, salta a la última
-    prevSlide(): void {
-        if (this.movies.length === 0) return;
-        const prev = (this.currentIndex() - 1 + this.movies.length) % this.movies.length;
-        this.currentIndex.set(prev);
-    }
+    // <----- Obtiene siempre las 3 películas visibles ----->
+    getVisibleMovies(): { movie: MovieBase; position: 'left' | 'center' | 'right' }[] {
+        if (this.movies.length === 0) return [];
 
-    // Inicia un intervalo de 5 segundos que ejecuta `nextSlide()` automáticamente
-    private startAutoSlide(): void {
-        this.autoSlideInterval = setInterval(() => {
-            this.nextSlide();
-        }, 5000);
+        const total = this.movies.length;
+        const curr = this.currentIndex();
+
+        const prevIdx = (curr - 1 + total) % total;
+        const nextIdx = (curr + 1) % total;
+
+        return [
+            { movie: this.movies[prevIdx], position: 'left' },
+            { movie: this.movies[curr], position: 'center' },
+            { movie: this.movies[nextIdx], position: 'right' },
+        ];
     }
 
     // ? <----- Helpers / Formatters ----->

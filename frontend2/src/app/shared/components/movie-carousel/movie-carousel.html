@@ -12,27 +12,24 @@
             <img src="assets/img/buttons-icons/left-arrow.png" alt="Left Arrow" />
         </button>
 
-        <!-- Movies Cards Track -->
-        <div
-            class="carousel-track"
-            [style.transform]="'translateX(calc(33.333% - ' + currentIndex() * 33.333 + '%))'"
-        >
-            @for (movie of movies; track movie.id; let i = $index) {
+        <!-- Movies Cards Container (Solo 3 elementos a la vez) -->
+        <div class="carousel-track">
+            @for (item of getVisibleMovies(); track item.movie.id) {
                 <div
                     class="movie-card"
-                    [class.active]="i === currentIndex()"
-                    [routerLink]="['/movies', movie.id]"
+                    [class.active]="item.position === 'center'"
+                    [routerLink]="['/movies', item.movie.id]"
                 >
                     <div class="img-wrapper">
                         <img
-                            [src]="movie.posterUrl || 'assets/img/default-poster.jpg'"
-                            [alt]="movie.title || 'Poster not available'"
+                            [src]="item.movie.posterUrl || 'assets/img/default-poster.jpg'"
+                            [alt]="item.movie.title || 'Poster not available'"
                             (error)="onImgError($event)"
                         />
-                        @if (i === currentIndex()) {
+                        @if (item.position === 'center') {
                             <div class="info-overlay">
-                                <p class="movie-title">{{ movie.title }}</p>
-                                <p class="movie-date">{{ movie.releaseDate }}</p>
+                                <p class="movie-title">{{ item.movie.title }}</p>
+                                <p class="movie-date">{{ item.movie.releaseDate }}</p>
                             </div>
                         }
                     </div>

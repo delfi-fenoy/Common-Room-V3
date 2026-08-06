@@ -26,24 +26,33 @@
 }
 
 .filter-dropdown {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
     background-color: var(--purple-500);
-    color: var(--purple-200);
+    color: #ffffff;
     border: 3px solid var(--purple-600);
-    border-radius: 0.5rem;
-    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    padding: 6px 32px 6px 12px;
     font-size: 0.95rem;
-    font-weight: 500;
-    cursor: pointer; 
-    outline: none;
+    cursor: pointer;
+
+    /* Diseño de la flecha */
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 14px;
+
     transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .filter-dropdown:hover,
 .filter-dropdown:focus {
+    outline: none;
     border-color: var(--purple-500);
     background-color: var(--purple-300);
     color: var(--purple-700);
-}
+} 
 
 .filter-dropdown option {
     background-color: var(--purple-300);

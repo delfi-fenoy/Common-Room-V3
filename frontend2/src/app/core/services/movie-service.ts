@@ -1,8 +1,7 @@
-// src/app/core/services/movie-service.ts
-
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { MovieDetails, MovieBase } from '../models';
+import { Observable } from 'rxjs';
+import { MovieBase, MovieDetails } from '../models';
 
 @Injectable({
     providedIn: 'root',
@@ -38,12 +37,26 @@ export class MovieService {
         return this.http.get<MovieBase[]>(`${this.URL}/upcoming?page=${page}`);
     }
 
-    /* ------ Metodo para buscar peliculas ------ */
-    searchMovies(query: string, page: number = 1, year?: string, genre?: string) {
+    // <----- Metodo Search | Discover Movies ----->
+    searchOrDiscoverMovies(
+        page: number = 1,
+        query?: string,
+        year?: string,
+        genreId?: number
+    ): Observable<MovieBase[]> {
         let params = new HttpParams().set('page', page.toString());
-        if (year) params = params.set('year', year);
-        if (genre) params = params.set('genre', genre);
 
-        return this.http.get<MovieBase[]>(`${this.URL}/search/${query}`, { params });
+        if (query && query.trim() !== '') {
+            params = params.set('query', query.trim());
+        }
+        if (year && year.trim() !== '') {
+            params = params.set('year', year.trim());
+        }
+        // <----- Validación extra para evitar NaN ----->
+        if (genreId !== undefined && genreId !== null && !isNaN(genreId)) {
+            params = params.set('genre', genreId.toString());
+        }
+
+        return this.http.get<MovieBase[]>(`${this.URL}/search-or-discover`, { params });
     }
 }

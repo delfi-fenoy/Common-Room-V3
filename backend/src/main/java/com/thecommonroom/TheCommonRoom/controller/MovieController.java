@@ -37,17 +37,6 @@ public class MovieController {
         return movieService.getAllMovies(page);
     }
 
-    // =========== Devuelve una película por ID =========== \\
-    @Operation(
-            summary = "Obtener detalles de una película",
-            description = "Devuelve información detallada de una película según su ID."
-    )
-    @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public MovieDetailsDTO getMovieById(@PathVariable Long id) {
-        return movieService.findMovieDetailsById(id);
-    }
-
     // =========== Lista paginada de películas populares =========== \\
     @Operation(
             summary = "Lista paginada de películas populares",
@@ -97,5 +86,16 @@ public class MovieController {
             @RequestParam(required = false) Integer genre) {
 
         return ResponseEntity.ok(movieService.searchOrFilterMovies(query, page, year, genre));
+    }
+
+    // =========== Devuelve una película por ID =========== \\
+    @Operation(
+            summary = "Obtener detalles de una película",
+            description = "Devuelve información detallada de una película según su ID."
+    )
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public MovieDetailsDTO getMovieById(@PathVariable Long id) {
+        return movieService.findMovieDetailsById(id);
     }
 }
