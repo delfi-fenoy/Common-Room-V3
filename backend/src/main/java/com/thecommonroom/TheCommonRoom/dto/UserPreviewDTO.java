@@ -1,11 +1,10 @@
 package com.thecommonroom.TheCommonRoom.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.thecommonroom.TheCommonRoom.model.Role;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-@Schema(description = "DTO con información básica y necesaria de un usuario para vistas " +
-        "resumidas o listados.")
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,5 +16,6 @@ public class UserPreviewDTO {
     private String username;
     private String profilePictureUrl;
     private Role role;
+    @JsonProperty("isBanned")
     private boolean isBanned;
 }

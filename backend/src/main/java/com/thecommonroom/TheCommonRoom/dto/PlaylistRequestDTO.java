@@ -1,5 +1,6 @@
 package com.thecommonroom.TheCommonRoom.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,7 @@ public class PlaylistRequestDTO {
     @Size(max = 255, message = "La descripcion no debe superar los 255 caracteres")
     private String description;
 
+    @JsonProperty("isPrivate")
     private boolean isPrivate;
 
     @URL(message = "La URL no es valida")
