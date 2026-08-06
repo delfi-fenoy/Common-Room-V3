@@ -116,9 +116,17 @@ public class UserController {
 
     // Desbaneo de usuarios
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/{username}/unban")
+    @PutMapping("/{username}/ban")
     public ResponseEntity<UserBanResponseDTO> unbanUser(@PathVariable String username){
         UserBanResponseDTO userBan = userBanService.unbanUser(username);
         return ResponseEntity.ok(userBan);
+    }
+
+    // Obtener el ultimo ban de un usuario
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/{username}/ban")
+    public ResponseEntity<UserBanResponseDTO> getUserLastBanInfo(@PathVariable String username){
+        UserBanResponseDTO banInfo = userBanService.getUserLastBanInfo(username);
+        return ResponseEntity.ok(banInfo);
     }
 }

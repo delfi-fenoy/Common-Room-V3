@@ -68,6 +68,17 @@ public class UserBanService {
         return UserBanMapper.entityToResponseDto(banInfo);
     }
 
+    // ----- LISTADO DE BANEOS -----
+
+    // Obtener el ultimo ban de un usuario
+    public UserBanResponseDTO getUserLastBanInfo(String username){
+        User user = userService.findUserByUsername(username); // Chequear que el usuario exista
+        // Traer el registro del ban
+        UserBan banInfoEntity = userBanRepository.findFirstByBannedUserIdOrderByBannedAtDesc(user.getId())
+                .orElseThrow(() -> new UserBanNotFoundException("Ban record not found for user: " + username));
+        return UserBanMapper.entityToResponseDto(banInfoEntity);
+    }
+
     // ----- COMPROBACIONES -----
 
     private void validateUserNotAdmin(User user, String errorMsg){
