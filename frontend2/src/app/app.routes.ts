@@ -22,18 +22,8 @@ export const routes: Routes = [
     { path: '', component: HomePage, title: 'Home | Common Room' },
 
     /* ------ Autenticación y Registro ------ */
-    {
-        path: 'login',
-        component: LoginPage,
-        title: 'Login | Common Room',
-        canActivate: [guestGuard],
-    },
-    {
-        path: 'register',
-        component: RegisterPage,
-        title: 'Register | Common Room',
-        canActivate: [guestGuard],
-    },
+    { path: 'login', component: LoginPage, title: 'Login | Common Room', canActivate: [guestGuard] },
+    { path: 'register', component: RegisterPage, title: 'Register | Common Room', canActivate: [guestGuard] },
 
     /* ------ Modulo de Películas ------ */
     { path: 'movies', component: MoviesList, title: 'Movies | Common Room' },
