@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, inject } from '@angular/core';
+import { Component, HostListener, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { MovieBase } from '../../../core/models';
 import { MovieService } from '../../../core/services/movie-service';
 import { RouterLink } from '@angular/router';
@@ -16,6 +16,7 @@ export type MovieFilterType = 'relevance' | 'popular' | 'recent' | 'upcoming';
 export class MoviesList implements OnInit {
     // * ======== Inyección de Servicios ========
     public mService = inject(MovieService);
+    private cdr = inject(ChangeDetectorRef); // <----- Inyección del detector de cambios
 
     // * ======== Variables de Estado ========
     movies: MovieBase[] = []; // Array peliculas visibles
@@ -41,10 +42,12 @@ export class MoviesList implements OnInit {
                 this.movies = [...this.movies, ...data]; // Concatena las 20 películas recibidas al array existente
                 this.hasMorePages = data.length === 20; // Verifica si agrega 20 peliculas mas, Si no llego al final
                 this.isLoading = false; // Desactiva el sppiner de cargando
+                this.cdr.detectChanges(); // Fuerza a Angular a detectar los cambios y renderizar el DOM de inmediato
             },
             error: (e) => {
                 console.error(e);
                 this.isLoading = false; // Desactiva el sppiner de cargando
+                this.cdr.detectChanges(); // <----- Fuerza actualización en caso de error
             },
         });
     }
@@ -82,8 +85,10 @@ export class MoviesList implements OnInit {
         this.movies = [];
         // Restablece la bandera indicando que hay nuevas páginas por consultar
         this.hasMorePages = true;
-        // Dispara la carga inmediata para el nuevo filtro
-        this.loadMovies();
+        // <----- Retrasa un ciclo de micro-task para dar tiempo a limpiar la UI antes de re-cargar
+        setTimeout(() => {
+            this.loadMovies();
+        }, 0);
     }
 
     // ! -------- Listener de Scroll Global --------

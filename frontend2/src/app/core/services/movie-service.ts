@@ -1,4 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+// src/app/core/services/movie-service.ts
+
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MovieDetails, MovieBase } from '../models';
 
@@ -11,7 +13,7 @@ export class MovieService {
 
     constructor(private http: HttpClient) {}
 
-    /* ------ Metodo para acceder a una unica pelicula por ID  ------ */
+    /* ------ Metodo para acceder a una unica pelicula por ID ------ */
     getMovieById(id: number) {
         return this.http.get<MovieDetails>(`${this.URL}/${id}`);
     }
@@ -37,7 +39,11 @@ export class MovieService {
     }
 
     /* ------ Metodo para buscar peliculas ------ */
-    searchMovies(query: string, page: number = 1) {
-        return this.http.get<MovieBase[]>(`${this.URL}/search/${query}?page=${page}`);
+    searchMovies(query: string, page: number = 1, year?: string, genre?: string) {
+        let params = new HttpParams().set('page', page.toString());
+        if (year) params = params.set('year', year);
+        if (genre) params = params.set('genre', genre);
+
+        return this.http.get<MovieBase[]>(`${this.URL}/search/${query}`, { params });
     }
 }

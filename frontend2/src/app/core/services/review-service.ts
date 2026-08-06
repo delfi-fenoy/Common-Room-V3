@@ -1,6 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+// src/app/core/services/review-service.ts
+
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Review } from '../models';
+import { Review, PageResponse } from '../models';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -28,13 +30,15 @@ export class ReviewService {
     }
 
     /* ------ Metodo para obtener todas las reseñas de una pelicula ------ */
-    getReviewsForMovie(movieId: number): Observable<Review[]> {
-        return this.http.get<Review[]>(`${this.URL}/movies/${movieId}/reviews`);
+    getReviewsForMovie(movieId: number, page: number = 1): Observable<PageResponse<Review>> {
+        const params = new HttpParams().set('page', page.toString());
+        return this.http.get<PageResponse<Review>>(`${this.URL}/movies/${movieId}/reviews`, { params });
     }
 
     /* ------ Metodo para obtener todas las reseñas de un usuario ------ */
-    getReviewsForUser(username: string): Observable<Review[]> {
-        return this.http.get<Review[]>(`${this.URL}/users/${username}/reviews`);
+    getReviewsForUser(username: string, page: number = 1): Observable<PageResponse<Review>> {
+        const params = new HttpParams().set('page', page.toString());
+        return this.http.get<PageResponse<Review>>(`${this.URL}/users/${username}/reviews`, { params });
     }
 
     /* ------ Metodo para obtener la reseña de un usuario para una pelicula especifica ------ */
