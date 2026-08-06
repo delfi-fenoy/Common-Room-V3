@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -85,5 +86,16 @@ public class MovieController {
     @ResponseStatus(HttpStatus.OK)
     public List<MoviePreviewDTO> searchMovies(@PathVariable String query, @RequestParam(defaultValue = "1") int page, @RequestParam(required = false) String year, @RequestParam(required = false) String genre) {
         return movieService.searchMovies(query, page, year, genre);
+    }
+
+    //Busco o filtro pelicula (error que teniamos en front)
+    @GetMapping("/search-or-discover")
+    public ResponseEntity<List<MoviePreviewDTO>> searchOrFilterMovies(
+            @RequestParam(required = false) String query,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(required = false) String year,
+            @RequestParam(required = false) Integer genre) {
+
+        return ResponseEntity.ok(movieService.searchOrFilterMovies(query, page, year, genre));
     }
 }
