@@ -14,6 +14,7 @@ import { SearchPage } from './features/search/search-page/search-page';
 import { UsersList } from './features/users/users-list/users-list';
 import { UserProfile } from './features/users/user-profile/user-profile';
 import { NotFound } from './features/not-found/not-found';
+import { PlaylistsList } from './features/playlists/playlists-list/playlists-list';
 
 /* ! ======== Configuración Global de Rutas ======== */
 export const routes: Routes = [
@@ -43,6 +44,9 @@ export const routes: Routes = [
     { path: 'users', component: UsersList, title: 'Users | Common Room' },
     { path: 'users/me', component: UserProfile, canActivate: [authGuard] },
     { path: 'users/:username', component: UserProfile },
+
+    /* ------ Modulo de playlist ------ */
+    { path: 'playlists', component: PlaylistsList },
 
     /* ------ Modulo Errores y Redirecciones ------ */
     { path: '404', component: NotFound, title: '404 | Not Found' },

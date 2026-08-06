@@ -14,6 +14,7 @@ export * from './movies/movie-details';
 
 /* ------ Modulo de Playlists ------ */
 export * from './playlists/playlist-request';
+export * from './playlists/playlist-preview';
 export * from './playlists/playlist-response';
 
 /* ------ Modulo de Reseñas ------ */

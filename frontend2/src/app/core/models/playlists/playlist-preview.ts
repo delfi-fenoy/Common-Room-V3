@@ -1,12 +1,10 @@
 import { UserPreview } from '../users/user-preview';
 
-// Modelo completo retornado en el detalle o creación/modificación
-export interface PlaylistResponse {
+// Modelo simplificado retornado en listados y búsquedas (sin descripción)
+export interface PlaylistPreview {
     id: number;
     name: string;
-    description?: string;
     isPrivate: boolean;
     pictureUrl?: string;
-    createdAt?: string;
     userPreviewDTO?: UserPreview;
 }
