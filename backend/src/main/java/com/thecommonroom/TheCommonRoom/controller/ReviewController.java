@@ -4,8 +4,6 @@ import com.thecommonroom.TheCommonRoom.dto.ReviewRequestDTO;
 import com.thecommonroom.TheCommonRoom.dto.ReviewResponseDTO;
 import com.thecommonroom.TheCommonRoom.dto.ReviewUpdateDTO;
 import com.thecommonroom.TheCommonRoom.service.ReviewService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,21 +15,14 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
-@Tag(
-        name = "Reseñas",
-        description = "Endpoints para crear, modificar, eliminar y consultar reseñas de usuarios " +
-                "sobre películas."
-)
 @RestController
 @RequiredArgsConstructor
 public class ReviewController {
 
     private final ReviewService reviewService;
 
-    @Operation(
-            summary = "Crear una reseña",
-            description = "Crea una nueva reseña para una película. El usuario debe estar autenticado."
-    )
+    // ----- ABM RESEÑAS -----
+
     @PostMapping("/reviews")
     public ResponseEntity<ReviewResponseDTO> createReview(@Valid @RequestBody ReviewRequestDTO reviewRequestDTO){
         ReviewResponseDTO reviewResponseDTO = reviewService.createReview(reviewRequestDTO); // Crear reseña
@@ -47,11 +38,6 @@ public class ReviewController {
     }
 
     // Llamar metodo de UserSecurity, para comprobar permisos
-    @Operation(
-            summary = "Eliminar una reseña",
-            description = "Elimina una reseña existente. Solo puede hacerlo el autor de la " +
-                    "reseña o un administrador."
-    )
     @PreAuthorize("@userSecurity.canDeleteReview(#reviewId, authentication)")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/reviews/{reviewId}")
@@ -59,21 +45,15 @@ public class ReviewController {
         reviewService.deleteReview(reviewId);
     }
 
-    @Operation(
-            summary = "Modificar una reseña",
-            description = "Permite modificar el contenido de una reseña existente identificada por su ID."
-    )
     @PutMapping("/reviews/{reviewId}")
     public ResponseEntity<ReviewResponseDTO> modifyReview(@PathVariable Long reviewId, @Valid @RequestBody ReviewUpdateDTO reviewUpdateDTO){
         ReviewResponseDTO reviewResponseDTO = reviewService.modifyReview(reviewId, reviewUpdateDTO);
         return ResponseEntity.ok(reviewResponseDTO);
     }
 
+    // ----- LISTADO / BUSQUEDA RESEÑAS -----
+
     // Obtener reseñas por usuario
-    @Operation(
-            summary = "Obtener reseñas de un usuario",
-            description = "Devuelve una lista paginada con todas las reseñas creadas por un usuario."
-    )
     @GetMapping("/users/{username}/reviews")
     public ResponseEntity<Page<ReviewResponseDTO>> getUserReviews(@PathVariable String username, @RequestParam(defaultValue = "1") int page){
         return ResponseEntity.ok(reviewService.getReviewsByUsername(username, page));
@@ -86,10 +66,6 @@ public class ReviewController {
     }
 
     // Obtener reseñas por película
-    @Operation(
-            summary = "Obtener reseñas de una película",
-            description = "Devuelve una lista paginada con todas las reseñas asociadas a una película."
-    )
     @GetMapping("/movies/{id}/reviews")
     public ResponseEntity<Page<ReviewResponseDTO>> getMovieReviews(@PathVariable Long id, @RequestParam(defaultValue = "1") int page){
         return ResponseEntity.ok(reviewService.getReviewsByMovieId(id, page));
