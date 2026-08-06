@@ -1,0 +1,188 @@
+/* * ======== Layout del Contenido del Modal ======== */
+.review-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.body-modal {
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+}
+
+/* ? ------- Poster Lateral ------- */
+.image-modal {
+    width: 35%;
+    max-width: 180px;
+    flex-shrink: 0;
+}
+
+.image-modal img {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    border: 0.3rem solid var(--brown-200);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+/* ? ------- Columna de Controles ------- */
+.text-modal {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.movie-title {
+    margin: 0;
+    font-size: 1.3rem;
+    color: var(--brown-200);
+    border-bottom: 0.3rem solid var(--brown-400);
+    padding-bottom: 0.3rem;
+}
+
+.field-label {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: var(--brown-200);
+    margin-bottom: 0.3rem;
+    display: block;
+}
+
+.required {
+    color: #ff6b6b;
+}
+
+/* * ======== Sistema de Estrellas ======== */
+.stars-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    cursor: pointer;
+    background-color: var(--brown-600);
+    padding: 0.4rem 0.8rem;
+    border-radius: 0.5rem;
+    border: 0.3rem solid var(--brown-400);
+}
+
+.star {
+    font-size: 2rem;
+    color: #ffd700;
+    user-select: none;
+    transition: transform 0.15s ease;
+}
+
+.star:hover {
+    transform: scale(1.2);
+}
+
+.rating-indicator {
+    margin-left: auto;
+    font-weight: bold;
+    color: var(--brown-700);
+    font-size: 0.95rem;
+}
+
+/* * ======== Textarea Comentario ======== */
+.comment-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-wrapper textarea {
+    width: 100%;
+    padding: 0.6rem;
+    background-color: var(--brown-200);
+    color: var(--brown-700);
+    border: 0.3rem solid var(--brown-400);
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+    font-family: inherit;
+    resize: none;
+    box-sizing: border-box;
+}
+
+.comment-wrapper textarea:focus {
+    outline: none;
+    border-color: var(--purple-400);
+}
+
+.comment-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.3rem;
+}
+
+.char-counter {
+    font-size: 0.75rem;
+    color: var(--brown-200);
+    margin-left: auto;
+}
+
+.error-msg {
+    color: #ff6b6b;
+    font-size: 0.8rem;
+    margin: 0.2rem 0 0 0;
+}
+
+/* * ======== Acciones / Botones ======== */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.8rem;
+    margin-top: 0.5rem;
+    padding-top: 0.8rem;
+    border-top: 5px solid var(--brown-400);
+}
+
+.btn {
+    padding: 0.55rem 1.2rem;
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    background-color: var(--brown-500);
+    color: var(--brown-100);
+    border: 0.2rem solid var(--brown-400);
+    transition: background-color 0.2s ease, transform 0.1s ease, color 0.2s ease;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+.btn-cancel:hover {
+    background-color: var(--green-300);
+    border-color: var(--green-400);
+    color: var(--green-700);
+}
+
+.btn-confirm:hover {
+    background-color: var(--purple-300);
+    border-color: var(--purple-400);
+    color: var(--purple-700);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ! __________ Responsive __________ */
+@media (max-width: 550px) {
+    .body-modal {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .image-modal {
+        width: 60%;
+    }
+
+    .text-modal {
+        width: 100%;
+    }
+}
