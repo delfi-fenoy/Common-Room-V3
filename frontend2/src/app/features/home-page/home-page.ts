@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { MovieBase } from '../../core/models';
+import { MoviePreview } from '../../core/models';
 import { MovieService } from '../../core/services/movie-service';
 import { MovieCarouselComponent } from '../../shared/components/movie-carousel/movie-carousel';
 
@@ -15,9 +15,9 @@ export class HomePage implements OnInit {
     private movieService = inject(MovieService);
 
     // * ---- Estados Reactivos con Signals (Listas) ----
-    popularMovies = signal<MovieBase[]>([]);
-    recentMovies = signal<MovieBase[]>([]);
-    upcomingMovies = signal<MovieBase[]>([]);
+    popularMovies = signal<MoviePreview[]>([]);
+    recentMovies = signal<MoviePreview[]>([]);
+    upcomingMovies = signal<MoviePreview[]>([]);
 
     // * -------- Ciclo de Vida: OnInit --------
     // Se ejecuta al inicializar el componente; invoca la carga inicial de todas las listas de películas

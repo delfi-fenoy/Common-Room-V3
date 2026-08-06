@@ -1,6 +1,6 @@
-import { MovieBase } from './movie-base';
+import { MoviePreview } from './movie-preview';
 
-export interface MovieDetails extends MovieBase {
+export interface MovieDetails extends MoviePreview {
     duration?: number;
     genres?: string[];
     voteAverage?: number;

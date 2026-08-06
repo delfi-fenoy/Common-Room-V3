@@ -1,4 +1,4 @@
-import { MovieBase } from '../movies/movie-base';
+import { MoviePreview } from '../movies/movie-preview';
 import { UserPreview } from '../users/user-preview';
 
 export interface Review {
@@ -7,6 +7,6 @@ export interface Review {
     rating: number;
     comment?: string;
     createdAt: string;
-    moviePreview?: MovieBase; 
-    userPreview?: UserPreview;          
+    moviePreview?: MoviePreview;
+    userPreview?: UserPreview;
 }

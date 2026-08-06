@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, OnDestroy, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { MovieBase } from '../../../core/models';
+import { MoviePreview } from '../../../core/models';
 
 @Component({
     selector: 'app-movie-carousel',
@@ -12,7 +12,7 @@ import { MovieBase } from '../../../core/models';
 export class MovieCarouselComponent implements OnInit, OnDestroy {
     // * ---- Inputs recibidos del componente padre ----
     @Input({ required: true }) title: string = ''; // Título de la sección
-    @Input({ required: true }) movies: MovieBase[] = []; // Arreglo de películas
+    @Input({ required: true }) movies: MoviePreview[] = []; // Arreglo de películas
 
     // * ---- Estado Reactivo Local ----
     currentIndex = signal<number>(0); // Signal que guarda el índice actual de la película destacada en el carrusel
@@ -62,7 +62,7 @@ export class MovieCarouselComponent implements OnInit, OnDestroy {
     }
 
     // <----- Obtiene siempre las 3 películas visibles ----->
-    getVisibleMovies(): { movie: MovieBase; position: 'left' | 'center' | 'right' }[] {
+    getVisibleMovies(): { movie: MoviePreview; position: 'left' | 'center' | 'right' }[] {
         if (this.movies.length === 0) return [];
 
         const total = this.movies.length;

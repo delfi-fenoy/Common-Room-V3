@@ -1,5 +1,5 @@
 import { Component, HostListener, OnInit, inject, ChangeDetectorRef } from '@angular/core';
-import { MovieBase } from '../../../core/models';
+import { MoviePreview } from '../../../core/models';
 import { MovieService } from '../../../core/services/movie-service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -45,7 +45,7 @@ export class MoviesList implements OnInit {
     private router = inject(Router);
 
     // * ======== Variables de Estado ========
-    movies: MovieBase[] = []; // Array peliculas visibles
+    movies: MoviePreview[] = []; // Array peliculas visibles
     currentPage = 1; // Número de página actual para la paginación del backend
     hasMorePages = true; // Boolean para saber si el backend aun tiene más páginas disponibles
     isLoading = false;
@@ -108,7 +108,7 @@ export class MoviesList implements OnInit {
         if (this.isLoading || !this.hasMorePages) return; // Controla si ya hay una petición en curso o si no quedan más páginas
         this.isLoading = true; // Sppiner de cargando
 
-        let request$: Observable<MovieBase[]>;
+        let request$: Observable<MoviePreview[]>;
 
         if (this.selectedYear || this.selectedGenre !== null) {
             request$ = this.mService.searchOrDiscoverMovies(
@@ -144,7 +144,7 @@ export class MoviesList implements OnInit {
     }
 
     // ! -------- Método Switch para obtener películas por filtro --------
-    private getMoviesByFilter(filter: MovieFilterType, page: number): Observable<MovieBase[]> {
+    private getMoviesByFilter(filter: MovieFilterType, page: number): Observable<MoviePreview[]> {
         switch (filter) {
             case 'popular':
                 return this.mService.getPopularMovies(page);

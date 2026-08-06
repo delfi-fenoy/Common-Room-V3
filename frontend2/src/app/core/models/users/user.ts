@@ -2,10 +2,11 @@ export interface User {
     id?: number;
     username: string;
     email?: string;
-    profilePictureUrl?: string;
     description?: string;
     role?: Role;
     createdAt?: string;
+    profilePictureUrl?: string;
+    isBanned?: boolean;
 }
 
 export enum Role {

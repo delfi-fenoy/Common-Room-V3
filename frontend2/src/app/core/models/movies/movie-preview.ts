@@ -1,4 +1,4 @@
-export interface MovieBase {
+export interface MoviePreview {
     id: number;
     title: string;
     synopsis: string;

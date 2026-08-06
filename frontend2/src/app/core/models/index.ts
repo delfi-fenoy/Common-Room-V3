@@ -9,13 +9,8 @@ export * from './auth/register-request';
 export * from './auth/token-response';
 
 /* ------ Modulo de Películas ------ */
-export * from './movies/movie-base';
+export * from './movies/movie-preview';
 export * from './movies/movie-details';
-
-/* ------ Modulo de Playlists ------ */
-export * from './playlists/playlist-request';
-export * from './playlists/playlist-preview';
-export * from './playlists/playlist-response';
 
 /* ------ Modulo de Reseñas ------ */
 export * from './reviews/review';
