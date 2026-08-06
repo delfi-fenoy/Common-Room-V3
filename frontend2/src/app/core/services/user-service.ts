@@ -1,6 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+// src/app/core/services/user-service.ts
+
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { User, TokenResponse, ChangePassword, UserPreview } from '../models';
+import { User, TokenResponse, ChangePassword, UserPreview, PageResponse } from '../models';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -12,9 +14,29 @@ export class UserService {
 
     constructor(private http: HttpClient) {}
 
-    /* ------ Metodo para obtener la lista general de usuarios ------ */
-    getUsers(): Observable<UserPreview[]> {
-        return this.http.get<UserPreview[]>(`${this.URL}/all`);
+    /* ------ Metodo para obtener la lista paginada de usuarios ------ */
+    getUsers(
+        page: number = 1, // <----- Base 1 para coincidir con Spring Boot
+        size: number = 10,
+        role?: string,
+    ): Observable<PageResponse<UserPreview>> {
+        let params = new HttpParams()
+            .set('page', page.toString())
+            .set('size', size.toString());
+
+        if (role && role !== 'all') {
+            params = params.set('role', role);
+        }
+
+        return this.http.get<PageResponse<UserPreview>>(`${this.URL}/all`, { params });
+    }
+
+    /* ------ Metodo para buscar usuarios paginados ------ */
+    searchUsers(query: string, role?: string, page: number = 1): Observable<PageResponse<UserPreview>> {
+        let params = new HttpParams().set('query', query).set('page', page.toString());
+        if (role && role !== 'all') params = params.set('role', role);
+
+        return this.http.get<PageResponse<UserPreview>>(`${this.URL}/search`, { params });
     }
 
     /* ------ Metodo para acceder al perfil publico de un usuario ------ */
@@ -29,8 +51,6 @@ export class UserService {
 
     /* ------ Metodo para modificar los datos del perfil propio ------ */
     updateUser(username: string, userUpdateDTO: User): Observable<TokenResponse | void> {
-        console.log('Service | Username (Viejo) =' + username);
-        console.log('Service | userUpdateDTO (Nuevo) =' + userUpdateDTO.username);
         return this.http.put<TokenResponse | void>(`${this.URL}/${username}`, userUpdateDTO);
     }
 

@@ -94,4 +94,20 @@ public class MovieService {
 
         return MovieMapper.rawToPreviewDTOList(results);
     }
+
+    public List<MoviePreviewDTO> searchOrFilterMovies(String query, int page, String year, Integer genreId) {
+        RawMovieListDTO rawList;
+
+        if (query != null && !query.isBlank()) {
+            rawList = api.searchMovies(query, page, year);
+        }
+        else {
+            rawList = api.discoverMovies(page, year, genreId);
+        }
+
+        if (page > rawList.getTotal_pages()) {
+            throw new PageOutOfBoundsException("This page does not exist. Max page: " + rawList.getTotal_pages());
+        }
+        return MovieMapper.rawToPreviewDTOList(rawList.getResults());
+    }
 }

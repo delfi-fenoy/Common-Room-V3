@@ -1,0 +1,139 @@
+<div class="review-card" [class.highlighted]="isHighlighted" [class.mode-user]="mode === 'user'">
+
+    <!-- ! ========== MovieSheet Review (Mode 1) ========== -->
+    @if (mode === 'movie') {
+        @if (review.userPreview; as user) {
+            <!-- ? === Review Header === -->
+            <div class="review-header">
+                <!-- User Info -->
+                <div class="user-info" [routerLink]="['/users', user.username]">
+                    @if (user.role === 'ADMIN') {
+                        <img
+                            [src]="user.profilePictureUrl || 'assets/img/userAdmin.jpg'"
+                            alt="{{ user.username || 'User Avatar' }}"
+                            (error)="noProfilePicture($event)"
+                        />
+                    } @else {
+                        <img
+                            [src]="user.profilePictureUrl || 'assets/img/userv2.jpg'"
+                            alt="{{ user.username || 'User Avatar' }}"
+                            (error)="noProfilePicture($event)"
+                        />
+                    }
+                    <div class="user-text">
+                        <span>Review By</span>
+                        <strong>{{ user.username }}</strong>
+                    </div>
+                </div>
+
+                <!-- --- Vertical Divider --- -->
+                <div class="header-divider"></div>
+
+                <!-- Rating Stars -->
+                <div class="star-container">
+                    @for (i of [1, 2, 3, 4, 5]; track i) {
+                        @if (i <= review.rating) {
+                            <span class="star">★</span>
+                        } @else if (i - review.rating === 0.5) {
+                            <span class="half-star">⯪</span>
+                        } @else {
+                            <span class="empty-star">☆</span>
+                        }
+                    }
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="buttons-container">
+                    @if (currentUsername && user.username === currentUsername) {
+                        <button (click)="onEdit()" title="Edit Review">✏️</button>
+                    }
+                    @if ((currentUsername && user.username === currentUsername) || isAdmin) {
+                        <button (click)="onDelete()" title="Delete Review">🗑️</button>
+                    }
+                </div>
+            </div>
+
+            <!-- ? === Review Body === -->
+            <div class="comment-section">
+                @if (review.comment == null) {
+                    <p><em>No comment provided</em></p>
+                } @else {
+                    <p>{{ review.comment }}</p>
+                }
+            </div>
+
+            <!-- ? === Review Footer === -->
+            <div class="review-footer">
+                <h3>Reviewed on</h3>
+                <h2>{{ review.createdAt | date: 'yyyy-MM-dd' }}</h2>
+            </div>
+        }
+    }
+
+    <!-- ! ========== Profile Review (Mode 2) ========== -->
+    @if (mode === 'user') {
+        @if (review.moviePreview; as movie) {
+            <!-- ? === Movie Poster === -->
+            <div
+                class="review-image"
+                [routerLink]="['/movies', movie.id]"
+                title="Go to {{ movie.title }}"
+            >
+                <img
+                    [src]="movie.posterUrl || 'assets/img/default-poster.jpg'"
+                    alt="{{ movie.title || 'Poster not available' }}"
+                    (error)="onImgError($event)"
+                />
+            </div>
+
+            <!-- ? === Review Content === -->
+            <div class="review-content-user">
+                <!-- Movie Header -->
+                <div class="review-header mode-user-header">
+                    <h2 [routerLink]="['/movies', movie.id]" title="Go to {{ movie.title }}">
+                        {{ movie.title }}
+                    </h2>
+
+                    <!-- Rating Stars -->
+                    <div class="star-container">
+                        @for (i of [1, 2, 3, 4, 5]; track i) {
+                            @if (i <= review.rating) {
+                                <span class="star">★</span>
+                            } @else if (i - review.rating === 0.5) {
+                                <span class="half-star">⯪</span>
+                            } @else {
+                                <span class="empty-star">☆</span>
+                            }
+                        }
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="buttons-container">
+                        @if (isAdmin || isMyProfile) {
+                            <button (click)="onDelete()" title="Delete Review">🗑️</button>
+                        }
+                        @if (isMyProfile) {
+                            <button (click)="onEdit()" title="Edit Review">✏️</button>
+                        }
+                    </div>
+                </div>
+
+                <!-- Comment Section -->
+                <div class="comment-section">
+                    @if (review.comment == null) {
+                        <p><em>No comment provided</em></p>
+                    } @else {
+                        <p>{{ review.comment }}</p>
+                    }
+                </div>
+
+                <!-- Review Footer -->
+                <div class="review-footer">
+                    <h3>Reviewed on</h3>
+                    <h2>{{ review.createdAt | date: 'yyyy-MM-dd' }}</h2>
+                </div>
+            </div>
+        }
+    }
+
+</div>
