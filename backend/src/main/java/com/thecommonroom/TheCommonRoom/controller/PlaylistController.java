@@ -90,4 +90,14 @@ public class PlaylistController {
         Page<PlaylistPreviewDTO> playlists = playlistService.getPublicPlaylists(page);
         return ResponseEntity.ok(playlists);
     }
+
+    // Buscador general de listas por nombre
+    @GetMapping("/playlists/search/{query}")
+    public ResponseEntity<Page<PlaylistPreviewDTO>> searchPlaylists(
+            @PathVariable String query,
+            @RequestParam(defaultValue = "1") int page) {
+
+        Page<PlaylistPreviewDTO> playlists = playlistService.searchPlaylists(query, page);
+        return ResponseEntity.ok(playlists);
+    }
 }

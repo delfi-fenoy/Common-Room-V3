@@ -200,4 +200,14 @@ public class PlaylistService {
             throw new MovieNotInPlaylistException("This movie is not in the playlist");
         }
     }
+
+    @Transactional(readOnly = true)
+    public Page<PlaylistPreviewDTO> searchPlaylists(String query, int page) {
+        Pageable pageable = PageRequest.of(page - 1, 10);
+
+        Page<Playlist> playlists = playlistRepository.findByNameContainingIgnoreCaseAndIsPrivateFalse(query, pageable);
+        long totalElements = playlists.getTotalElements();
+
+        return PlaylistMapper.entityToPreviewDTOPage(playlists, pageable, totalElements);
+    }
 }
