@@ -28,6 +28,7 @@ public class UserMapper {
                 .username(user.getUsername())
                 .profilePictureUrl(user.getProfilePictureUrl())
                 .role(Role.valueOf(user.getRole().name()))
+                .isBanned(user.isBanned())
                 .build();
     }
 
@@ -47,6 +48,7 @@ public class UserMapper {
                 .description(user.getDescription())
                 .profilePictureUrl(user.getProfilePictureUrl())
                 .role(user.getRole())
+                .isBanned(user.isBanned())
                 .build();
     }
 }

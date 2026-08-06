@@ -24,4 +24,5 @@ public class UserResponseDTO {
     private String profilePictureUrl;
     private String description;
     private Role role;
+    private boolean isBanned;
 }
