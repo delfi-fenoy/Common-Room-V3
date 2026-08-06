@@ -1,6 +1,7 @@
 package com.thecommonroom.TheCommonRoom.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @AllArgsConstructor
@@ -13,6 +14,7 @@ public class PlaylistPreviewDTO {
 
     private Long id;
     private String name;
+    @JsonProperty("isPrivate")
     private boolean isPrivate;
     private String pictureUrl;
     private UserPreviewDTO userPreviewDTO;

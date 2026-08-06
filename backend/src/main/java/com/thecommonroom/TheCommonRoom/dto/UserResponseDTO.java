@@ -1,6 +1,7 @@
 package com.thecommonroom.TheCommonRoom.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.thecommonroom.TheCommonRoom.model.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -24,5 +25,6 @@ public class UserResponseDTO {
     private String profilePictureUrl;
     private String description;
     private Role role;
+    @JsonProperty("isBanned")
     private boolean isBanned;
 }
