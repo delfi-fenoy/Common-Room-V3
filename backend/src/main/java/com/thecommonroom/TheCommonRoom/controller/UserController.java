@@ -115,4 +115,10 @@ public class UserController {
     }
 
     // Desbaneo de usuarios
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{username}/unban")
+    public ResponseEntity<UserBanResponseDTO> unbanUser(@PathVariable String username){
+        UserBanResponseDTO userBan = userBanService.unbanUser(username);
+        return ResponseEntity.ok(userBan);
+    }
 }

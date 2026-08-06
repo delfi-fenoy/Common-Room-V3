@@ -3,6 +3,7 @@ package com.thecommonroom.TheCommonRoom.service;
 import com.thecommonroom.TheCommonRoom.dto.UserBanRequestDTO;
 import com.thecommonroom.TheCommonRoom.dto.UserBanResponseDTO;
 import com.thecommonroom.TheCommonRoom.exception.IllegalOperationException;
+import com.thecommonroom.TheCommonRoom.exception.UserBanNotFoundException;
 import com.thecommonroom.TheCommonRoom.mapper.UserBanMapper;
 import com.thecommonroom.TheCommonRoom.model.Role;
 import com.thecommonroom.TheCommonRoom.model.User;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Service
@@ -44,6 +46,27 @@ public class UserBanService {
     }
 
     // ----- DESBANEO DE USUARIOS -----
+    @Transactional
+    public UserBanResponseDTO unbanUser(String username){
+        // Conseguir admin actual y usuario a banear
+        User targetUser = userService.findUserByUsername(username);
+        User currentAdmin = userService.getCurrentUser();
+
+        // Comprobar que el usuario a desbanear esté baneado
+        if(!targetUser.isBanned()){
+            throw new IllegalOperationException("This user is not banned");
+        }
+
+        // Cambiar estado del usuario
+        targetUser.setBanned(false); // Cambiar estado del usuario
+        // Recuperar la info del ban y modificar valores
+        UserBan banInfo = userBanRepository.findFirstByBannedUserIdOrderByBannedAtDesc(targetUser.getId())
+                .orElseThrow(() -> new UserBanNotFoundException("Ban record not found for user: " + username));
+        banInfo.setUnbannedByUser(currentAdmin); // Guardar al admin que realizo la operacion
+        banInfo.setUnbannedAt(LocalDateTime.now()); // Guardar la fecha y hora de desbaneo
+
+        return UserBanMapper.entityToResponseDto(banInfo);
+    }
 
     // ----- COMPROBACIONES -----
 

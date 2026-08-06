@@ -113,6 +113,17 @@ public class GlobalExceptionHandler {
                 .body(error);
     }
 
+    // |=== EXCEPCIONES DE BANEO ===|
+
+    @ExceptionHandler(UserBanNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleUserBanNotFound(UserBanNotFoundException ex){
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(error);
+    }
+
     @ExceptionHandler(IllegalOperationException.class)
     public ResponseEntity<Map<String, String>> handleIllegalOperation(IllegalOperationException ex){
         Map<String, String> error = new HashMap<>();

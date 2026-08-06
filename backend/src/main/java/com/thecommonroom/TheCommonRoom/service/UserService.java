@@ -239,7 +239,7 @@ public class UserService {
         }
     }
 
-    public void validateUserNotBanned(String username, String errorMsg){
+    protected void validateUserNotBanned(String username, String errorMsg){
         if(userRepository.existsByUsernameAndIsBannedTrue(username)){
             throw new UserBannedException(errorMsg);
         }
