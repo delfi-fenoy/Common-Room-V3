@@ -1,0 +1,183 @@
+<div class="movie-sheet-container">
+    <!-- ? --- Loading Indicator --- -->
+    @if (isLoadingMovie) {
+        <div class="loading-container">
+            <h3>Loading movie information...</h3>
+        </div>
+    } @else if (chosenMovie) {
+        <!-- * ---- Fondo Difuminado Fijo ---- -->
+        @if (chosenMovie.backdropUrl) {
+            <div class="bg-wrapper">
+                <img [src]="chosenMovie.backdropUrl" alt="Movie backdrop" class="bg-img" />
+            </div>
+        }
+
+        <!-- ! ========== Movie Section ========== -->
+        <section class="movie-main-card">
+            <!-- ? --- Columna Izquierda: Póster --- -->
+            <div class="poster-column">
+                <div class="img-wrapper">
+                    <img
+                        [src]="chosenMovie.posterUrl || 'assets/img/default-img/movie-noimg.jpg'"
+                        [alt]="chosenMovie.title || 'Movie Poster'"
+                        (error)="onImgError($event)"
+                    />
+                </div>
+            </div>
+
+            <!-- ? --- Columna Derecha: Detalles de la Película --- -->
+            <div class="info-column">
+                <!-- Título y Rating -->
+                <div class="block-box title-box">
+                    <h1>{{ chosenMovie.title }}</h1>
+                    @if (chosenMovie.voteAverage != null) {
+                        <span class="rating-badge">⭐ {{ chosenMovie.voteAverage }}</span>
+                    }
+                </div>
+
+                <!-- Sinopsis -->
+                <div class="block-box synopsis-box">
+                    <h3>Synopsis</h3>
+                    <p>{{ chosenMovie.synopsis || 'No synopsis available.' }}</p>
+                </div>
+
+                <!-- Metadatos de la Película -->
+                <div class="block-box data-box">
+                    <h3>Movie Details</h3>
+
+                    <!-- Lista de Géneros -->
+                    @if (chosenMovie.genres && chosenMovie.genres.length > 0) {
+                        <div class="genres-container">
+                            <strong>Genres:</strong>
+                            <div class="genres-list">
+                                @for (genre of chosenMovie.genres; track $index) {
+                                    <a
+                                        [routerLink]="['/movies']"
+                                        [queryParams]="{ genre: getGenreIdByName(genre) }"
+                                        class="genre-link"
+                                    >
+                                        {{ genre }}
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Información Adicional -->
+                    <div class="metadata-details">
+                        <h4>Additional Information:</h4>
+                        <ul>
+                            <li>
+                                <strong>Release date:</strong>
+                                {{ chosenMovie.releaseDate }}
+                            </li>
+                            <li>
+                                <strong>Revenue / Budget:</strong>
+                                ${{ chosenMovie.revenue || 0 | number }} / ${{
+                                    chosenMovie.budget || 0 | number
+                                }}
+                            </li>
+                            <li>
+                                <strong>Duration:</strong> {{ chosenMovie.duration || 'N/A' }} min
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- * ========== Reviews Section ========== -->
+        <section class="reviews-section">
+            <h2 class="title-reviews">Community Reviews</h2>
+
+            @if (!isLoggedIn) {
+                <p class="login-text">You must be logged in to post a review...</p>
+            }
+
+            <!-- ? === 1. Reseña del Usuario Logueado O Botón para Crear === -->
+            <div class="user-review-area">
+                @if (isLoggedIn && currentUserReview) {
+                    <div class="own-review-wrapper">
+                        <span class="own-review-tag">Your review</span>
+                        <app-review-card
+                            [review]="currentUserReview"
+                            [mode]="'movie'"
+                            [currentUsername]="currentUsername"
+                            [isAdmin]="isAdmin"
+                            [isHighlighted]="true"
+                            (edit)="openEditModal($event)"
+                            (delete)="confirmDeleteReview($event)"
+                        ></app-review-card>
+                    </div>
+                } @else if (isLoggedIn && !currentUserReview) {
+                    <button (click)="openCreateModal()" class="addReview-button">Review +</button>
+                }
+            </div>
+
+            <!-- Divisor horizontal entre reseña propia y lista de la comunidad -->
+            <hr class="reviews-divider" />
+
+            <!-- ? === 2. Lista de Reseñas Generales (Grid Paginado) === -->
+            <div class="reviews-container">
+                @if (isLoadingReviews) {
+                    <p class="loading-reviews">Loading reviews...</p>
+                } @else if (reviews.length === 0) {
+                    <h2 class="no-reviews">No reviews published yet.</h2>
+                } @else {
+                    @for (review of reviews; track review.id) {
+                        <app-review-card
+                            [review]="review"
+                            [mode]="'movie'"
+                            [currentUsername]="currentUsername"
+                            [isAdmin]="isAdmin"
+                            (edit)="openEditModal($event)"
+                            (delete)="confirmDeleteReview($event)"
+                        ></app-review-card>
+                    }
+                }
+            </div>
+
+            <!-- ? === 3. Controles de Paginación === -->
+            @if (totalPages > 1) {
+                <div class="pagination-controls">
+                    <button
+                        [disabled]="currentPage === 1"
+                        (click)="changePage(currentPage - 1)"
+                        class="page-btn"
+                    >
+                        &laquo; Previous
+                    </button>
+
+                    <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+
+                    <button
+                        [disabled]="currentPage === totalPages"
+                        (click)="changePage(currentPage + 1)"
+                        class="page-btn"
+                    >
+                        Next &raquo;
+                    </button>
+                </div>
+            }
+        </section>
+    } @else {
+        <!-- ? --- Mensaje de Película No Encontrada --- -->
+        <div class="not-found-container">
+            <h3>No movie was found with that information.</h3>
+        </div>
+    }
+
+    <!-- ! ========== Modal Formulario de Reseña (Crear / Editar) ========== -->
+    @if (modalService.isOpen() && modalService.type() === 'custom') {
+        <app-review-form-modal
+            [movie]="chosenMovie"
+            [review]="selectedReview"
+            (submitted)="refreshReviews()"
+        ></app-review-form-modal>
+    }
+
+    <!-- ! ========== Modal Genérico (Alertas / Confirmaciones) ========== -->
+    @if (modalService.isOpen() && modalService.type() !== 'custom') {
+        <app-modal></app-modal>
+    }
+</div>

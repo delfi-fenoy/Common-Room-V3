@@ -1,32 +1,44 @@
 import { Routes } from '@angular/router';
-import { HomePage } from './pages/home-page/home-page';
-import { LoginPage } from './pages/login-page/login-page';
-import { MovieSheet } from './pages/movie-sheet/movie-sheet';
-import { UserProfile } from './pages/user-profile/user-profile';
-import { UsersList } from './pages/users-list/users-list';
-import { MoviesList } from './pages/movies-list/movies-list';
-import { SearchPage } from './pages/search-page/search-page';
-import { guestGuard } from './guards/guest-guard';
-import { RegisterPage } from './pages/register-page/register-page';
-import { authGuard } from './guards/auth-guard';
-import { NotFound } from './pages/not-found/not-found';
 
+// Guards
+import { authGuard } from './core/guards/auth-guard';
+import { guestGuard } from './core/guards/guest-guard';
+
+// Componentes
+import { HomePage } from './features/home-page/home-page';
+import { LoginPage } from './features/auth/login-page/login-page';
+import { RegisterPage } from './features/auth/register-page/register-page';
+import { MoviesList } from './features/movies/movies-list/movies-list';
+import { MovieSheet } from './features/movies/movie-sheet/movie-sheet';
+import { SearchPage } from './features/search/search-page/search-page';
+import { UsersList } from './features/users/users-list/users-list';
+import { UserProfile } from './features/users/user-profile/user-profile';
+import { NotFound } from './features/not-found/not-found';
+import { PlaylistsList } from './features/playlists/playlists-list/playlists-list';
+
+/* ! ======== Configuración Global de Rutas ======== */
 export const routes: Routes = [
-    {path: '', component: HomePage, title:"Home | Common Room"},
-    {path: 'login', component: LoginPage, title:"Login | Common Room", canActivate: [guestGuard]},
-    {path: 'register', component: RegisterPage, title:"Register | Common Room", canActivate: [guestGuard]},
-    {path: 'movies', component: MoviesList, title:"Movies | Common Room"},
-    {path: 'movies/:id', component: MovieSheet},
-    {path: 'movies/search/:query', component: SearchPage},
-    {path: 'users', component: UsersList, title:"Users | Common Room"},
-    {path: 'users/:username', component: UserProfile},
-    {path: 'users/me', component: UserProfile},
-    {path: '404', component: NotFound},
-  
-    //Cualquier otra ruta redirige a home
-    {path: '', redirectTo: '/', pathMatch: 'full'},
+    /* ------ Pagina Principal ------ */
+    { path: '', component: HomePage, title: 'Home | Common Room' },
 
-    //Ruta not found
-    {path: '**', redirectTo: '/404'}
+    /* ------ Autenticación y Registro ------ */
+    { path: 'login', component: LoginPage, title: 'Login | Common Room', canActivate: [guestGuard] },
+    { path: 'register', component: RegisterPage, title: 'Register | Common Room', canActivate: [guestGuard] },
+
+    /* ------ Modulo de Películas ------ */
+    { path: 'movies', component: MoviesList, title: 'Movies | Common Room' },
+    { path: 'movies/search/:query', component: SearchPage, title: 'Search | Common Room' },
+    { path: 'movies/:id', component: MovieSheet },
+
+    /* ------ Modulo de Usuarios ------ */
+    { path: 'users', component: UsersList, title: 'Users | Common Room' },
+    { path: 'users/me', component: UserProfile, canActivate: [authGuard] },
+    { path: 'users/:username', component: UserProfile },
+
+    /* ------ Modulo de playlist ------ */
+    { path: 'playlists', component: PlaylistsList },
+
+    /* ------ Modulo Errores y Redirecciones ------ */
+    { path: '404', component: NotFound, title: '404 | Not Found' },
+    { path: '**', redirectTo: '/404' },
 ];
-

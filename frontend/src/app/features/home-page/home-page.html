@@ -1,0 +1,12 @@
+<div class="home-container">
+    <!-- ! ====== Title ====== -->
+    <section class="logo-section">
+        <img src="assets/img/CR-Title.png" alt="Common Room Logo" class="main-logo" />
+    </section>
+
+    <!-- ! ====== Carousels ====== -->
+    <app-movie-carousel title="Popular Movies" [movies]="popularMovies()" />
+    <app-movie-carousel title="Recent Movies" [movies]="recentMovies()" />
+    <app-movie-carousel title="Upcoming Movies" [movies]="upcomingMovies()" />
+
+</div>

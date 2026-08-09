@@ -1,0 +1,163 @@
+/* * ========== Host & Structural Overlay ========== */
+:host {
+    display: block;
+    width: 100%;
+}
+
+/* * ========== Header Container ========== */
+.footer {
+    background-color: var(--green-600);
+    color: var(--purple-100);
+    padding: 1rem 1.5rem 1rem 1.5rem;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.7rem;
+}
+
+/* * ========== General Images / Icons Styles ========== */
+.buttons-img {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    display: block;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+
+/* * ========== Top Section (Authors & Repo) ========== */
+.footer-top {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 4rem;
+    max-width: 1200px;
+}
+
+.footer-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--purple-200);
+}
+
+.authors-list {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.author-link {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--purple-100);
+    text-decoration: none;
+    font-size: 0.85rem;
+    opacity: 0.75;
+    transition: color 0.2s ease, opacity 0.2s ease, transform 0.1s ease;
+}
+
+.author-link:hover {
+    opacity: 1;
+    color: var(--purple-300);
+    transform: scale(1.05);
+}
+
+.author-link:hover span {
+    text-decoration: underline;
+}
+
+.author-link:hover .buttons-img {
+    opacity: 1;
+}
+
+.author-link:active {
+    transform: scale(0.98);
+}
+
+/* ? --- Buttons Styles --- */
+.repo-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--green-300);
+    border: 3px solid var(--green-200);
+    border-radius: 6px;
+    padding: 0.35rem 0.75rem;
+    color: var(--purple-100);
+    text-decoration: none;
+    font-size: 0.85rem;
+    opacity: 0.7;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease, color 0.2s ease, opacity 0.2s ease;
+    margin-left: auto;
+}
+
+.repo-btn:hover {
+    opacity: 1;
+    background-color: var(--purple-300);
+    border-color: var(--purple-400);
+    color: var(--purple-700);
+    transform: scale(1.05);
+}
+
+.repo-btn:hover span {
+    text-decoration: underline;
+}
+
+.repo-btn:hover .buttons-img {
+    opacity: 1;
+}
+
+.repo-btn:active {
+    transform: scale(0.98);
+}
+
+/* ? --- Divider --- */
+.footer-divider {
+    width: 100%;
+    max-width: 1200px;
+    border: none;
+    height: 1px;
+    background-color: var(--green-400);
+}
+
+/* * ========== Bottom Section (Institution & Copyright) ========== */
+.footer-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    text-align: center;
+}
+
+.institution-text {
+    font-size: 0.85rem;
+    color: var(--purple-200);
+}
+
+.copyright-text {
+    font-size: 0.8rem;
+    color: var(--purple-300);
+    opacity: 0.8;
+}
+
+/* ! ========== Responsive ========== */
+@media (max-width: 768px) {
+    .footer-top {
+        flex-direction: column;
+        gap: 0.85rem;
+    }
+
+    .repo-btn {
+        margin-left: 0;
+    }
+
+    .authors-list {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}

@@ -1,0 +1,51 @@
+<section class="carousel-section" (mouseenter)="stopAutoSlide()" (mouseleave)="startAutoSlide()">
+    <!-- ? --- Header --- -->
+    <div class="carousel-header">
+        <h3 class="header-title">{{ title }}</h3>
+        <span class="header-counter">{{ getFormattedCounter() }}</span>
+    </div>
+
+    <!-- ? --- Carousel --- -->
+    <div class="carousel-viewport">
+        <!-- Left Button -->
+        <button class="nav-btn left" (click)="prevSlide()" aria-label="Previous">
+            <img src="assets/img/buttons-icons/left-arrow.png" alt="Left Arrow" />
+        </button>
+
+        <!-- Movies Cards Container (Solo 3 elementos a la vez) -->
+        <div class="carousel-track">
+            @for (item of getVisibleMovies(); track item.movie.id) {
+                <div
+                    class="movie-card"
+                    [class.active]="item.position === 'center'"
+                    [routerLink]="['/movies', item.movie.id]"
+                >
+                    <div class="img-wrapper">
+                        <img
+                            [src]="item.movie.posterUrl || 'assets/img/default-img/movie-noimg.jpg'"
+                            [alt]="item.movie.title || 'Poster not available'"
+                            (error)="onImgError($event)"
+                        />
+                        <div class="info-overlay">
+                            <h1>{{ item.movie.title }}</h1>
+                            <h3>{{ item.movie.releaseDate }}</h3>
+                            <p>{{ item.movie.synopsis }}</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Right Button -->
+        <button class="nav-btn right" (click)="nextSlide()" aria-label="Next">
+            <img src="assets/img/buttons-icons/right-arrow.png" alt="Right Arrow" />
+        </button>
+    </div>
+
+    <!-- ? --- Indicators --- -->
+    <div class="carousel-indicators">
+        @for (movie of movies; track movie.id; let i = $index) {
+            <span class="indicator-dash" [class.active]="i === currentIndex()"></span>
+        }
+    </div>
+</section>

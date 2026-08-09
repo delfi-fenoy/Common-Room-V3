@@ -1,0 +1,135 @@
+<div class="user-profile-container">
+    @if (isLoadingUser) {
+        <div class="loading-container">
+            <h3>Loading user profile...</h3>
+        </div>
+    } @else if (selectedUser) {
+        <!-- * ========== Información del Usuario ========== -->
+        <section class="user-main-card">
+            <div class="user-container">
+                <!-- Columna Foto de Perfil -->
+                <div class="avatar-column">
+                    <div class="img-wrapper">
+                        <img
+                            [src]="selectedUser.profilePictureUrl || (selectedUser.role === 'ADMIN' ? 'assets/img/userAdmin.jpg' : 'assets/img/userv2.jpg')"
+                            [alt]="selectedUser.username || 'User Picture'"
+                            (error)="noProfilePicture($event)"
+                        />
+                    </div>
+                </div>
+
+                <!-- Columna Detalles -->
+                <div class="info-column">
+                    <div class="block-box info-header">
+                        <div class="user-title">
+                            <h1>
+                                {{ selectedUser.username }}
+                                @if (selectedUser.role === 'ADMIN') { <span class="admin-badge" title="Administrator">⭐ Admin</span> }
+                            </h1>
+                            <span class="user-date">Member since {{ selectedUser.createdAt | date: 'yyyy-MM-dd' }}</span>
+                        </div>
+                    </div>
+
+                    <div class="block-box info-body">
+                        <h3>About</h3>
+                        <p>{{ selectedUser.description || 'No description provided.' }}</p>
+                    </div>
+
+                    <div class="block-box info-footer">
+                        <span class="review-count">Total Reviews: <strong>{{ totalElements }}</strong></span>
+
+                        @if (isMyProfile) {
+                            <div class="profile-actions">
+                                <button (click)="openEditModal()" class="action-btn edit-btn">
+                                    ⚙️ Edit Settings
+                                </button>
+                                <button (click)="deleteUser()" class="action-btn delete-btn" title="Delete User Account">
+                                    🗑️
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- * ========== Reviews Section ========== -->
+        <section class="reviews-section">
+            <h2 class="title-reviews">{{ selectedUser.username }}'s thoughts...</h2>
+
+            <div class="reviews-container">
+                @if (isLoadingReviews) {
+                    <p class="loading-reviews">Loading reviews...</p>
+                } @else if (reviews.length === 0) {
+                    <p class="no-reviews">No reviews published yet...</p>
+                } @else {
+                    @for (review of reviews; track review.id) {
+                        <app-review-card
+                            [review]="review"
+                            [mode]="'user'"
+                            [currentUsername]="currentUsername"
+                            [isAdmin]="isAdmin"
+                            [isMyProfile]="isMyProfile"
+                            (edit)="onEditReview($event)"
+                            (delete)="onDeleteReview($event)"
+                        ></app-review-card>
+                    }
+                }
+            </div>
+
+            <!-- Controles de Paginación -->
+            @if (totalPages > 1) {
+                <div class="pagination-controls">
+                    <button
+                        [disabled]="currentPage === 1"
+                        (click)="changePage(currentPage - 1)"
+                        class="page-btn"
+                    >
+                        &laquo; Previous
+                    </button>
+
+                    <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+
+                    <button
+                        [disabled]="currentPage === totalPages"
+                        (click)="changePage(currentPage + 1)"
+                        class="page-btn"
+                    >
+                        Next &raquo;
+                    </button>
+                </div>
+            }
+        </section>
+    } @else {
+        <!-- <----- Estado Usuario No Encontrado con Botón ----->
+        <div class="not-found-card">
+            <h2>⚠️ User Not Found</h2>
+            <p>The requested user profile does not exist or has been removed.</p>
+            <a routerLink="/users" class="back-users-btn">
+                <span>← Back to Users List</span>
+            </a>
+        </div>
+    }
+
+    <!-- * ========== Modal Edición Unificado (Custom) ========== -->
+    @if (modalService.isOpen() && modalService.type() === 'custom') {
+        @if (activeModal === 'profile') {
+            <app-modal>
+                <app-edit-profile-modal
+                    [user]="selectedUser!"
+                    (submitted)="refreshProfileData($event)"
+                ></app-edit-profile-modal>
+            </app-modal>
+        } @else if (activeModal === 'review' && selectedReview) {
+            <app-review-form-modal
+                [review]="selectedReview"
+                (submitted)="onReviewUpdated()"
+            ></app-review-form-modal>
+        }
+    }
+
+    <!-- * ========== Modal Genérico (Confirmaciones y Alertas) ========== -->
+    @if (modalService.isOpen() && modalService.type() !== 'custom') {
+        <app-modal></app-modal>
+    }
+</div>

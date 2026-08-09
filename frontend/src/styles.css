@@ -1,37 +1,48 @@
 :root {
-  /* ===== Verdes ===== */
-  --green-dark: #1d3327;
-  --green-semi-dark: #23332a;
-  --green-mid: #355f49;
-  --green-light: #a2b18a;
-  --green-plus-light: #d8e9bd;
-  
-  /* Degradados */
-  --green-gradient: linear-gradient(135deg, #9cab86 0%, #3b5445 100%);
-  --brown-gradient: linear-gradient(135deg, #bb9f8c 0%, #766153 100%);
+    /* Primary | Green (60%) */
+    --green-100: #d3e29e;
+    --green-200: #acb981;
+    --green-300: #889265;
+    --green-400: #656d4a;
+    --green-500: #444a31;
+    --green-600: #26291a;
+    --green-700: #101209;
 
-  /* ===== Marrones ===== */
-  --brown-dark: #51443B;
-  --brown-mid: #766153;
-  --brown-light: #bb9f8c;
-  
-  /* ===== Extras suaves ===== */
-  --bg-light: #f5f5f2;
-  --text-dark: #1a1a1a;
-  --text-light: #ffffff;
+    /* Secondary | Brown (30%) */
+    --brown-100: #efd9bf;
+    --brown-200: #d2af80;
+    --brown-300: #a68a64;
+    --brown-400: #7c674a;
+    --brown-500: #554631;
+    --brown-600: #31271a;
+    --brown-700: #161009;
+
+    /* Tertiary | Purple (10%) */
+    --purple-100: #efeef2;
+    --purple-200: #c8c4d2;
+    --purple-300: #a39cb4;
+    --purple-400: #807596;
+    --purple-500: #5d5271;
+    --purple-600: #3a3348;
+    --purple-700: #1b1722;
 }
 
-*{
-  padding: 0;
-  margin: 0;
+* {
+    padding: 0;
+    margin: 0;
 }
 
 html {
-  scroll-behavior: smooth;
+    scroll-behavior: smooth;
+    overflow-x: hidden; 
+    max-width: 100%;
 }
 
 body {
-  /* background: var(--green-gradient); */
-  background-image: url('/assets/img/background-page.jpg');
-  background-position: center;
+    overflow-x: hidden; 
+    max-width: 100%;
+    background-image: url('/assets/img/background/background-pattern.png');
+    background-repeat: repeat;
+    background-size: auto;
+    background-position: top center;
 }

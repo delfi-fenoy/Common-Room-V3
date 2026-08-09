@@ -77,4 +77,5 @@ public class MovieController {
 
         return ResponseEntity.ok(movieService.searchOrFilterMovies(query, page, year, genre));
     }
+
 }
