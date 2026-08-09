@@ -14,10 +14,10 @@ import { ModalService } from '../../services/modal-services';
 })
 export class Header implements OnInit {
     // * ---- Inyección de Dependencias ----
-    private router = inject(Router); // <-- Otra forma de aplicar Inyección de Dependencias en lugar de pasarlas por el constructor(...)
+    private router = inject(Router);
     private authService = inject(AuthService);
     private modalService = inject(ModalService);
-    private cdr = inject(ChangeDetectorRef); // Para prevenir error ExpressionChangedAfterItHasBeenCheckedError
+    private cdr = inject(ChangeDetectorRef);
 
     // * ---- Variables de Estado de Búsqueda ----
     searchQuery: string = '';
@@ -35,13 +35,13 @@ export class Header implements OnInit {
         // Escucha el estado de sesión del usuario
         this.authService.loggedIn$.subscribe((value) => {
             this.isLoggedIn = value;
-            this.cdr.detectChanges(); // Previene error ExpressionChangedAfterItHasBeenCheckedError
+            setTimeout(() => this.cdr.detectChanges()); // <----- Asincronía para prevenir error NG0100 ----->
         });
 
         // Escucha el nombre del usuario logueado
         this.authService.username$.subscribe((username) => {
             this.currentUser = username;
-            this.cdr.detectChanges(); // Previene error ExpressionChangedAfterItHasBeenCheckedError
+            setTimeout(() => this.cdr.detectChanges()); // <----- Asincronía para prevenir error NG0100 ----->
         });
 
         // Escucha los cambios de ruta para limpiar la barra si no está en búsquedas
@@ -60,7 +60,6 @@ export class Header implements OnInit {
     }
 
     onSearchBlur(): void {
-        // Timeout breve para permitir hacer clic en el botón de búsqueda antes de ocultar
         setTimeout(() => {
             this.isSearchFocused = false;
         }, 150);
@@ -85,7 +84,6 @@ export class Header implements OnInit {
             'Are you sure you want to log out of your account?',
             () => {
                 this.authService.logout();
-                this.router.navigate(['/login']);
             },
         );
     }

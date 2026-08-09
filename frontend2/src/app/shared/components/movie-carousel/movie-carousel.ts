@@ -42,17 +42,19 @@ export class MovieCarouselComponent implements OnInit, OnDestroy {
         this.resetAutoSlide(); // <----- Reinicia el contador de 5s tras interacción manual ----->
     }
 
-    // <----- Control del Autoplay / Timer ----->
-    private startAutoSlide(): void {
+    // <----- Control del Autoplay / Timer (Públicos para pausar/reanudar en hover) ----->
+    startAutoSlide(): void {
+        this.stopAutoSlide(); // <----- Previene la duplicación de timers activos ----->
         this.autoSlideInterval = setInterval(() => {
             if (this.movies.length === 0) return;
             this.currentIndex.update((i) => (i + 1) % this.movies.length);
         }, 5000);
     }
 
-    private stopAutoSlide(): void {
+    stopAutoSlide(): void {
         if (this.autoSlideInterval) {
             clearInterval(this.autoSlideInterval);
+            this.autoSlideInterval = null;
         }
     }
 

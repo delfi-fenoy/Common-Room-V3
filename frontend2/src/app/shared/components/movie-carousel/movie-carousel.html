@@ -1,4 +1,4 @@
-<section class="carousel-section">
+<section class="carousel-section" (mouseenter)="stopAutoSlide()" (mouseleave)="startAutoSlide()">
     <!-- ? --- Header --- -->
     <div class="carousel-header">
         <h3 class="header-title">{{ title }}</h3>
@@ -22,16 +22,15 @@
                 >
                     <div class="img-wrapper">
                         <img
-                            [src]="item.movie.posterUrl || 'assets/img/default-poster.jpg'"
+                            [src]="item.movie.posterUrl || 'assets/img/default-img/movie-noimg.jpg'"
                             [alt]="item.movie.title || 'Poster not available'"
                             (error)="onImgError($event)"
                         />
-                        @if (item.position === 'center') {
-                            <div class="info-overlay">
-                                <p class="movie-title">{{ item.movie.title }}</p>
-                                <p class="movie-date">{{ item.movie.releaseDate }}</p>
-                            </div>
-                        }
+                        <div class="info-overlay">
+                            <h1>{{ item.movie.title }}</h1>
+                            <h3>{{ item.movie.releaseDate }}</h3>
+                            <p>{{ item.movie.synopsis }}</p>
+                        </div>
                     </div>
                 </div>
             }

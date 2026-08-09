@@ -58,12 +58,13 @@
     text-decoration: none;
     font-size: 0.85rem;
     opacity: 0.75;
-    transition: opacity 0.2s ease;
+    transition: color 0.2s ease, opacity 0.2s ease, transform 0.1s ease;
 }
 
 .author-link:hover {
     opacity: 1;
-    color: #ffffff;
+    color: var(--purple-300);
+    transform: scale(1.05);
 }
 
 .author-link:hover span {
@@ -72,6 +73,10 @@
 
 .author-link:hover .buttons-img {
     opacity: 1;
+}
+
+.author-link:active {
+    transform: scale(0.98);
 }
 
 /* ? --- Buttons Styles --- */
@@ -87,15 +92,16 @@
     text-decoration: none;
     font-size: 0.85rem;
     opacity: 0.7;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease, color 0.2s ease, opacity 0.2s ease;
     margin-left: auto;
 }
 
 .repo-btn:hover {
     opacity: 1;
-    background-color: var(--green-200);
-    border-color: var(--green-300);
-    color: #ffffff;
+    background-color: var(--purple-300);
+    border-color: var(--purple-400);
+    color: var(--purple-700);
+    transform: scale(1.05);
 }
 
 .repo-btn:hover span {
@@ -104,6 +110,10 @@
 
 .repo-btn:hover .buttons-img {
     opacity: 1;
+}
+
+.repo-btn:active {
+    transform: scale(0.98);
 }
 
 /* ? --- Divider --- */
