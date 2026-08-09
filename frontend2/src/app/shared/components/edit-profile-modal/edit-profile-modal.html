@@ -1,1 +1,166 @@
-<p>edit-profile-modal works!</p>
+<div class="edit-profile-container">
+    <!-- * ========== Pestañas de Navegación ========== -->
+    <div class="tabs-header">
+        <button 
+            type="button" 
+            class="tab-btn" 
+            [class.active]="activeTab === 'profile'"
+            (click)="setTab('profile')">
+            Edit Profile
+        </button>
+        <button 
+            type="button" 
+            class="tab-btn" 
+            [class.active]="activeTab === 'password'"
+            (click)="setTab('password')">
+            Change Password
+        </button>
+    </div>
+
+    <!-- * ========== Pestaña 1: Información de Perfil ========== -->
+    @if (activeTab === 'profile') {
+        <form [formGroup]="profileForm" (ngSubmit)="onSaveProfile()" class="modal-form">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input 
+                    id="username" 
+                    type="text" 
+                    formControlName="username" 
+                    placeholder="Enter username" 
+                />
+                <!-- <----- Mensajes de Error alineados con Register ----->
+                @if (profileForm.get('username')?.touched && profileForm.get('username')?.hasError('required')) {
+                    <span class="error-msg">Username is required.</span>
+                } @else if (
+                    profileForm.get('username')?.touched && 
+                    (profileForm.get('username')?.hasError('minlength') || profileForm.get('username')?.hasError('maxlength'))
+                ) {
+                    <span class="error-msg">Username must be between 5 and 20 characters.</span>
+                }
+            </div>
+
+            <div class="form-group">
+                <label for="profilePictureUrl">Profile Picture URL</label>
+                <input 
+                    id="profilePictureUrl" 
+                    type="url" 
+                    formControlName="profilePictureUrl" 
+                    placeholder="https://example.com/photo.jpg" 
+                />
+                <!-- --- Mensaje de Error de URL alineado con Register --- --> 
+                @if (profileForm.get('profilePictureUrl')?.touched && profileForm.get('profilePictureUrl')?.hasError('pattern')) {
+                    <span class="error-msg">Enter a valid URL (e.g. https://example.com/photo.jpg).</span>
+                }
+            </div>
+
+            <div class="form-group">
+                <label for="description">Bio / Description</label>
+                <textarea 
+                    id="description" 
+                    rows="3" 
+                    formControlName="description" 
+                    placeholder="Tell us something about yourself..."
+                ></textarea>
+                @if (profileForm.get('description')?.touched && profileForm.get('description')?.hasError('maxlength')) {
+                    <span class="error-msg">Description cannot exceed 250 characters.</span>
+                }
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn btn-cancel" (click)="close()">Cancel</button>
+                <button type="submit" class="btn btn-submit" [disabled]="isLoadingProfile || profileForm.invalid">
+                    {{ isLoadingProfile ? 'Saving...' : 'Save Profile' }}
+                </button>
+            </div>
+        </form>
+    }
+
+    <!-- * ========== Pestaña 2: Cambiar Contraseña ========== -->
+    @if (activeTab === 'password') {
+        <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()" class="modal-form">
+            <div class="form-group">
+                <label for="oldPassword">Current Password</label>
+                <!-- <----- Contenedor para Input + Botón Toggle -----> 
+                <div class="password-field">
+                    <input 
+                        id="oldPassword" 
+                        [type]="showOldPassword() ? 'text' : 'password'" 
+                        formControlName="oldPassword" 
+                        placeholder="••••••••" 
+                    />
+                    <button 
+                        type="button" 
+                        class="toggle-password-btn" 
+                        (click)="toggleOldPassword()"
+                        [title]="showOldPassword() ? 'Hide password' : 'Show password'"
+                    >
+                        {{ showOldPassword() ? 'Hide' : 'Show' }}
+                    </button>
+                </div>
+                @if (passwordForm.get('oldPassword')?.touched && passwordForm.get('oldPassword')?.hasError('required')) {
+                    <span class="error-msg">Current password is required.</span>
+                }
+            </div>
+
+            <div class="form-group">
+                <label for="newPassword">New Password</label>
+                <!-- <----- Contenedor para Input + Botón Toggle ----->
+                <div class="password-field">
+                    <input 
+                        id="newPassword" 
+                        [type]="showNewPassword() ? 'text' : 'password'" 
+                        formControlName="newPassword" 
+                        placeholder="••••••••" 
+                    />
+                    <button 
+                        type="button" 
+                        class="toggle-password-btn" 
+                        (click)="toggleNewPassword()"
+                        [title]="showNewPassword() ? 'Hide password' : 'Show password'"
+                    >
+                        {{ showNewPassword() ? 'Hide' : 'Show' }}
+                    </button>
+                </div>
+                <!-- <----- Mensajes de Error de Contraseña alineados con Register -----> 
+                @if (passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.hasError('required')) {
+                    <span class="error-msg">Password is required.</span>
+                } @else if (passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.hasError('minlength')) {
+                    <span class="error-msg">Password must be at least 8 characters long.</span>
+                }
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirm New Password</label>
+                <!-- <----- Contenedor para Input + Botón Toggle -----> 
+                <div class="password-field">
+                    <input 
+                        id="confirmPassword" 
+                        [type]="showConfirmPassword() ? 'text' : 'password'" 
+                        formControlName="confirmPassword" 
+                        placeholder="••••••••" 
+                    />
+                    <button 
+                        type="button" 
+                        class="toggle-password-btn" 
+                        (click)="toggleConfirmPassword()"
+                        [title]="showConfirmPassword() ? 'Hide password' : 'Show password'"
+                    >
+                        {{ showConfirmPassword() ? 'Hide' : 'Show' }}
+                    </button>
+                </div>
+                @if (passwordForm.get('confirmPassword')?.touched && passwordForm.get('confirmPassword')?.hasError('required')) {
+                    <span class="error-msg">Confirm password is required.</span>
+                } @else if (passwordForm.get('confirmPassword')?.touched && passwordForm.hasError('passwordMismatch')) {
+                    <span class="error-msg">Passwords do not match.</span>
+                }
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn btn-cancel" (click)="close()">Cancel</button>
+                <button type="submit" class="btn btn-submit" [disabled]="isLoadingPassword || passwordForm.invalid">
+                    {{ isLoadingPassword ? 'Updating...' : 'Update Password' }}
+                </button>
+            </div>
+        </form>
+    }
+</div>

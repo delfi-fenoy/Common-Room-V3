@@ -1,7 +1,7 @@
 import { Component, HostListener, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { UserPreview } from '../../../core/models';
 import { UserService } from '../../../core/services/user-service';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 export type UserFilterType = 'all' | 'ADMIN' | 'USER';
 
@@ -14,7 +14,9 @@ export type UserFilterType = 'all' | 'ADMIN' | 'USER';
 export class UsersList implements OnInit {
     // * ======== Inyección de Servicios ========
     public uService = inject(UserService);
-    private cdr = inject(ChangeDetectorRef); // <----- Inyección del detector de cambios
+    private route = inject(ActivatedRoute); // Inyección para leer parámetros de URL
+    private router = inject(Router); // Inyección para redireccionar
+    private cdr = inject(ChangeDetectorRef);
 
     // * ======== Variables de Estado ========
     users: UserPreview[] = [];
@@ -27,10 +29,16 @@ export class UsersList implements OnInit {
 
     // * ======== Lifecycle Hooks ========
     ngOnInit(): void {
+        // Redirección a 404 si la URL contiene query params no permitidos (ej: /users?role=ADMIN)
+        if (Object.keys(this.route.snapshot.queryParams).length > 0) {
+            this.router.navigate(['/404']);
+            return;
+        }
+
         this.loadUsers();
     }
 
-    // ! -------- Método para cargar Usuarios des del Backend --------
+    // ! -------- Método para cargar Usuarios desde el Backend --------
     loadUsers(): void {
         if (this.isLoading || !this.hasMorePages) return;
         this.isLoading = true;
@@ -39,15 +47,15 @@ export class UsersList implements OnInit {
 
         this.uService.getUsers(this.currentPage, this.itemsPerPage, roleParam).subscribe({
             next: (pageResponse) => {
-                this.users = [...this.users, ...pageResponse.content]; // <----- Anexa los nuevos registros
-                this.hasMorePages = !pageResponse.last; // <----- Determina si quedan páginas
+                this.users = [...this.users, ...pageResponse.content]; // Anexa los nuevos registros
+                this.hasMorePages = !pageResponse.last; // Determina si quedan páginas
                 this.isLoading = false;
-                this.cdr.detectChanges(); // <----- Fuerza actualización en caso de éxito
+                this.cdr.detectChanges(); // Fuerza actualización en caso de éxito
             },
             error: (e) => {
                 console.error('Error al obtener la lista de usuarios:', e);
                 this.isLoading = false;
-                this.cdr.detectChanges(); // <----- Fuerza actualización en caso de error
+                this.cdr.detectChanges();
             },
         });
     }
@@ -62,11 +70,11 @@ export class UsersList implements OnInit {
     changeFilter(filter: UserFilterType): void {
         if (this.selectedFilter === filter) return;
         this.selectedFilter = filter;
-        this.currentPage = 1; // <----- Reinicia la página para la nueva consulta
-        this.users = []; // <----- Limpia la lista previa
+        this.currentPage = 1; // Reinicia la página para la nueva consulta
+        this.users = []; // Limpia la lista previa
         this.hasMorePages = true;
         setTimeout(() => {
-            this.loadUsers(); // <----- Encola la ejecución para permitir que el DOM se limpie correctamente
+            this.loadUsers(); // Encola la ejecución para permitir que el DOM se limpie correctamente
         }, 0);    }
 
     // ! -------- Listener de Scroll Global --------
@@ -83,7 +91,7 @@ export class UsersList implements OnInit {
             this.hasMorePages &&
             this.users.length > 0
         ) {
-            this.currentPage++; // <----- Incrementa la página y solicita la siguiente tanda
+            this.currentPage++; // Incrementa la página y solicita la siguiente tanda
             this.loadUsers();
         }
     }

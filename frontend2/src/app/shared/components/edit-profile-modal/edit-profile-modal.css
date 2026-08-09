@@ -1,0 +1,170 @@
+.edit-profile-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    width: 100%;
+}
+
+/* * ======== Header de Pestañas (Resaltado en Purple) ======== */
+.tabs-header {
+    display: flex;
+    gap: 0.8rem;
+    border-bottom: 0.3rem solid var(--brown-400);
+    padding-bottom: 0.8rem;
+}
+
+.tab-btn {
+    background: var(--brown-600);
+    border: 0.2rem solid var(--brown-400);
+    color: var(--brown-200);
+    font-size: 0.95rem;
+    font-weight: bold;
+    padding: 0.65rem 1.25rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    opacity: 0.75;
+    transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+    opacity: 1;
+    color: var(--brown-100);
+    background-color: var(--brown-400);
+}
+
+/* <----- Pestaña Activa en Purple -----> */
+.tab-btn.active {
+    opacity: 1;
+    background-color: var(--purple-400);
+    color: #ffffff;
+    border-color: var(--purple-300);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* * ======== Formularios e Inputs Unificados ======== */
+.modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.form-group label {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: var(--brown-200);
+}
+
+/* <----- Contenedor para Password e Icono Toggle -----> */
+.password-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.password-field input {
+    padding-right: 3.5rem; /* Espacio para que el texto del botón no pise el contenido */
+}
+
+/* <----- Botón Toggle adaptado con texto SHOW / HIDE -----> */
+.toggle-password-btn {
+    position: absolute;
+    right: 0.6rem;
+    background: transparent;
+    border: none;
+    color: var(--brown-200);
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    opacity: 0.8;
+    transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.toggle-password-btn:hover {
+    opacity: 1;
+    color: var(--purple-300);
+}
+
+/* <----- Inputs y Textareas Homogéneos -----> */
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.65rem 0.8rem;
+    background-color: var(--brown-600);
+    border: 0.2rem solid var(--brown-400);
+    border-radius: 0.5rem;
+    color: var(--brown-100);
+    font-size: 0.95rem;
+    box-sizing: border-box;
+    outline: none;
+    resize: none;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+    font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: var(--purple-400);
+    background-color: var(--brown-700);
+}
+
+.error-msg {
+    color: #ff6b6b;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-top: 0.2rem;
+}
+
+/* * ======== Footer idéntico a Log Out (.modal-footer) ======== */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.8rem;
+    margin: 1.4rem -1.2rem -1.4rem -1.2rem; /* Cancela el padding del modal-body */
+    padding: 0.8rem 1.2rem;
+    background-color: var(--brown-600);
+    border-top: 0.3rem solid var(--brown-400);
+}
+
+.btn {
+    padding: 0.55rem 1.2rem;
+    font-size: 0.95rem;
+    font-weight: bold;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    background-color: var(--brown-500);
+    color: var(--brown-100);
+    border: 0.2rem solid var(--brown-400);
+    transition: background-color 0.2s ease, transform 0.1s ease, color 0.2s ease;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+.btn-cancel:hover {
+    background-color: var(--green-300);
+    border-color: var(--green-400);
+    color: var(--green-700);
+}
+
+.btn-submit:hover:not(:disabled) {
+    background-color: var(--purple-300);
+    border-color: var(--purple-400);
+    color: var(--purple-700);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

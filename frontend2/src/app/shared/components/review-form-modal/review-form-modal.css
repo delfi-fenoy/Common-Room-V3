@@ -63,7 +63,7 @@
     background-color: var(--brown-600);
     padding: 0.4rem 0.8rem;
     border-radius: 0.5rem;
-    border: 0.3rem solid var(--brown-400);
+    border: 0.2rem solid var(--brown-400);
 }
 
 .star {
@@ -80,32 +80,35 @@
 .rating-indicator {
     margin-left: auto;
     font-weight: bold;
-    color: var(--brown-700);
+    color: var(--brown-100);
     font-size: 0.95rem;
 }
 
-/* * ======== Textarea Comentario ======== */
+/* * ======== Textarea Comentario (Mismo estilo que Edit Profile) ======== */
 .comment-wrapper {
     display: flex;
     flex-direction: column;
 }
 
+/* <----- Inputs y Textareas Homogéneos -----> */
 .comment-wrapper textarea {
     width: 100%;
-    padding: 0.6rem;
-    background-color: var(--brown-200);
-    color: var(--brown-700);
-    border: 0.3rem solid var(--brown-400);
+    padding: 0.65rem 0.8rem;
+    background-color: var(--brown-600);
+    border: 0.2rem solid var(--brown-400);
     border-radius: 0.5rem;
+    color: var(--brown-100);
     font-size: 0.95rem;
     font-family: inherit;
-    resize: none;
     box-sizing: border-box;
+    outline: none;
+    resize: none; /* Deshabilita el cambio de tamaño */
+    transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .comment-wrapper textarea:focus {
-    outline: none;
     border-color: var(--purple-400);
+    background-color: var(--brown-700);
 }
 
 .comment-footer {
@@ -127,14 +130,15 @@
     margin: 0.2rem 0 0 0;
 }
 
-/* * ======== Acciones / Botones ======== */
+/* * ======== Footer idéntico a Log Out (.modal-footer) ======== */
 .form-actions {
     display: flex;
     justify-content: flex-end;
     gap: 0.8rem;
-    margin-top: 0.5rem;
-    padding-top: 0.8rem;
-    border-top: 5px solid var(--brown-400);
+    margin: 1.4rem -1.2rem -1.4rem -1.2rem; /* Cancela el padding del modal-body */
+    padding: 0.8rem 1.2rem;
+    background-color: var(--brown-600);
+    border-top: 0.3rem solid var(--brown-400);
 }
 
 .btn {
@@ -143,7 +147,6 @@
     font-size: 0.95rem;
     font-weight: bold;
     cursor: pointer;
-    border: none;
     background-color: var(--brown-500);
     color: var(--brown-100);
     border: 0.2rem solid var(--brown-400);
