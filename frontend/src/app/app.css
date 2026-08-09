@@ -1,17 +1,24 @@
 main {
-    align-items: center;
+    box-sizing: border-box;
+    margin-top: 4.5rem; /* Desplaza el contenido por debajo del header */
     padding: 1.25rem;
+    min-height: calc(100vh - 4.5rem);
     transition: margin-left 0.35s ease;
-    margin-top: 4.5rem;
-    margin-left: 5em;
-    min-height: calc(100vh - 4.5rem - 6rem); 
 }
 
-/* ! __________ Responsive __________ */
+/* <----- Reset de diseño para páginas sin Layout (Login, Register, 404) -----> */
+main.no-layout {
+    margin-top: 0 !important;
+    margin-left: 0 !important;
+    padding: 0 !important;
+    min-height: 100vh !important;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
     main {
-        margin-top: 4rem;          
-        margin-left: 4.2rem;       
+        margin-top: 4rem;
+        margin-left: 4.2rem;
     }
 
     .sidebar:hover ~ main {
@@ -21,6 +28,6 @@ main {
 
 @media (max-width: 480px) {
     main {
-        margin-left: 3.5rem;       
+        margin-left: 3.5rem;
     }
 }

@@ -1,29 +1,47 @@
 import { Component, signal } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
-import { Header } from './components/header/header';
-import { Footer } from './components/footer/footer';
-import { Sidebar } from './components/sidebar/sidebar';
 import { filter } from 'rxjs';
+import { Header } from './shared/components/header/header';
+import { Sidebar } from './shared/components/sidebar/sidebar';
+import { Footer } from './shared/components/footer/footer';
 
 @Component({
-  selector: 'app-root',
-  imports: [RouterOutlet, Header, Footer, Sidebar],
-  templateUrl: './app.html',
-  styleUrl: './app.css'
+    selector: 'app-root',
+    standalone: true,
+    imports: [RouterOutlet, Header, Sidebar, Footer],
+    templateUrl: './app.html',
+    styleUrl: './app.css',
 })
 export class App {
-  showLayout = signal(true); // ? <- Controla header/sidebar/footer
+    // * ---- Titulo de la aplicacion ----
+    protected readonly title = signal('Common Room'); 
 
-  constructor(private router: Router) {
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe((event: any) => {
-        const url = event.urlAfterRedirects;
+    // * ---- Estados para el Layout y Navegacion ----
+    showLayout = signal<boolean>(true); // Control de renderizado para Header, Sidebar y Footer
+    isSidebarOpen = signal<boolean>(false); // Estado de apertura de la barra lateral
 
-        // ! --- Rutas donde NO debe aparecer el layout
-        const hideFor = ['/login', '/register', '/404'];
+    constructor(private router: Router) {
+        /* ------ Suscripción a eventos de navegación para control de Layout ------ */
+        this.router.events
+            .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+            .subscribe((event) => {
+                // Limpiamos la URL de query params y fragmentos (Ej: /login?error=true)
+                const cleanUrl = event.urlAfterRedirects.split('?')[0].split('#')[0];
 
-        this.showLayout.set(!hideFor.includes(url));
-      });
-  }
+                // Rutas donde NO se debe renderizar el layout principal
+                const hideFor = ['/login', '/register', '/404'];
+
+                this.showLayout.set(!hideFor.includes(cleanUrl));
+            });
+    }
+
+    /* ------ Metodo para alternar la visibilidad de la barra lateral ------ */
+    onToggleSidebar(): void {
+        this.isSidebarOpen.update((prev) => !prev);
+    }
+
+    /* ------ Metodo para cerrar la barra lateral ------ */
+    closeSidebar(): void {
+        this.isSidebarOpen.set(false);
+    }
 }
