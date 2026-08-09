@@ -35,12 +35,22 @@
         <!-- ? --- Password Input --- -->
         <div class="field-container">
             <label for="password">Password</label>
-            <input
-                type="password"
-                id="password"
-                formControlName="password"
-                autocomplete="new-password"
-            />
+            <div class="password-field">
+                <input
+                    [type]="showPassword() ? 'text' : 'password'"
+                    id="password"
+                    formControlName="password"
+                    autocomplete="new-password"
+                />
+                <button
+                    type="button"
+                    class="toggle-password-btn"
+                    (click)="togglePassword()"
+                    [title]="showPassword() ? 'Hide password' : 'Show password'"
+                >
+                    {{ showPassword() ? 'Hide' : 'Show' }}
+                </button>
+            </div>
 
             <!-- ! === Validators === -->
             @if (f.password.touched && f.password.hasError('required')) {

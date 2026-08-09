@@ -107,6 +107,42 @@
     border-bottom-color: #8fa072;
 }
 
+/* <----- Contenedor para Password e Input Flotante -----> */
+.password-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.password-field input {
+    padding-right: 3rem;
+}
+
+/* <----- Botón Toggle -----> */
+.toggle-password-btn {
+    position: absolute;
+    right: 0;
+    bottom: 0.35rem;
+    background: transparent;
+    border: none;
+    color: var(--green-semi-dark, #1c3a2a);
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    opacity: 0.75;
+    transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.toggle-password-btn:hover {
+    opacity: 1;
+    color: #8fa072;
+}
+
 /* ? Botón Principal */
 .auth-container button[type='submit'] {
     width: 100%;

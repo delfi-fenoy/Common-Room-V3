@@ -22,6 +22,9 @@ export class RegisterPage {
     // Permite deshabilitar el botón mostrando un "spinner" en el mouse, mientras se procesa la solicitud.
     isSubmitting = signal<boolean>(false);
 
+    // <----- Signal visibilidad de contraseña ----->
+    showPassword = signal<boolean>(false);
+
     // * ---- Formulario Reactivo ----
     // nonNullable = Garantiza que las propiedades del formulario nunca sean 'null' o 'undefined'.
     registerForm = this.fb.nonNullable.group({
@@ -38,6 +41,11 @@ export class RegisterPage {
     // Devuelve los controles del formulario (this.registerForm.controls) para simplificar la sintaxis en el HTML al validar errores (Ej: 'f.username' en lugar de 'registerForm.get("username")').
     get f() {
         return this.registerForm.controls;
+    }
+
+    // <----- Alternar visibilidad de contraseña ----->
+    togglePassword(): void {
+        this.showPassword.update((val) => !val);
     }
 
     // * -------- Metodo de Formulario --------

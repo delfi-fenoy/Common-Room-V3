@@ -13,11 +13,7 @@ export class UserService {
     constructor(private http: HttpClient) {}
 
     /* ------ Metodo para obtener la lista paginada de usuarios ------ */
-    getUsers(
-        page: number = 1, // <----- Base 1 para coincidir con Spring Boot
-        size: number = 10,
-        role?: string,
-    ): Observable<PageResponse<UserPreview>> {
+    getUsers( page: number = 1, size: number = 10, role?: string,): Observable<PageResponse<UserPreview>> {
         let params = new HttpParams()
             .set('page', page.toString())
             .set('size', size.toString());

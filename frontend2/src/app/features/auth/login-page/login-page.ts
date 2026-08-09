@@ -22,11 +22,19 @@ export class LoginPage {
     loginError = signal<boolean>(false);
     isSubmitting = signal<boolean>(false);
 
+    // <----- Signal visibilidad de contraseña ----->
+    showPassword = signal<boolean>(false);
+
     // * ---- Formulario Reactivo ----
     loginForm = this.fb.nonNullable.group({
         username: ['', Validators.required],
         password: ['', Validators.required],
     });
+
+    // <----- Alternar visibilidad de contraseña ----->
+    togglePassword(): void {
+        this.showPassword.update((val) => !val);
+    }
 
     // * -------- Metodo de Formulario --------
     onSubmit(): void {
