@@ -15,24 +15,11 @@
         <!-- Movies Cards Container (Solo 3 elementos a la vez) -->
         <div class="carousel-track">
             @for (item of getVisibleMovies(); track item.movie.id) {
-                <div
-                    class="movie-card"
+                <!-- ? --- Refactor con MovieCard --- -->
+                <app-movie-card
+                    [movie]="item.movie"
                     [class.active]="item.position === 'center'"
-                    [routerLink]="['/movies', item.movie.id]"
-                >
-                    <div class="img-wrapper">
-                        <img
-                            [src]="item.movie.posterUrl || 'assets/img/default-img/movie-noimg.jpg'"
-                            [alt]="item.movie.title || 'Poster not available'"
-                            (error)="onImgError($event)"
-                        />
-                        <div class="info-overlay">
-                            <h1>{{ item.movie.title }}</h1>
-                            <h3>{{ item.movie.releaseDate }}</h3>
-                            <p>{{ item.movie.synopsis }}</p>
-                        </div>
-                    </div>
-                </div>
+                />
             }
         </div>
 

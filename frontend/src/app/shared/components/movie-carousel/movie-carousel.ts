@@ -1,11 +1,11 @@
 import { Component, Input, OnInit, OnDestroy, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { MoviePreview } from '../../../core/models';
+import { MovieCard } from '../movie-card/movie-card';
 
 @Component({
     selector: 'app-movie-carousel',
     standalone: true,
-    imports: [RouterLink],
+    imports: [MovieCard], 
     templateUrl: './movie-carousel.html',
     styleUrl: './movie-carousel.css',
 })
@@ -32,19 +32,19 @@ export class MovieCarouselComponent implements OnInit, OnDestroy {
     nextSlide(): void {
         if (this.movies.length === 0) return;
         this.currentIndex.update((i) => (i + 1) % this.movies.length);
-        this.resetAutoSlide(); // <----- Reinicia el contador de 5s tras interacción manual ----->
+        this.resetAutoSlide(); // Reinicia el contador de 5s tras interacción manual
     }
 
     // Retrocede a la película anterior (bucle circular)
     prevSlide(): void {
         if (this.movies.length === 0) return;
         this.currentIndex.update((i) => (i - 1 + this.movies.length) % this.movies.length);
-        this.resetAutoSlide(); // <----- Reinicia el contador de 5s tras interacción manual ----->
+        this.resetAutoSlide();
     }
 
-    // <----- Control del Autoplay / Timer (Públicos para pausar/reanudar en hover) ----->
+    // Control del Autoplay / Timer (Públicos para pausar/reanudar en hover)
     startAutoSlide(): void {
-        this.stopAutoSlide(); // <----- Previene la duplicación de timers activos ----->
+        this.stopAutoSlide(); // Previene la duplicación de timers activos
         this.autoSlideInterval = setInterval(() => {
             if (this.movies.length === 0) return;
             this.currentIndex.update((i) => (i + 1) % this.movies.length);
@@ -91,10 +91,5 @@ export class MovieCarouselComponent implements OnInit, OnDestroy {
         const formattedTotal = total < 10 ? `0${total}` : `${total}`;
 
         return `${formattedCurrent}/${formattedTotal}`;
-    }
-
-    onImgError(event: Event): void {
-        const img = event.target as HTMLImageElement;
-        img.src = 'assets/img/default-img/movie-noimg.jpg';
     }
 }

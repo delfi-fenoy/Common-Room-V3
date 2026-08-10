@@ -4,6 +4,7 @@
     flex-direction: column;
     width: 100%;
     max-width: 100%;
+    min-width: 0;
     gap: 0.5rem;
     padding: 0.6rem;
     background-color: var(--brown-400);
@@ -87,6 +88,8 @@
 
 /* ? ----- Título en Modo Usuario (User Profile -> Película) ----- */
 .mode-user-header h2 {
+    flex: 1;
+    min-width: 0; 
     color: var(--brown-600);
     margin: 0;
     white-space: nowrap;
@@ -125,11 +128,18 @@
     pointer-events: none;
 }
 
+.review-card.mode-user .star-container {
+    font-size: 1rem;
+    padding: 0.2rem 0.5rem;
+    flex-shrink: 0; 
+}
+
 /* ? ----- Buttons (Edit/Delete) ----- */
 .buttons-container {
     display: flex;
     gap: 0.3rem;
     margin-left: auto;
+    flex-shrink: 0; 
 }
 
 .buttons-container button {
@@ -194,12 +204,13 @@
 /* * ======== Modo 2 Layout Override (User Profile -> Película) ======== */
 .review-card.mode-user {
     flex-direction: row;
-    align-items: stretch;
+    align-items: flex-start;
     max-width: 100%;
 }
 
 .review-image {
     width: 7.5rem;
+    aspect-ratio: 2 / 3;
     flex-shrink: 0;
     border-radius: 0.4rem;
     border: 0.15rem solid transparent;

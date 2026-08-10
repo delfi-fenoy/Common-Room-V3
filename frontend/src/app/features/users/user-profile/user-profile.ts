@@ -41,7 +41,7 @@ export class UserProfile implements OnInit, OnDestroy {
     isLoadingUser = true;
     isMyProfile = false;
     isAdmin = false;
-    userNotFound = false; // <----- Bandera para indicar perfil inexistente ----->
+    userNotFound = false;
 
     // * ======== Control de Modales ========
     activeModal: 'profile' | 'review' | null = null;
@@ -104,7 +104,7 @@ export class UserProfile implements OnInit, OnDestroy {
             error: (e) => {
                 console.error('Error loading user profile:', e);
                 this.selectedUser = null;
-                this.userNotFound = true; // <----- Marca el estado no encontrado ----->
+                this.userNotFound = true; // Marca el estado no encontrado
                 this.titleService.setTitle('User Not Found | Common Room');
                 this.isLoadingUser = false;
                 this.cdr.markForCheck();
@@ -162,7 +162,7 @@ export class UserProfile implements OnInit, OnDestroy {
     }
 
     onDeleteReview(reviewId: number): void {
-        // <----- Modal de Confirmación previo a la eliminación ----->
+        // Modal de Confirmación previo a la eliminación de la reseña
         this.modalService.openConfirm(
             'Delete Review',
             'Are you sure you want to delete this review?',
@@ -194,7 +194,7 @@ export class UserProfile implements OnInit, OnDestroy {
     deleteUser(): void {
         if (!this.selectedUser) return;
 
-        // <----- Modal de Confirmación para borrado definitivo de cuenta ----->
+        // Modal de Confirmación para borrado definitivo de cuenta 
         this.modalService.openConfirm(
             'Delete Account',
             'Are you sure you want to delete your profile? This action is permanent.',
@@ -222,7 +222,7 @@ export class UserProfile implements OnInit, OnDestroy {
         );
     }
 
-    // <----- Recarga o Redirección al Actualizar Datos del Perfil ----->
+    // Recarga o Redirección al Actualizar Datos del Perfil
     refreshProfileData(newUsername?: string): void {
         const targetUsername = newUsername || this.auth.getUsername();
 
@@ -240,6 +240,6 @@ export class UserProfile implements OnInit, OnDestroy {
     // ? <----- Fallback para Imágenes de Perfil Caídas/Nulas ----->
     noProfilePicture(event: Event): void {
         const img = event.target as HTMLImageElement;
-        img.src = 'assets/img/userv2.jpg';
+        img.src = 'assets/img/default-img/user-noimg.jpg';
     }
 }

@@ -216,6 +216,11 @@
     padding: 2rem;
 }
 
+app-review-card {
+    width: 100%;
+    min-width: 0; /* Garantiza respeto al tamaño de celda 1fr*/
+}
+
 /* <----- Estado Usuario No Encontrado -----> */
 .not-found-card {
     display: flex;

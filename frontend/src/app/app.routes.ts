@@ -24,10 +24,10 @@ export const routes: Routes = [
     /* ------ Autenticación y Registro ------ */
     { path: 'login', component: LoginPage, title: 'Login | Common Room', canActivate: [guestGuard] },
     { path: 'register', component: RegisterPage, title: 'Register | Common Room', canActivate: [guestGuard] },
-
+    { path: 'search/:query', component: SearchPage },
+    
     /* ------ Modulo de Películas ------ */
     { path: 'movies', component: MoviesList, title: 'Movies | Common Room' },
-    { path: 'movies/search/:query', component: SearchPage, title: 'Search | Common Room' },
     { path: 'movies/:id', component: MovieSheet },
 
     /* ------ Modulo de Usuarios ------ */

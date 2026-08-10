@@ -11,7 +11,7 @@
                 <div class="avatar-column">
                     <div class="img-wrapper">
                         <img
-                            [src]="selectedUser.profilePictureUrl || (selectedUser.role === 'ADMIN' ? 'assets/img/userAdmin.jpg' : 'assets/img/userv2.jpg')"
+                            [src]="selectedUser.profilePictureUrl || (selectedUser.role === 'ADMIN' ? 'assets/img/default-img/admin-noimg.jpg' : 'assets/img/default-img/user-noimg.jpg')"
                             [alt]="selectedUser.username || 'User Picture'"
                             (error)="noProfilePicture($event)"
                         />
@@ -41,7 +41,7 @@
                         @if (isMyProfile) {
                             <div class="profile-actions">
                                 <button (click)="openEditModal()" class="action-btn edit-btn">
-                                    ⚙️ Edit Settings
+                                    ⚙️
                                 </button>
                                 <button (click)="deleteUser()" class="action-btn delete-btn" title="Delete User Account">
                                     🗑️

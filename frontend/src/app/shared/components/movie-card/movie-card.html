@@ -1,0 +1,15 @@
+<div class="movie-card" [routerLink]="['/movies', movie.id]">
+    <div class="img-wrapper">
+        <img
+            [src]="movie.posterUrl || 'assets/img/default-img/movie-noimg.jpg'"
+            alt="{{ movie.title || 'Poster not available' }}"
+            (error)="onImgError($event)"
+        />
+
+        <div class="info-overlay">
+            <h1>{{ movie.title }}</h1>
+            <h3>{{ movie.releaseDate }}</h3>
+            <p>{{ movie.synopsis }}</p>
+        </div>
+    </div>
+</div>
