@@ -1,11 +1,11 @@
-// <----- search-page.ts ----->
 import { Component, OnInit, HostListener, inject, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Title } from '@angular/platform-browser';
-import { MovieService } from '../../../core/services/movie-service';
-import { UserService } from '../../../core/services/user-service';
-import { MoviePreview, UserPreview } from '../../../core/models';
-import { MovieCard } from '../../../shared/components/movie-card/movie-card';
+
+import { MovieService } from '../../core/services/movie-service';
+import { UserService } from '../../core/services/user-service';
+import { MoviePreview, UserPreview } from '../../core/models';
+import { MovieCard } from '../../shared/components/movie-card/movie-card';
 
 export type SearchTab = 'movies' | 'users' | 'playlists';
 
@@ -19,7 +19,6 @@ export type SearchTab = 'movies' | 'users' | 'playlists';
 export class SearchPage implements OnInit {
     // * ======== Inyección de Servicios ========
     private route = inject(ActivatedRoute);
-    private router = inject(Router);
     private titleService = inject(Title);
     private mService = inject(MovieService);
     private uService = inject(UserService);
@@ -29,27 +28,27 @@ export class SearchPage implements OnInit {
     query: string = '';
     activeTab: SearchTab = 'movies';
 
-    // Películas
+    // ? ----- Películas -----
     movies: MoviePreview[] = [];
-    moviesPage = 1;
-    hasMoreMovies = true;
+    moviesPage: number = 1;
+    hasMoreMovies: boolean = true;
 
-    // Usuarios
+    // ? ----- Usuarios -----
     users: UserPreview[] = [];
-    usersPage = 1;
-    hasMoreUsers = true;
+    usersPage: number = 1;
+    hasMoreUsers: boolean = true;
 
-    // Paginación y Control
-    isLoading = false;
-    showScrollTopBtn = false;
+    // ? ----- Paginación y Control -----
+    isLoading: boolean = false;
+    showScrollTopBtn: boolean = false;
 
     // * ======== Lifecycle Hooks ========
     ngOnInit(): void {
-        // <----- Subscripción a cambios de parámetro en la URL ----->
+        // Escucha cambios en los parámetros de la URL (/search/:query)
         this.route.params.subscribe((params) => {
             this.query = params['query'] || '';
-            
-            // Cambiar título de la pestaña
+
+            // Actualiza el título de la pestaña en el navegador
             if (this.query) {
                 this.titleService.setTitle(`${this.query} | Common Room`);
             } else {
@@ -64,8 +63,8 @@ export class SearchPage implements OnInit {
     selectTab(tab: SearchTab): void {
         if (this.activeTab === tab) return;
         this.activeTab = tab;
-        
-        // Si la pestaña no tiene resultados cargados, realizamos la búsqueda inicial
+
+        // Si la pestaña no tiene resultados cargados, realiza la búsqueda inicial
         if (tab === 'movies' && this.movies.length === 0 && this.hasMoreMovies) {
             this.searchMovies();
         } else if (tab === 'users' && this.users.length === 0 && this.hasMoreUsers) {
@@ -89,7 +88,7 @@ export class SearchPage implements OnInit {
         }
     }
 
-    // ! -------- Buscar Películas --------
+    // ! -------- Buscar Películas desde el Backend --------
     searchMovies(): void {
         if (this.isLoading || !this.hasMoreMovies || !this.query.trim()) return;
         this.isLoading = true;
@@ -113,7 +112,7 @@ export class SearchPage implements OnInit {
         });
     }
 
-    // ! -------- Buscar Usuarios --------
+    // ! -------- Buscar Usuarios desde el Backend --------
     searchUsers(): void {
         if (this.isLoading || !this.hasMoreUsers || !this.query.trim()) return;
         this.isLoading = true;
@@ -137,7 +136,7 @@ export class SearchPage implements OnInit {
         });
     }
 
-    // ! -------- Listener de Scroll Global --------
+    // ! -------- Listener de Scroll Global (Paginación Infinita) --------
     @HostListener('window:scroll', [])
     onWindowScroll(): void {
         this.showScrollTopBtn = window.scrollY > 400;
@@ -161,7 +160,7 @@ export class SearchPage implements OnInit {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // * -------- Métodos Auxiliares --------
+    // * -------- Método para reemplazar foto de perfil fallida --------
     noProfilePicture(event: Event, role?: string): void {
         const img = event.target as HTMLImageElement;
         if (role === 'ADMIN') {

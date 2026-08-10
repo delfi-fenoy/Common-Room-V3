@@ -90,7 +90,7 @@ export class MovieSheet implements OnInit {
             next: (data) => {
                 this.chosenMovie = data;
                 
-                // <----- Actualiza el título de la pestaña en el navegador con el nombre de la película ----->
+                // Actualiza el título de la pestaña en el navegador con el nombre de la película
                 if (data && data.title) {
                     this.titleService.setTitle(`${data.title} | Common Room`);
                 }
@@ -102,7 +102,7 @@ export class MovieSheet implements OnInit {
                 console.error('Error al cargar la película:', e);
                 this.chosenMovie = null;
                 
-                // <----- Título por defecto en caso de error ----->
+                // Título por defecto en caso de error
                 this.titleService.setTitle('Movie Details | Common Room');
                 
                 this.isLoadingMovie = false;
@@ -116,7 +116,7 @@ export class MovieSheet implements OnInit {
         this.isLoadingReviews = true;
         this.currentPage = page;
 
-        // <----- Petición paginada directa al servicio ----->
+        // Petición paginada directa al servicio 
         this.rService.getReviewsForMovie(movieId, page).subscribe({
             next: (pageData) => {
                 // Filtra la lista para quitar la reseña del usuario activo y evitar verla dos veces
