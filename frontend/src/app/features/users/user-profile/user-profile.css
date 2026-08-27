@@ -139,7 +139,14 @@
     padding: 0.5rem 1rem;
 }
 
-.review-count {
+.counts-group {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.review-count,
+.playlist-count {
     font-size: 0.95rem;
     color: var(--brown-100);
 }
@@ -183,24 +190,61 @@
     transform: scale(1.03);
 }
 
+/* * ========== Profile Tabs Wrapper & Navigation ========== */
+.profile-tabs-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.profile-tabs-nav {
+    display: flex;
+    gap: 0.4rem;
+    width: 100%;
+    padding-left: 0.5rem;
+    z-index: 1;
+}
+
+.tab-btn {
+    background-color: var(--brown-600);
+    border: 0.35rem solid var(--brown-500);
+    border-bottom: none;
+    color: var(--brown-200);
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 0.65rem 1.5rem;
+    border-radius: 0.75rem 0.75rem 0 0;
+    cursor: pointer;
+    margin-bottom: -0.35rem; /* Elimina la brecha con la sección */
+    transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+    background-color: var(--brown-500);
+    color: var(--brown-100);
+}
+
+.tab-btn.active {
+    background-color: var(--green-600);
+    color: #ffffff;
+    border-color: var(--brown-500);
+    border-bottom: 0.35rem solid var(--green-600); /* Tapa la línea superior del panel */
+    position: relative;
+    z-index: 2;
+}
+
 /* * ========== Reviews Section ========== */
 .reviews-section {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
-    padding: 1.25rem;
+    padding: 1.5rem 1.25rem 1.25rem 1.25rem;
     background-color: var(--green-600);
     border: 0.35rem solid var(--brown-500);
     border-radius: 0.75rem;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
     box-sizing: border-box;
-}
-
-.title-reviews {
-    margin: 0 0 1.2rem 0;
-    font-size: 2rem;
-    color: var(--brown-200);
 }
 
 /* ? ------- Reviews Grid ------- */
@@ -223,6 +267,89 @@
 app-review-card {
     width: 100%;
     min-width: 0;
+}
+
+/* * ========== Playlists Section ========== */
+.playlists-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 1.5rem 1.25rem 1.25rem 1.25rem;
+    background-color: var(--green-600);
+    border: 0.35rem solid var(--brown-500);
+    border-radius: 0.75rem;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+}
+
+.playlists-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+    gap: 1.2rem;
+    width: 100%;
+}
+
+.no-data-msg,
+.loading-msg {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--brown-200);
+    padding: 2rem;
+}
+
+.playlist-card {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--brown-600);
+    border: 0.2rem solid var(--brown-400);
+    border-radius: 0.6rem;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.playlist-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--purple-400);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.playlist-card-img {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background-color: var(--brown-700);
+}
+
+.playlist-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.private-badge {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.4rem;
+    background-color: rgba(0, 0, 0, 0.65);
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.4rem;
+    font-size: 0.85rem;
+}
+
+.playlist-card-info {
+    padding: 0.6rem 0.8rem;
+    background-color: var(--brown-600);
+}
+
+.playlist-card-info h3 {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--brown-100);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* ? ------- Pagination Controls ------- */
@@ -343,11 +470,32 @@ app-review-card {
         align-items: flex-start;
     }
 
+    .counts-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.3rem;
+    }
+
     .profile-actions {
         width: 100%;
     }
 
     .action-btn {
         flex: 1;
+    }
+
+    .profile-tabs-nav {
+        padding-left: 0;
+    }
+
+    .tab-btn {
+        flex: 1;
+        padding: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .reviews-section,
+    .playlists-section {
+        border-radius: 0.75rem;
     }
 }

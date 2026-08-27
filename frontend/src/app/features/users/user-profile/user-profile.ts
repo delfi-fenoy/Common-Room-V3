@@ -4,9 +4,10 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 
-import { User, Review } from '../../../core/models';
+import { User, Review, PlaylistPreview } from '../../../core/models';
 import { UserService } from '../../../core/services/user-service';
 import { ReviewService } from '../../../core/services/review-service';
+import { PlaylistService } from '../../../core/services/playlist-service';
 import { AuthService } from '../../../core/services/auth-service';
 import { ModalService } from '../../../shared/services/modal-services';
 
@@ -31,6 +32,7 @@ export class UserProfile implements OnInit, OnDestroy {
     private router = inject(Router);
     private uService = inject(UserService);
     private rService = inject(ReviewService);
+    private pService = inject(PlaylistService);
     private auth = inject(AuthService);
     public modalService = inject(ModalService);
     private titleService = inject(Title);
@@ -44,6 +46,9 @@ export class UserProfile implements OnInit, OnDestroy {
     isAdmin: boolean = false;
     userNotFound: boolean = false;
 
+    // ? ----- Control de Vista por Pestañas (Tabs) -----
+    activeTab: 'reviews' | 'playlists' = 'reviews';
+
     // ? ----- Control de Modales -----
     activeModal: 'profile' | 'review' | null = null;
     selectedReview: Review | null = null;
@@ -54,6 +59,13 @@ export class UserProfile implements OnInit, OnDestroy {
     totalPages: number = 1;
     totalElements: number = 0;
     isLoadingReviews: boolean = false;
+
+    // ? ----- Paginación y Estado de Playlists -----
+    playlists: PlaylistPreview[] = []; 
+    currentPlaylistPage: number = 1; 
+    totalPlaylistPages: number = 1; 
+    totalPlaylistElements: number = 0; 
+    isLoadingPlaylists: boolean = false; 
 
     // Suscripción a los cambios de parámetros de la ruta
     private routeSubscription!: Subscription;
@@ -77,6 +89,7 @@ export class UserProfile implements OnInit, OnDestroy {
                 this.isMyProfile = this.currentUsername === username;
                 this.loadUser(username);
                 this.loadReviews(username, 1);
+                this.loadPlaylists(username, 1);
             }
         });
     }
@@ -86,6 +99,11 @@ export class UserProfile implements OnInit, OnDestroy {
         if (this.routeSubscription) {
             this.routeSubscription.unsubscribe();
         }
+    }
+
+    // ? ----- Selector de Pestaña Activa -----
+    setTab(tab: 'reviews' | 'playlists'): void {
+        this.activeTab = tab;
     }
 
     // ! -------- Método para cargar el Perfil del Usuario --------
@@ -113,6 +131,42 @@ export class UserProfile implements OnInit, OnDestroy {
                 this.cdr.markForCheck();
             },
         });
+    }
+
+    // ! -------- Método para cargar Playlists del Usuario --------
+    loadPlaylists(username: string, page: number): void { 
+        this.isLoadingPlaylists = true;
+        this.currentPlaylistPage = page;
+
+        const playlistReq$ = this.isMyProfile 
+            ? this.pService.getMyPlaylists(page) 
+            : this.pService.getUserPlaylists(username, page);
+
+        playlistReq$.subscribe({
+            next: (pageData) => {
+                this.playlists = pageData.content;
+                this.totalPlaylistPages = pageData.totalPages || 1;
+                this.totalPlaylistElements = pageData.totalElements || 0;
+                this.isLoadingPlaylists = false;
+                this.cdr.markForCheck();
+            },
+            error: (e) => {
+                console.error('Error al cargar playlists:', e);
+                this.playlists = [];
+                this.totalPlaylistPages = 1;
+                this.totalPlaylistElements = 0;
+                this.isLoadingPlaylists = false;
+                this.cdr.markForCheck();
+            }
+        });
+    }
+
+    // ? ----- Cambio de Página de Playlists -----
+    changePlaylistPage(newPage: number): void { 
+        if (this.selectedUser && newPage >= 1 && newPage <= this.totalPlaylistPages) {
+            this.currentPlaylistPage = newPage;
+            this.loadPlaylists(this.selectedUser.username, this.currentPlaylistPage);
+        }
     }
 
     // ! -------- Método para cargar Reseñas del Usuario --------
@@ -220,6 +274,7 @@ export class UserProfile implements OnInit, OnDestroy {
             } else {
                 this.loadUser(targetUsername);
                 this.loadReviews(targetUsername, this.currentPage);
+                this.loadPlaylists(targetUsername, this.currentPlaylistPage);
             }
         }
     }
@@ -228,5 +283,10 @@ export class UserProfile implements OnInit, OnDestroy {
     noProfilePicture(event: Event): void {
         const img = event.target as HTMLImageElement;
         img.src = 'assets/img/default-img/user-noimg.jpg';
+    }
+
+    noPlaylistPicture(event: Event): void {
+        const img = event.target as HTMLImageElement;
+        img.src = 'assets/img/default-img/playlist-noimg.jpg';
     }
 }
