@@ -15,6 +15,10 @@ export * from './movies/movie-details';
 /* ------ Modulo de Reseñas ------ */
 export * from './reviews/review';
 
+/* ------ Modulo de Playlists ------ */
+export * from './playlists/playlist-preview';
+export * from './playlists/playlist-details';
+
 /* ------ Modulo de Usuarios ------ */
 export * from './users/user';
 export * from './users/user-preview';

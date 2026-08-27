@@ -12,12 +12,13 @@ import { MovieDetails, Review } from '../../../core/models';
 import { ReviewCard } from '../../../shared/components/review-card/review-card';
 import { ReviewFormModal } from '../../../shared/components/review-form-modal/review-form-modal';
 import { Modal } from '../../../shared/components/modal/modal';
+import { PlaylistModal } from '../../../shared/components/playlist-modal/playlist-modal'; 
 import { TMDB_GENRES } from '../movies-list/movies-list';
 
 @Component({
     selector: 'app-movie-sheet',
     standalone: true,
-    imports: [CommonModule, RouterLink, ReviewCard, ReviewFormModal, Modal],
+    imports: [CommonModule, RouterLink, ReviewCard, ReviewFormModal, Modal, PlaylistModal], 
     templateUrl: './movie-sheet.html',
     styleUrl: './movie-sheet.css',
 })
@@ -48,6 +49,9 @@ export class MovieSheet implements OnInit {
     isAdmin: boolean = false;
     currentUsername: string | null = null;
     currentUserReview: Review | null = null;
+
+    // ? ----- Contexto del Modal -----
+    currentModalContext: 'review' | 'playlist' | null = null; 
 
     // * ======== Lifecycle Hooks ========
     ngOnInit(): void {
@@ -101,25 +105,20 @@ export class MovieSheet implements OnInit {
             error: (e) => {
                 console.error('Error al cargar la película:', e);
                 this.chosenMovie = null;
-                
-                // Título por defecto en caso de error
                 this.titleService.setTitle('Movie Details | Common Room');
-                
                 this.isLoadingMovie = false;
                 this.cdr.markForCheck();
             },
         });
     }
 
-    // ! -------- Método para cargar Reseñas (Paginación normal del Backend) --------
+    // ! -------- Método para cargar Reseñas --------
     loadReviews(movieId: number, page: number): void {
         this.isLoadingReviews = true;
         this.currentPage = page;
 
-        // Petición paginada directa al servicio 
         this.rService.getReviewsForMovie(movieId, page).subscribe({
             next: (pageData) => {
-                // Filtra la lista para quitar la reseña del usuario activo y evitar verla dos veces
                 this.reviews = pageData.content.filter(
                     (review) => !this.currentUsername || review.userPreview?.username !== this.currentUsername
                 );
@@ -160,14 +159,24 @@ export class MovieSheet implements OnInit {
     }
 
     // ! -------- Gestión de Modales --------
+    // Abrir Modal de Crear Reseña
     openCreateModal(): void {
         this.selectedReview = null;
+        this.currentModalContext = 'review';
         this.modalService.openCustom('Add Review');
     }
 
+    // Abrir Modal de Editar Reseña
     openEditModal(review: Review): void {
         this.selectedReview = review;
+        this.currentModalContext = 'review'; 
         this.modalService.openCustom('Edit Review');
+    }
+
+    // Abrir Modal de Agregar película a Playlist
+    openAddPlaylistModal(): void {
+        this.currentModalContext = 'playlist'; 
+        this.modalService.openCustom('Add to Playlist');
     }
 
     // ! -------- Confirmación y Eliminación de Reseñas --------

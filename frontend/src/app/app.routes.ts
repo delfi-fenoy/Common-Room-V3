@@ -10,11 +10,12 @@ import { LoginPage } from './features/auth/login-page/login-page';
 import { RegisterPage } from './features/auth/register-page/register-page';
 import { MoviesList } from './features/movies/movies-list/movies-list';
 import { MovieSheet } from './features/movies/movie-sheet/movie-sheet';
-import { SearchPage } from './features/search/search-page/search-page';
+import { SearchPage } from './features/search-page/search-page';
 import { UsersList } from './features/users/users-list/users-list';
 import { UserProfile } from './features/users/user-profile/user-profile';
 import { NotFound } from './features/not-found/not-found';
 import { PlaylistsList } from './features/playlists/playlists-list/playlists-list';
+import { PlaylistSheet } from './features/playlists/playlist-sheet/playlist-sheet';
 
 /* ! ======== Configuración Global de Rutas ======== */
 export const routes: Routes = [
@@ -37,6 +38,7 @@ export const routes: Routes = [
 
     /* ------ Modulo de playlist ------ */
     { path: 'playlists', component: PlaylistsList },
+    { path: 'playlists/:id', component: PlaylistSheet },
 
     /* ------ Modulo Errores y Redirecciones ------ */
     { path: '404', component: NotFound, title: '404 | Not Found' },
