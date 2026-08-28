@@ -37,7 +37,7 @@ export const routes: Routes = [
     { path: 'users/:username', component: UserProfile },
 
     /* ------ Modulo de playlist ------ */
-    { path: 'playlists', component: PlaylistsList },
+    { path: 'playlists', component: PlaylistsList, title: 'Playlists | Common Room' },
     { path: 'playlists/:id', component: PlaylistSheet },
 
     /* ------ Modulo Errores y Redirecciones ------ */
