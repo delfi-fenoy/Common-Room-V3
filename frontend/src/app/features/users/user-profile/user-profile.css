@@ -190,6 +190,19 @@
     transform: scale(1.03);
 }
 
+/* <----- Estilos para el botón de Ban -----> */
+.ban-btn {
+    background-color: rgba(229, 57, 53, 0.15);
+    color: #ff5252;
+    border-color: #ff5252;
+}
+
+.ban-btn:hover {
+    background-color: #ff5252;
+    color: #ffffff;
+    transform: scale(1.03);
+}
+
 /* * ========== Profile Tabs Wrapper & Navigation ========== */
 .profile-tabs-wrapper {
     display: flex;

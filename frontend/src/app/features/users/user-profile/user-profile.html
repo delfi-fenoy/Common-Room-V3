@@ -56,6 +56,13 @@
                                     🗑️
                                 </button>
                             </div>
+                        } @else if (isAdmin) {
+                            <!-- <----- Botón de Baneo para Administradores en perfiles ajenos ----->
+                            <div class="profile-actions">
+                                <button (click)="banUser()" class="action-btn ban-btn" title="Ban User">
+                                    🔨 Ban User
+                                </button>
+                            </div>
                         }
                     </div>
                 </div>

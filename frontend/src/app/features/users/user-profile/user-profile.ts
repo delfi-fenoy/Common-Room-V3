@@ -9,6 +9,7 @@ import { UserService } from '../../../core/services/user-service';
 import { ReviewService } from '../../../core/services/review-service';
 import { PlaylistService } from '../../../core/services/playlist-service';
 import { AuthService } from '../../../core/services/auth-service';
+import { UserbanService } from '../../../core/services/userban-service';
 import { ModalService } from '../../../shared/services/modal-services';
 
 import { ReviewCard } from '../../../shared/components/review-card/review-card';
@@ -33,6 +34,7 @@ export class UserProfile implements OnInit, OnDestroy {
     private uService = inject(UserService);
     private rService = inject(ReviewService);
     private pService = inject(PlaylistService);
+    private userBanService = inject(UserbanService); // <--- Inyección del servicio de baneo
     private auth = inject(AuthService);
     public modalService = inject(ModalService);
     private titleService = inject(Title);
@@ -276,6 +278,39 @@ export class UserProfile implements OnInit, OnDestroy {
                         );
                     },
                 });
+            },
+        );
+    }
+
+    // <----- Banear Usuario (Exclusivo Admin) ----->
+    banUser(): void {
+        if (!this.selectedUser) return;
+
+        this.modalService.openConfirm(
+            'Ban User',
+            `Are you sure you want to ban user ${this.selectedUser.username}?`,
+            () => {
+                // Pasamos los dos argumentos de forma independiente
+                this.userBanService
+                    .banUser(this.selectedUser!.username, 'Violation of community guidelines')
+                    .subscribe({
+                        next: () => {
+                            this.modalService.openAlert(
+                                'Banned',
+                                `User ${this.selectedUser!.username} has been successfully banned.`,
+                                'success',
+                            );
+                            this.router.navigate(['/users']);
+                        },
+                        error: (e) => {
+                            console.error(e);
+                            this.modalService.openAlert(
+                                'Error',
+                                'Could not ban the user.',
+                                'error',
+                            );
+                        },
+                    });
             },
         );
     }

@@ -23,6 +23,10 @@ export * from './playlists/playlist-details';
 export * from './users/user';
 export * from './users/user-preview';
 
+/* ------ Modulo de Usuarios Baneados ------ */
+export * from './bans/user-ban-preview';
+export * from './bans/user-ban-response';
+
 /* ------ Modulo Compartido / General ------ */
 export * from './common/not-found-item';
 export * from './common/page-response';

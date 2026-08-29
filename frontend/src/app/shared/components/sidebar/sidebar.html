@@ -45,6 +45,12 @@
             <span>Playlists</span>
         </a>
 
-        <!-- ! --- ADMIN BAN USER LIST Button (PROXIMO) --- -->
+        <!-- ! --- ADMIN BAN USER LIST Button (Exclusivo Admin) --- -->
+        @if (isAdmin()) {
+            <button class="nav-btn" (click)="openBanModal()">
+                <img src="assets/img/buttons-icons/users-button.png" alt="Bans" class="buttons-img" />
+                <span>Banned Users</span>
+            </button>
+        }
     </nav>
 </aside>
