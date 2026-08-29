@@ -10,19 +10,18 @@ import { ModalService } from '../../../shared/services/modal-services';
 
 import { MovieDetails, Review } from '../../../core/models';
 import { ReviewCard } from '../../../shared/components/review-card/review-card';
-import { ReviewFormModal } from '../../../shared/components/review-form-modal/review-form-modal';
-import { Modal } from '../../../shared/components/modal/modal';
-import { PlaylistModal } from '../../../shared/components/playlist-modal/playlist-modal'; 
+import { ReviewFormModal } from '../../../shared/modals/review-form-modal/review-form-modal';
+import { Modal } from '../../../shared/modals/modal/modal';
+import { PlaylistModal } from '../../../shared/modals/playlist-modal/playlist-modal';
 import { TMDB_GENRES } from '../movies-list/movies-list';
 
 @Component({
     selector: 'app-movie-sheet',
     standalone: true,
-    imports: [CommonModule, RouterLink, ReviewCard, ReviewFormModal, Modal, PlaylistModal], 
+    imports: [CommonModule, RouterLink, ReviewCard, ReviewFormModal, Modal, PlaylistModal],
     templateUrl: './movie-sheet.html',
     styleUrl: './movie-sheet.css',
 })
-
 export class MovieSheet implements OnInit {
     // * ======== Inyección de Servicios ========
     private route = inject(ActivatedRoute);
@@ -51,7 +50,7 @@ export class MovieSheet implements OnInit {
     currentUserReview: Review | null = null;
 
     // ? ----- Contexto del Modal -----
-    currentModalContext: 'review' | 'playlist' | null = null; 
+    currentModalContext: 'review' | 'playlist' | null = null;
 
     // * ======== Lifecycle Hooks ========
     ngOnInit(): void {
@@ -93,7 +92,7 @@ export class MovieSheet implements OnInit {
         this.mService.getMovieById(id).subscribe({
             next: (data) => {
                 this.chosenMovie = data;
-                
+
                 // Actualiza el título de la pestaña en el navegador con el nombre de la película
                 if (data && data.title) {
                     this.titleService.setTitle(`${data.title} | Common Room`);
@@ -120,7 +119,9 @@ export class MovieSheet implements OnInit {
         this.rService.getReviewsForMovie(movieId, page).subscribe({
             next: (pageData) => {
                 this.reviews = pageData.content.filter(
-                    (review) => !this.currentUsername || review.userPreview?.username !== this.currentUsername
+                    (review) =>
+                        !this.currentUsername ||
+                        review.userPreview?.username !== this.currentUsername,
                 );
                 this.totalPages = pageData.totalPages || 1;
 
@@ -169,13 +170,13 @@ export class MovieSheet implements OnInit {
     // Abrir Modal de Editar Reseña
     openEditModal(review: Review): void {
         this.selectedReview = review;
-        this.currentModalContext = 'review'; 
+        this.currentModalContext = 'review';
         this.modalService.openCustom('Edit Review');
     }
 
     // Abrir Modal de Agregar película a Playlist
     openAddPlaylistModal(): void {
-        this.currentModalContext = 'playlist'; 
+        this.currentModalContext = 'playlist';
         this.modalService.openCustom('Add to Playlist');
     }
 
@@ -184,14 +185,18 @@ export class MovieSheet implements OnInit {
         this.modalService.openConfirm(
             'Delete Review',
             'Are you sure you want to delete this review?',
-            () => this.deleteReview(reviewId)
+            () => this.deleteReview(reviewId),
         );
     }
 
     private deleteReview(reviewId: number): void {
         this.rService.deleteReview(reviewId).subscribe({
             next: () => {
-                this.modalService.openAlert('Deleted', 'The review was successfully deleted.', 'success');
+                this.modalService.openAlert(
+                    'Deleted',
+                    'The review was successfully deleted.',
+                    'success',
+                );
                 this.refreshReviews();
             },
             error: (e) => {

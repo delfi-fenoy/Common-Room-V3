@@ -9,8 +9,8 @@ import { ModalService } from '../../../shared/services/modal-services';
 
 import { PlaylistDetails, MoviePreview } from '../../../core/models';
 import { MovieCard } from '../../../shared/components/movie-card/movie-card';
-import { EditPlaylistModal } from '../../../shared/components/edit-playlist-modal/edit-playlist-modal';
-import { Modal } from '../../../shared/components/modal/modal';
+import { EditPlaylistModal } from '../../../shared/modals/edit-playlist-modal/edit-playlist-modal';
+import { Modal } from '../../../shared/modals/modal/modal';
 
 @Component({
     selector: 'app-playlist-sheet',
@@ -27,7 +27,7 @@ export class PlaylistSheet implements OnInit {
     private auth = inject(AuthService);
     public modalService = inject(ModalService);
     private cdr = inject(ChangeDetectorRef);
-    private titleService = inject(Title); 
+    private titleService = inject(Title);
 
     // * ======== Variables de Estado ========
     playlist: PlaylistDetails | null = null; // La playlist seleccionada

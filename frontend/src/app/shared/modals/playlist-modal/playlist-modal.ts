@@ -1,4 +1,12 @@
-import { Component, Input, Output, EventEmitter, OnInit, inject, ChangeDetectorRef } from '@angular/core';
+import {
+    Component,
+    Input,
+    Output,
+    EventEmitter,
+    OnInit,
+    inject,
+    ChangeDetectorRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { forkJoin, Observable } from 'rxjs';
@@ -27,7 +35,7 @@ export class PlaylistModal implements OnInit {
 
     // * ======== Estado de 'add-movie' Mode ========
     playlists: PlaylistPreview[] = [];
-    
+
     // <----- Tracking Local para Confirmar Cambios ----->
     initialMovieMap: Map<number, boolean> = new Map();
     selectedMovieMap: Map<number, boolean> = new Map();
@@ -60,7 +68,7 @@ export class PlaylistModal implements OnInit {
                 console.error('Error fetching playlists:', err);
                 this.isLoadingPlaylists = false;
                 this.cdr.markForCheck();
-            }
+            },
         });
     }
 
@@ -77,7 +85,8 @@ export class PlaylistModal implements OnInit {
         this.playlists.forEach((playlist) => {
             this.playlistService.getMovieListByPlaylistId(playlist.id, 1).subscribe({
                 next: (moviesPage) => {
-                    const isPresent = moviesPage.content?.some((m) => m.id === this.movie?.id) ?? false;
+                    const isPresent =
+                        moviesPage.content?.some((m) => m.id === this.movie?.id) ?? false;
                     this.initialMovieMap.set(playlist.id, isPresent);
                     this.selectedMovieMap.set(playlist.id, isPresent);
                     pendingChecks--;
@@ -94,7 +103,7 @@ export class PlaylistModal implements OnInit {
                         this.isLoadingPlaylists = false;
                         this.cdr.markForCheck();
                     }
-                }
+                },
             });
         });
     }
@@ -141,7 +150,9 @@ export class PlaylistModal implements OnInit {
                 requests.push(this.playlistService.addMovieToPlaylist(playlist.id, this.movie!.id));
             } else if (initialStatus && !currentStatus) {
                 // <----- Eliminar Película de la Lista ----->
-                requests.push(this.playlistService.deleteMovieFromPlaylist(playlist.id, this.movie!.id));
+                requests.push(
+                    this.playlistService.deleteMovieFromPlaylist(playlist.id, this.movie!.id),
+                );
             }
         });
 
@@ -155,14 +166,18 @@ export class PlaylistModal implements OnInit {
             next: () => {
                 this.isSavingChanges = false;
                 this.closeModal();
-                this.modalService.openAlert('Success', 'Playlists updated successfully!', 'success');
+                this.modalService.openAlert(
+                    'Success',
+                    'Playlists updated successfully!',
+                    'success',
+                );
             },
             error: (err) => {
                 console.error('Error updating movie in playlists:', err);
                 this.isSavingChanges = false;
                 this.closeModal();
                 this.modalService.openAlert('Error', 'Failed to update playlists.', 'error');
-            }
+            },
         });
     }
 
@@ -179,7 +194,7 @@ export class PlaylistModal implements OnInit {
         const newPlaylistData = {
             name: this.playlistName.trim(),
             description: this.playlistDescription.trim(),
-            isPrivate: this.isPrivate
+            isPrivate: this.isPrivate,
         };
 
         this.playlistService.createPlaylist(newPlaylistData as PlaylistDetails).subscribe({
@@ -199,11 +214,15 @@ export class PlaylistModal implements OnInit {
                         error: () => {
                             this.mode = 'add-movie';
                             this.loadUserPlaylists();
-                        }
+                        },
                     });
                 } else {
                     this.closeModal();
-                    this.modalService.openAlert('Success', 'Playlist created successfully!', 'success');
+                    this.modalService.openAlert(
+                        'Success',
+                        'Playlist created successfully!',
+                        'success',
+                    );
                 }
             },
             error: (err) => {
@@ -212,7 +231,7 @@ export class PlaylistModal implements OnInit {
                 this.closeModal();
                 this.modalService.openAlert('Error', 'Could not create playlist.', 'error');
                 this.cdr.markForCheck();
-            }
+            },
         });
     }
 

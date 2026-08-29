@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PlaylistDetails } from '../../../core/models';
 import { PlaylistService } from '../../../core/services/playlist-service';
-import { ModalService } from '../../../shared/services/modal-services';
+import { ModalService } from '../../services/modal-services';
 
 @Component({
     selector: 'app-edit-playlist-modal',
@@ -33,17 +33,11 @@ export class EditPlaylistModal implements OnInit {
     // <----- Inicializar Formulario con Límites de BDD ----->
     private initForm(): void {
         this.editForm = this.fb.group({
-            name: [
-                this.playlist?.name || '', 
-                [Validators.required, Validators.maxLength(30)]
-            ],
-            description: [
-                this.playlist?.description || '', 
-                [Validators.maxLength(255)]
-            ],
+            name: [this.playlist?.name || '', [Validators.required, Validators.maxLength(30)]],
+            description: [this.playlist?.description || '', [Validators.maxLength(255)]],
             pictureUrl: [
-                this.playlist?.pictureUrl || '', 
-                [Validators.pattern(/^(https?:\/\/)?([\w\-]+\.)+[a-z]{2,6}(:\d+)?(\/[^\s]*)?$/i)]
+                this.playlist?.pictureUrl || '',
+                [Validators.pattern(/^(https?:\/\/)?([\w\-]+\.)+[a-z]{2,6}(:\d+)?(\/[^\s]*)?$/i)],
             ],
             isPrivate: [this.playlist?.isPrivate ?? false],
         });

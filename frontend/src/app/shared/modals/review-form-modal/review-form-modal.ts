@@ -105,7 +105,11 @@ export class ReviewFormModal implements OnInit {
             next: () => {
                 this.modalService.close();
                 this.submitted.emit();
-                this.modalService.openAlert('Review Saved', 'Your review has been successfully submitted.', 'success');
+                this.modalService.openAlert(
+                    'Review Saved',
+                    'Your review has been successfully submitted.',
+                    'success',
+                );
             },
             error: (e) => {
                 console.error(e);
@@ -124,7 +128,11 @@ export class ReviewFormModal implements OnInit {
             next: () => {
                 this.modalService.close();
                 this.submitted.emit();
-                this.modalService.openAlert('Review Updated', 'Changes were saved successfully.', 'success');
+                this.modalService.openAlert(
+                    'Review Updated',
+                    'Changes were saved successfully.',
+                    'success',
+                );
             },
             error: (e) => {
                 console.error(e);

@@ -12,9 +12,9 @@ import { AuthService } from '../../../core/services/auth-service';
 import { ModalService } from '../../../shared/services/modal-services';
 
 import { ReviewCard } from '../../../shared/components/review-card/review-card';
-import { Modal } from '../../../shared/components/modal/modal';
-import { EditProfileModal } from '../../../shared/components/edit-profile-modal/edit-profile-modal';
-import { ReviewFormModal } from '../../../shared/components/review-form-modal/review-form-modal';
+import { Modal } from '../../../shared/modals/modal/modal';
+import { EditProfileModal } from '../../../shared/modals/edit-profile-modal/edit-profile-modal';
+import { ReviewFormModal } from '../../../shared/modals/review-form-modal/review-form-modal';
 
 // ! Lista de palabras clave reservadas para rutas de usuario
 const RESERVED_USERNAMES = ['all', 'null', 'undefined', 'config', 'api', 'root', 'system'];
@@ -61,11 +61,11 @@ export class UserProfile implements OnInit, OnDestroy {
     isLoadingReviews: boolean = false;
 
     // ? ----- Paginación y Estado de Playlists -----
-    playlists: PlaylistPreview[] = []; 
-    currentPlaylistPage: number = 1; 
-    totalPlaylistPages: number = 1; 
-    totalPlaylistElements: number = 0; 
-    isLoadingPlaylists: boolean = false; 
+    playlists: PlaylistPreview[] = [];
+    currentPlaylistPage: number = 1;
+    totalPlaylistPages: number = 1;
+    totalPlaylistElements: number = 0;
+    isLoadingPlaylists: boolean = false;
 
     // Suscripción a los cambios de parámetros de la ruta
     private routeSubscription!: Subscription;
@@ -134,12 +134,12 @@ export class UserProfile implements OnInit, OnDestroy {
     }
 
     // ! -------- Método para cargar Playlists del Usuario --------
-    loadPlaylists(username: string, page: number): void { 
+    loadPlaylists(username: string, page: number): void {
         this.isLoadingPlaylists = true;
         this.currentPlaylistPage = page;
 
-        const playlistReq$ = this.isMyProfile 
-            ? this.pService.getMyPlaylists(page) 
+        const playlistReq$ = this.isMyProfile
+            ? this.pService.getMyPlaylists(page)
             : this.pService.getUserPlaylists(username, page);
 
         playlistReq$.subscribe({
@@ -157,12 +157,12 @@ export class UserProfile implements OnInit, OnDestroy {
                 this.totalPlaylistElements = 0;
                 this.isLoadingPlaylists = false;
                 this.cdr.markForCheck();
-            }
+            },
         });
     }
 
     // ? ----- Cambio de Página de Playlists -----
-    changePlaylistPage(newPage: number): void { 
+    changePlaylistPage(newPage: number): void {
         if (this.selectedUser && newPage >= 1 && newPage <= this.totalPlaylistPages) {
             this.currentPlaylistPage = newPage;
             this.loadPlaylists(this.selectedUser.username, this.currentPlaylistPage);
@@ -227,17 +227,25 @@ export class UserProfile implements OnInit, OnDestroy {
             () => {
                 this.rService.deleteReview(reviewId).subscribe({
                     next: () => {
-                        this.modalService.openAlert('Deleted', 'Review deleted successfully.', 'success');
+                        this.modalService.openAlert(
+                            'Deleted',
+                            'Review deleted successfully.',
+                            'success',
+                        );
                         if (this.selectedUser) {
                             this.loadReviews(this.selectedUser.username, this.currentPage);
                         }
                     },
                     error: (e) => {
                         console.error(e);
-                        this.modalService.openAlert('Error', 'Could not delete the review.', 'error');
+                        this.modalService.openAlert(
+                            'Error',
+                            'Could not delete the review.',
+                            'error',
+                        );
                     },
                 });
-            }
+            },
         );
     }
 
@@ -251,16 +259,24 @@ export class UserProfile implements OnInit, OnDestroy {
             () => {
                 this.uService.deleteUser(this.selectedUser!.username).subscribe({
                     next: () => {
-                        this.modalService.openAlert('Deleted', 'Your account was deleted successfully.', 'success');
+                        this.modalService.openAlert(
+                            'Deleted',
+                            'Your account was deleted successfully.',
+                            'success',
+                        );
                         this.auth.logout();
                         this.router.navigate(['/']);
                     },
                     error: (e) => {
                         console.error(e);
-                        this.modalService.openAlert('Error', 'Could not delete user account.', 'error');
+                        this.modalService.openAlert(
+                            'Error',
+                            'Could not delete user account.',
+                            'error',
+                        );
                     },
                 });
-            }
+            },
         );
     }
 
