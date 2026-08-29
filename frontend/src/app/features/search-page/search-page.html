@@ -1,0 +1,107 @@
+<div class="search-container">
+    <!-- ! ========== Navigation Tabs ========== -->
+    <section class="tabs-section">
+        <div class="tabs-container">
+            <button
+                class="tab-btn"
+                [class.active]="activeTab === 'movies'"
+                (click)="selectTab('movies')"
+            >
+                Movies
+            </button>
+            <button
+                class="tab-btn"
+                [class.active]="activeTab === 'users'"
+                (click)="selectTab('users')"
+            >
+                Users
+            </button>
+            <button
+                class="tab-btn"
+                [class.active]="activeTab === 'playlists'"
+                (click)="selectTab('playlists')"
+            >
+                Playlists
+            </button>
+        </div>
+    </section>
+
+    <!-- ! ========== Tab: Movies ========== -->
+    @if (activeTab === 'movies') {
+        <section class="movies-section">
+            @for (movie of movies; track movie.id) {
+                <!-- ? --- Movie Card --- -->
+                <app-movie-card [movie]="movie" />
+            }
+        </section>
+
+        <!-- Mensaje sin resultados -->
+        @if (!isLoading && movies.length === 0) {
+            <div class="no-results">
+                <p>No movies found for "{{ query }}"</p>
+            </div>
+        }
+    }
+
+    <!-- ! ========== Tab: Users ========== -->
+    @if (activeTab === 'users') {
+        <section class="users-section">
+            @for (user of users; track user.id) {
+                <!-- ? --- User Card --- -->
+                <div class="user-card" [routerLink]="['/users', user.username]">
+                    <div class="img-wrapper">
+                        @if (user.role === 'ADMIN') {
+                            <img
+                                [src]="user.profilePictureUrl || 'assets/img/default-img/admin-noimg.jpg'"
+                                alt="{{ user.username || 'User picture' }}"
+                                (error)="noProfilePicture($event, 'ADMIN')"
+                            />
+                        } @else {
+                            <img
+                                [src]="user.profilePictureUrl || 'assets/img/default-img/user-noimg.jpg'"
+                                alt="{{ user.username || 'User picture' }}"
+                                (error)="noProfilePicture($event, 'USER')"
+                            />
+                        }
+
+                        <div class="info-overlay">
+                            @if (user.role === 'ADMIN') {
+                                <h3>⭐</h3>
+                            }
+                            <h1>{{ user.username }}</h1>
+                        </div>
+                    </div>
+                </div>
+            }
+        </section>
+
+        <!-- Mensaje sin resultados -->
+        @if (!isLoading && users.length === 0) {
+            <div class="no-results">
+                <p>No users found for "{{ query }}"</p>
+            </div>
+        }
+    }
+
+    <!-- ! ========== Tab: Playlists ========== -->
+    @if (activeTab === 'playlists') {
+        <div class="no-results">
+            <p>Playlists feature coming soon!</p>
+        </div>
+    }
+
+    <!-- ? --- Loading Indicator --- -->
+    @if (isLoading) {
+        <div class="loading-indicator">
+            <div class="spinner"></div>
+            <span>Searching...</span>
+        </div>
+    }
+
+    <!-- ? --- Scroll Top Button --- -->
+    @if (showScrollTopBtn) {
+        <button class="scroll-top-btn" (click)="scrollToTop()" aria-label="Scroll to top">
+            <img src="assets/img/buttons-icons/arrow-button.png" alt="Scroll to top" />
+        </button>
+    }
+</div>

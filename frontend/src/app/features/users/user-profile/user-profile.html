@@ -1,50 +1,66 @@
 <div class="user-profile-container">
+    <!-- ? --- Loading Indicator --- -->
     @if (isLoadingUser) {
         <div class="loading-container">
             <h3>Loading user profile...</h3>
         </div>
     } @else if (selectedUser) {
-        <!-- * ========== Información del Usuario ========== -->
+        <!-- ! ========== User Main Card Section ========== -->
         <section class="user-main-card">
             <div class="user-container">
-                <!-- Columna Foto de Perfil -->
+                <!-- ? --- Columna Izquierda: Foto de Perfil --- -->
                 <div class="avatar-column">
                     <div class="img-wrapper">
                         <img
-                            [src]="selectedUser.profilePictureUrl || (selectedUser.role === 'ADMIN' ? 'assets/img/userAdmin.jpg' : 'assets/img/userv2.jpg')"
+                            [src]="selectedUser.profilePictureUrl || (selectedUser.role === 'ADMIN' ? 'assets/img/default-img/admin-noimg.jpg' : 'assets/img/default-img/user-noimg.jpg')"
                             [alt]="selectedUser.username || 'User Picture'"
                             (error)="noProfilePicture($event)"
                         />
                     </div>
                 </div>
 
-                <!-- Columna Detalles -->
+                <!-- ? --- Columna Derecha: Detalles del Usuario --- -->
                 <div class="info-column">
+                    <!-- Título e Información de Cuenta -->
                     <div class="block-box info-header">
                         <div class="user-title">
                             <h1>
                                 {{ selectedUser.username }}
-                                @if (selectedUser.role === 'ADMIN') { <span class="admin-badge" title="Administrator">⭐ Admin</span> }
+                                @if (selectedUser.role === 'ADMIN') {
+                                    <span class="admin-badge" title="Administrator">⭐ Admin</span>
+                                }
                             </h1>
                             <span class="user-date">Member since {{ selectedUser.createdAt | date: 'yyyy-MM-dd' }}</span>
                         </div>
                     </div>
 
+                    <!-- Descripción / Sobre el Usuario -->
                     <div class="block-box info-body">
                         <h3>About</h3>
                         <p>{{ selectedUser.description || 'No description provided.' }}</p>
                     </div>
 
+                    <!-- Pie con Contador y Acciones -->
                     <div class="block-box info-footer">
-                        <span class="review-count">Total Reviews: <strong>{{ totalElements }}</strong></span>
+                        <div class="counts-group">
+                            <span class="review-count">Total Reviews: <strong>{{ totalElements }}</strong></span>|
+                            <span class="playlist-count">Total Playlists: <strong>{{ totalPlaylistElements }}</strong></span>
+                        </div>
 
                         @if (isMyProfile) {
                             <div class="profile-actions">
-                                <button (click)="openEditModal()" class="action-btn edit-btn">
-                                    ⚙️ Edit Settings
+                                <button (click)="openEditModal()" class="action-btn edit-btn" title="Edit Profile">
+                                    ⚙️
                                 </button>
                                 <button (click)="deleteUser()" class="action-btn delete-btn" title="Delete User Account">
                                     🗑️
+                                </button>
+                            </div>
+                        } @else if (isAdmin) {
+                            <!-- <----- Botón de Baneo para Administradores en perfiles ajenos ----->
+                            <div class="profile-actions">
+                                <button (click)="banUser()" class="action-btn ban-btn" title="Ban User">
+                                    🔨 Ban User
                                 </button>
                             </div>
                         }
@@ -53,55 +69,132 @@
             </div>
         </section>
 
-        <!-- * ========== Reviews Section ========== -->
-        <section class="reviews-section">
-            <h2 class="title-reviews">{{ selectedUser.username }}'s thoughts...</h2>
-
-            <div class="reviews-container">
-                @if (isLoadingReviews) {
-                    <p class="loading-reviews">Loading reviews...</p>
-                } @else if (reviews.length === 0) {
-                    <p class="no-reviews">No reviews published yet...</p>
-                } @else {
-                    @for (review of reviews; track review.id) {
-                        <app-review-card
-                            [review]="review"
-                            [mode]="'user'"
-                            [currentUsername]="currentUsername"
-                            [isAdmin]="isAdmin"
-                            [isMyProfile]="isMyProfile"
-                            (edit)="onEditReview($event)"
-                            (delete)="onDeleteReview($event)"
-                        ></app-review-card>
-                    }
-                }
+        <!-- ! ========== Tabs & Main Content Container ========== -->
+        <div class="profile-tabs-wrapper">
+            <!-- ! ========== Tab Selector Bar ========== -->
+            <div class="profile-tabs-nav">
+                <button 
+                    class="tab-btn" 
+                    [class.active]="activeTab === 'reviews'" 
+                    (click)="setTab('reviews')"
+                >
+                    Reviews ({{ totalElements }})
+                </button>
+                <button 
+                    class="tab-btn" 
+                    [class.active]="activeTab === 'playlists'" 
+                    (click)="setTab('playlists')"
+                >
+                    Playlists ({{ totalPlaylistElements }})
+                </button>
             </div>
 
-            <!-- Controles de Paginación -->
-            @if (totalPages > 1) {
-                <div class="pagination-controls">
-                    <button
-                        [disabled]="currentPage === 1"
-                        (click)="changePage(currentPage - 1)"
-                        class="page-btn"
-                    >
-                        &laquo; Previous
-                    </button>
+            <!-- ! ========== Tab Content: Reviews Section ========== -->
+            @if (activeTab === 'reviews') {
+                <section class="reviews-section">
+                    <!-- Grid de Reseñas -->
+                    <div class="reviews-container">
+                        @if (isLoadingReviews) {
+                            <p class="loading-reviews">Loading reviews...</p>
+                        } @else if (reviews.length === 0) {
+                            <p class="no-reviews">No reviews published yet...</p>
+                        } @else {
+                            @for (review of reviews; track review.id) {
+                                <app-review-card
+                                    [review]="review"
+                                    [mode]="'user'"
+                                    [currentUsername]="currentUsername"
+                                    [isAdmin]="isAdmin"
+                                    [isMyProfile]="isMyProfile"
+                                    (edit)="onEditReview($event)"
+                                    (delete)="onDeleteReview($event)"
+                                ></app-review-card>
+                            }
+                        }
+                    </div>
 
-                    <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+                    <!-- ? --- Controles de Paginación de Reseñas --- -->
+                    @if (totalPages > 1) {
+                        <div class="pagination-controls">
+                            <button
+                                [disabled]="currentPage === 1"
+                                (click)="changePage(currentPage - 1)"
+                                class="page-btn"
+                            >
+                                &laquo; Previous
+                            </button>
 
-                    <button
-                        [disabled]="currentPage === totalPages"
-                        (click)="changePage(currentPage + 1)"
-                        class="page-btn"
-                    >
-                        Next &raquo;
-                    </button>
-                </div>
+                            <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+
+                            <button
+                                [disabled]="currentPage === totalPages"
+                                (click)="changePage(currentPage + 1)"
+                                class="page-btn"
+                            >
+                                Next &raquo;
+                            </button>
+                        </div>
+                    }
+                </section>
             }
-        </section>
+
+            <!-- ! ========== Tab Content: Playlists Section ========== -->
+            @if (activeTab === 'playlists') {
+                <section class="playlists-section">
+                    <!-- Grid de Playlists -->
+                    <div class="playlists-container">
+                        @if (isLoadingPlaylists) {
+                            <p class="loading-msg">Loading playlists...</p>
+                        } @else if (playlists.length === 0) {
+                            <p class="no-data-msg">No playlists created yet...</p>
+                        } @else {
+                            @for (playlist of playlists; track playlist.id) {
+                                <div class="playlist-card" [routerLink]="['/playlists', playlist.id]">
+                                    <div class="playlist-card-img">
+                                        <img
+                                            [src]="playlist.pictureUrl || 'assets/img/default-img/playlist-noimg.jpg'"
+                                            [alt]="playlist.name"
+                                            (error)="noPlaylistPicture($event)"
+                                        />
+                                        @if (playlist.isPrivate) {
+                                            <span class="private-badge" title="Private Playlist">🔒</span>
+                                        }
+                                    </div>
+                                    <div class="playlist-card-info">
+                                        <h3>{{ playlist.name }}</h3>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+
+                    <!-- ? --- Controles de Paginación de Playlists --- -->
+                    @if (totalPlaylistPages > 1) {
+                        <div class="pagination-controls">
+                            <button
+                                [disabled]="currentPlaylistPage === 1"
+                                (click)="changePlaylistPage(currentPlaylistPage - 1)"
+                                class="page-btn"
+                            >
+                                &laquo; Previous
+                            </button>
+
+                            <span class="page-info">Page {{ currentPlaylistPage }} of {{ totalPlaylistPages }}</span>
+
+                            <button
+                                [disabled]="currentPlaylistPage === totalPlaylistPages"
+                                (click)="changePlaylistPage(currentPlaylistPage + 1)"
+                                class="page-btn"
+                            >
+                                Next &raquo;
+                            </button>
+                        </div>
+                    }
+                </section>
+            }
+        </div>
     } @else {
-        <!-- <----- Estado Usuario No Encontrado con Botón ----->
+        <!-- ? --- Mensaje de Usuario No Encontrado --- -->
         <div class="not-found-card">
             <h2>⚠️ User Not Found</h2>
             <p>The requested user profile does not exist or has been removed.</p>
@@ -111,7 +204,7 @@
         </div>
     }
 
-    <!-- * ========== Modal Edición Unificado (Custom) ========== -->
+    <!-- ! ========== Modal Formulario (Editar Perfil / Editar Reseña) ========== -->
     @if (modalService.isOpen() && modalService.type() === 'custom') {
         @if (activeModal === 'profile') {
             <app-modal>
@@ -128,7 +221,7 @@
         }
     }
 
-    <!-- * ========== Modal Genérico (Confirmaciones y Alertas) ========== -->
+    <!-- ! ========== Modal Genérico (Alertas / Confirmaciones) ========== -->
     @if (modalService.isOpen() && modalService.type() !== 'custom') {
         <app-modal></app-modal>
     }

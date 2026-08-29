@@ -1,20 +1,26 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
 import { Header } from './shared/components/header/header';
 import { Sidebar } from './shared/components/sidebar/sidebar';
 import { Footer } from './shared/components/footer/footer';
+import { Modal } from './shared/modals/modal/modal';
+import { BanModal } from './shared/modals/ban-modal/ban-modal';
+import { ModalService } from './shared/services/modal-services';
 
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [RouterOutlet, Header, Sidebar, Footer],
+    imports: [RouterOutlet, Header, Sidebar, Footer, Modal, BanModal],
     templateUrl: './app.html',
     styleUrl: './app.css',
 })
 export class App {
     // * ---- Titulo de la aplicacion ----
     protected readonly title = signal('Common Room'); 
+
+    // * ---- Servicio de Modales Global ----
+    public modalService = inject(ModalService);
 
     // * ---- Estados para el Layout y Navegacion ----
     showLayout = signal<boolean>(true); // Control de renderizado para Header, Sidebar y Footer

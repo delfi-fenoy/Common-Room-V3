@@ -87,6 +87,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 1rem;
 }
 
 .title-box h1 {
@@ -102,6 +103,14 @@
     text-decoration: underline;
 }
 
+/* <----- Contenedor para Botón y Rating -----> */
+.title-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-shrink: 0;
+}
+
 .rating-badge {
     background-color: var(--brown-500);
     color: #ffd700;
@@ -110,6 +119,27 @@
     padding: 0.4rem 0.8rem;
     border-radius: 0.5rem;
     border: 0.15rem solid var(--brown-400);
+}
+
+/* <----- Add Playlist Button -----> */
+.add-playlist-btn {
+    background-color: var(--brown-500);
+    color: var(--brown-100);
+    border: 0.15rem solid var(--brown-400);
+    padding: 0.45rem 0.9rem;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease, color 0.2s ease;
+    margin: 0;
+}
+
+.add-playlist-btn:hover {
+    transform: scale(1.05);
+    background-color: var(--purple-300);
+    border-color: var(--purple-400);
+    color: var(--purple-700);
 }
 
 .synopsis-box h3,

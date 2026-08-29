@@ -1,0 +1,193 @@
+<app-modal>
+    <div class="playlist-modal-container">
+        <!-- * ================= 1. MODO: CREAR PLAYLIST ================= -->
+        @if (mode === 'create') {
+            <form (ngSubmit)="onCreateSubmit()" class="modal-form">
+                <div class="form-group">
+                    <label for="pName">Playlist Name</label>
+                    <input
+                        id="pName"
+                        type="text"
+                        [(ngModel)]="playlistName"
+                        name="playlistName"
+                        placeholder="e.g. My Favorite Movies"
+                        required
+                        [disabled]="isSubmitting"
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="pDesc">Description (optional)</label>
+                    <textarea
+                        id="pDesc"
+                        [(ngModel)]="playlistDescription"
+                        name="playlistDescription"
+                        rows="3"
+                        placeholder="Tell us something about this playlist..."
+                        [disabled]="isSubmitting"
+                    ></textarea>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <label class="checkbox-label">
+                        <input
+                            type="checkbox"
+                            [(ngModel)]="isPrivate"
+                            name="isPrivate"
+                            [disabled]="isSubmitting"
+                        />
+                        <span>Make this playlist private?</span>
+                    </label>
+                </div>
+
+                <div class="form-actions">
+                    <button
+                        type="button"
+                        class="btn btn-cancel"
+                        (click)="closeModal()"
+                        [disabled]="isSubmitting"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="submit"
+                        class="btn btn-submit"
+                        [disabled]="!playlistName.trim() || isSubmitting"
+                    >
+                        {{ isSubmitting ? 'Creating...' : 'Create Playlist' }}
+                    </button>
+                </div>
+            </form>
+        }
+
+        <!-- * ================= 2. MODO: AGREGAR A PLAYLIST ================= -->
+        @if (mode === 'add-movie') {
+            <div class="add-movie-section">
+                <!-- Buscador de Playlists -->
+                <div class="form-group">
+                    <input
+                        type="text"
+                        [(ngModel)]="searchQuery"
+                        placeholder="Search your playlists..."
+                    />
+                </div>
+
+                <!-- Botón para Crear Nueva Playlist -->
+                <button type="button" class="create-shortcut-btn" (click)="switchToCreateMode()">
+                    <span class="plus-icon">+</span>
+                    <span>New Playlist</span>
+                </button>
+
+                <hr class="modal-divider" />
+
+                <!-- Listas de Playlists -->
+                <div class="playlists-list-container">
+                    @if (isLoadingPlaylists) {
+                        <p class="status-msg">Loading your playlists...</p>
+                    } @else if (playlists.length === 0) {
+                        <p class="status-msg">No playlists found.</p>
+                    } @else {
+                        <!-- ? ----- Sección 1: Playlists donde YA esta la película ----- -->
+                        @if (inPlaylists.length > 0) {
+                            <div class="section-header">In this playlist</div>
+                            <ul class="playlist-items">
+                                @for (playlist of inPlaylists; track playlist.id) {
+                                    <li
+                                        class="playlist-item"
+                                        (click)="togglePlaylistSelection(playlist.id)"
+                                    >
+                                        <div class="playlist-thumb">
+                                            @if (playlist.pictureUrl) {
+                                                <img
+                                                    [src]="playlist.pictureUrl"
+                                                    [alt]="playlist.name"
+                                                />
+                                            } @else {
+                                                <span class="default-icon">🎵</span>
+                                            }
+                                        </div>
+
+                                        <div class="playlist-meta">
+                                            <span class="playlist-name">{{ playlist.name }}</span>
+                                            <span class="playlist-visibility">
+                                                {{
+                                                    playlist.isPrivate ? '🔒 Private' : '🌐 Public'
+                                                }}
+                                            </span>
+                                        </div>
+
+                                        <div class="playlist-check">
+                                            <span class="checked-icon">✔</span>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                        }
+
+                        <!-- ? ----- Divisor Entre Secciones ----- -->
+                        @if (inPlaylists.length > 0 && notInPlaylists.length > 0) {
+                            <hr class="section-divider" />
+                        }
+
+                        <!-- ? ----- Sección 2: Playlists donde NO esta la película ----- -->
+                        @if (notInPlaylists.length > 0) {
+                            <div class="section-header">Add to playlist</div>
+                            <ul class="playlist-items">
+                                @for (playlist of notInPlaylists; track playlist.id) {
+                                    <li
+                                        class="playlist-item"
+                                        (click)="togglePlaylistSelection(playlist.id)"
+                                    >
+                                        <div class="playlist-thumb">
+                                            @if (playlist.pictureUrl) {
+                                                <img
+                                                    [src]="playlist.pictureUrl"
+                                                    [alt]="playlist.name"
+                                                />
+                                            } @else {
+                                                <span class="default-icon">🎵</span>
+                                            }
+                                        </div>
+
+                                        <div class="playlist-meta">
+                                            <span class="playlist-name">{{ playlist.name }}</span>
+                                            <span class="playlist-visibility">
+                                                {{
+                                                    playlist.isPrivate ? '🔒 Private' : '🌐 Public'
+                                                }}
+                                            </span>
+                                        </div>
+
+                                        <div class="playlist-check">
+                                            <span class="unchecked-circle"></span>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    }
+                </div>
+
+                <!-- Footer de Acciones -->
+                <div class="form-actions">
+                    <button
+                        type="button"
+                        class="btn btn-cancel"
+                        (click)="closeModal()"
+                        [disabled]="isSavingChanges"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-submit"
+                        (click)="onConfirmSave()"
+                        [disabled]="isSavingChanges || isLoadingPlaylists"
+                    >
+                        {{ isSavingChanges ? 'Saving...' : 'Save Changes' }}
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+</app-modal>

@@ -10,11 +10,12 @@ import { LoginPage } from './features/auth/login-page/login-page';
 import { RegisterPage } from './features/auth/register-page/register-page';
 import { MoviesList } from './features/movies/movies-list/movies-list';
 import { MovieSheet } from './features/movies/movie-sheet/movie-sheet';
-import { SearchPage } from './features/search/search-page/search-page';
+import { SearchPage } from './features/search-page/search-page';
 import { UsersList } from './features/users/users-list/users-list';
 import { UserProfile } from './features/users/user-profile/user-profile';
 import { NotFound } from './features/not-found/not-found';
 import { PlaylistsList } from './features/playlists/playlists-list/playlists-list';
+import { PlaylistSheet } from './features/playlists/playlist-sheet/playlist-sheet';
 
 /* ! ======== Configuración Global de Rutas ======== */
 export const routes: Routes = [
@@ -24,10 +25,10 @@ export const routes: Routes = [
     /* ------ Autenticación y Registro ------ */
     { path: 'login', component: LoginPage, title: 'Login | Common Room', canActivate: [guestGuard] },
     { path: 'register', component: RegisterPage, title: 'Register | Common Room', canActivate: [guestGuard] },
-
+    { path: 'search/:query', component: SearchPage },
+    
     /* ------ Modulo de Películas ------ */
     { path: 'movies', component: MoviesList, title: 'Movies | Common Room' },
-    { path: 'movies/search/:query', component: SearchPage, title: 'Search | Common Room' },
     { path: 'movies/:id', component: MovieSheet },
 
     /* ------ Modulo de Usuarios ------ */
@@ -36,7 +37,8 @@ export const routes: Routes = [
     { path: 'users/:username', component: UserProfile },
 
     /* ------ Modulo de playlist ------ */
-    { path: 'playlists', component: PlaylistsList },
+    { path: 'playlists', component: PlaylistsList, title: 'Playlists | Common Room' },
+    { path: 'playlists/:id', component: PlaylistSheet },
 
     /* ------ Modulo Errores y Redirecciones ------ */
     { path: '404', component: NotFound, title: '404 | Not Found' },

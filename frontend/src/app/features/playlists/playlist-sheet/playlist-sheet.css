@@ -1,0 +1,311 @@
+/* * ======== Playlist-Sheet | Container ======== */
+.sheet-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    width: 100%;
+    max-width: 85rem;
+    margin: 0 auto;
+    padding: 1.5rem;
+    box-sizing: border-box;
+}
+
+.sheet-content {
+    display: grid;
+    grid-template-columns: 22rem 1fr;
+    gap: 1.5rem;
+    width: 100%;
+    align-items: start;
+}
+
+/* * ========== Sidebar Izquierdo (Metadata y Acciones) ========== */
+.playlist-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    width: 100%;
+}
+
+.playlist-cover {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border: 0.4rem solid var(--brown-200);
+    border-radius: 0.75rem;
+    background-color: var(--brown-700);
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
+
+.playlist-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.block-box {
+    background-color: var(--brown-600);
+    border: 0.4rem solid var(--brown-500);
+    border-radius: 0.6rem;
+    padding: 1rem;
+    color: var(--brown-100);
+}
+
+.title-box {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.title-box h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: var(--brown-200);
+    text-shadow: 1px 1px 2px var(--brown-700);
+    word-break: break-word;
+}
+
+.badge {
+    align-self: flex-start;
+    padding: 0.25rem 0.6rem;
+    border-radius: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.private-badge {
+    background-color: var(--purple-500);
+    color: var(--purple-100);
+    border: 0.1rem solid var(--purple-400);
+}
+
+.public-badge {
+    background-color: var(--brown-500);
+    color: var(--brown-100);
+    border: 0.1rem solid var(--brown-400);
+}
+
+/* <----- Botones de Edición / Borrado de Playlist -----> */
+.actions-box {
+    display: flex;
+    gap: 0.6rem;
+}
+
+.btn-edit,
+.btn-delete {
+    flex: 1;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    font-size: 0.95rem;
+    cursor: pointer;
+    border: 0.15rem solid var(--brown-400);
+    transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-edit {
+    background-color: var(--brown-500);
+    color: var(--brown-100);
+}
+
+.btn-edit:hover {
+    transform: scale(1.03);
+    background-color: var(--purple-300);
+    border-color: var(--purple-400);
+    color: var(--purple-700);
+}
+
+.btn-delete {
+    background-color: var(--brown-500);
+    color: #ffb3b3;
+}
+
+.btn-delete:hover {
+    transform: scale(1.03);
+    background-color: #8b0000;
+    border-color: #a00000;
+    color: #fff;
+}
+
+.description-box h3,
+.owner-box h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+    color: var(--brown-200);
+    border-bottom: 2px solid var(--brown-400);
+    padding-bottom: 0.2rem;
+}
+
+.description-box p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    color: var(--brown-100);
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+/* <----- Tarjeta del Creador (Enlace al perfil) -----> */
+.owner-card {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.5rem;
+    background-color: var(--brown-500);
+    border: 0.15rem solid var(--brown-400);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.owner-card:hover {
+    background-color: var(--purple-300);
+    border-color: var(--purple-400);
+    transform: translateY(-2px);
+}
+
+.owner-card:hover .owner-info strong {
+    color: var(--purple-700);
+    text-decoration: underline;
+}
+
+.owner-card img {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 0.12rem solid var(--brown-300);
+}
+
+.owner-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.owner-info strong {
+    color: var(--brown-100);
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
+}
+
+.owner-info small {
+    color: var(--brown-200);
+    font-size: 0.75rem;
+}
+
+/* * ========== Sección Principal de Películas ========== */
+.movies-main {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    width: 100%;
+    padding: 1.25rem;
+    background-color: var(--green-600);
+    border: 0.35rem solid var(--brown-500);
+    border-radius: 0.75rem;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+.movies-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--brown-500);
+    padding-bottom: 0.5rem;
+}
+
+.movies-header h2 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: var(--brown-200);
+}
+
+.empty-movies {
+    padding: 3rem;
+    text-align: center;
+    color: var(--purple-200);
+}
+
+/* * ========== Grid de Películas (4 Columnas) ========== */
+.movies-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.2rem;
+}
+
+.grid-card-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+/* <----- Botón X reubicado estéticamente sobre la esquina de la tarjeta -----> */
+.btn-remove-overlay {
+    position: absolute;
+    top: -0.5rem;
+    right: -0.5rem;
+    z-index: 20;
+    background-color: #8b0000;
+    color: #fff;
+    border: 0.15rem solid var(--brown-100);
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.btn-remove-overlay:hover {
+    background-color: #ff4d4d;
+    transform: scale(1.15);
+}
+
+.loading-container,
+.not-found-container {
+    color: var(--green-100);
+    text-align: center;
+    padding: 3rem;
+    font-size: 1.2rem;
+}
+
+/* ! __________ Responsive Design __________ */
+@media (max-width: 1200px) {
+    .movies-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 992px) {
+    .sheet-content {
+        grid-template-columns: 1fr;
+    }
+
+    .movies-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .movies-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .sheet-container {
+        padding: 1rem;
+    }
+
+    .movies-grid {
+        grid-template-columns: 1fr;
+    }
+}

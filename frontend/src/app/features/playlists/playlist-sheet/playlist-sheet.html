@@ -1,0 +1,118 @@
+<div class="sheet-container">
+    <!-- ? --- Loading Indicator --- -->
+    @if (isLoadingPlaylist) {
+        <div class="loading-container">
+            <h3>Loading playlist information...</h3>
+        </div>
+    } @else if (playlist) {
+        <div class="sheet-content">
+
+            <!-- ! ==================== SIDEBAR IZQUIERDO (Metadata y Acciones) ==================== -->
+            <aside class="playlist-sidebar">
+                <!-- Portada de la Playlist -->
+                <div class="playlist-cover">
+                    <img
+                        [src]="playlist.pictureUrl || 'assets/img/default-img/playlist-noimg.jpg'"
+                        [alt]="playlist.name"
+                        (error)="noPlaylistPicture($event)"
+                    />
+                </div>
+
+                <!-- Título y Visibilidad -->
+                <div class="block-box title-box">
+                    <h1>{{ playlist.name }}</h1>
+                    @if (playlist.isPrivate) {
+                        <span class="badge private-badge">🔒 Private</span>
+                    } @else {
+                        <span class="badge public-badge">🌐 Public</span>
+                    }
+                </div>
+
+                <!-- Acciones (Edit / Delete) exclusivas para el Creador -->
+                @if (isOwner) {
+                    <div class="actions-box">
+                        <button class="btn-edit" (click)="openEditModal()">✏️ Edit</button>
+                        <button class="btn-delete" (click)="deletePlaylist()">🗑️ Delete</button>
+                    </div>
+                }
+
+                <!-- Descripción -->
+                <div class="block-box description-box">
+                    <h3>Description</h3>
+                    <p>{{ playlist.description || 'No description provided.' }}</p>
+                </div>
+
+                <!-- Información del Creador -->
+                @let user = playlist.userPreviewDTO;
+                <div class="block-box owner-box">
+                    <h3>Created by</h3>
+                    <div 
+                        class="owner-card" 
+                        [routerLink]="['/users', user?.username]"
+                        [title]="'View ' + (user?.username || 'user') + '\'s profile'"
+                    >
+                        <img
+                            [src]="user?.profilePictureUrl || 'assets/img/default-img/user-noimg.jpg'"
+                            [alt]="user?.username || 'User'"
+                            (error)="noUserPicture($event)"
+                        />
+                        <div class="owner-info">
+                            <strong>{{ user?.username || 'Unknown' }}</strong>
+                            <small>{{ user?.role }}</small>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- ! ==================== SECCIÓN PRINCIPAL (Grid de Películas) ==================== -->
+            <main class="movies-main">
+                <div class="movies-header">
+                    <h2>Movies in playlist ({{ movies.length }})</h2>
+                </div>
+
+                @if (movies.length === 0) {
+                    <div class="empty-movies">
+                        <h3>No movies added to this playlist yet.</h3>
+                    </div>
+                } @else {
+                    <div class="movies-grid">
+                        @for (movie of movies; track movie.id) {
+                            <div class="grid-card-wrapper">
+                                @if (isOwner) {
+                                    <button 
+                                        class="btn-remove-overlay" 
+                                        (click)="removeMovie(movie.id)" 
+                                        title="Remove movie from playlist"
+                                    >
+                                        ✕
+                                    </button>
+                                }
+                                <app-movie-card [movie]="movie" />
+                            </div>
+                        }
+                    </div>
+                }
+            </main>
+
+        </div>
+    } @else {
+        <div class="not-found-container">
+            <h3>Playlist not found or unreachable.</h3>
+        </div>
+    }
+
+    <!-- ! ========== Modal Custom: Editar Playlist ========== -->
+    @if (modalService.isOpen() && modalService.type() === 'custom') {
+        <app-modal>
+            <app-edit-playlist-modal
+                [playlist]="playlist!"
+                (submitted)="onPlaylistUpdated()"
+            ></app-edit-playlist-modal>
+        </app-modal>
+    }
+
+    <!-- ! ========== Modal Genérico (Alertas / Confirmaciones) ========== -->
+    @if (modalService.isOpen() && modalService.type() !== 'custom') {
+        <app-modal></app-modal>
+    }
+</div>

@@ -1,0 +1,68 @@
+<div class="edit-profile-container">
+    <form [formGroup]="editForm" (ngSubmit)="onSubmit()" class="modal-form">
+        <!-- Nombre de la Playlist -->
+        <div class="form-group">
+            <label for="name">Playlist Name</label>
+            <input
+                id="name"
+                type="text"
+                formControlName="name"
+                placeholder="Enter playlist name"
+            />
+            @if (editForm.get('name')?.touched && editForm.get('name')?.hasError('required')) {
+                <span class="error-msg">Playlist name is required.</span>
+            } @else if (editForm.get('name')?.touched && editForm.get('name')?.hasError('maxlength')) {
+                <span class="error-msg">Playlist name cannot exceed 30 characters.</span>
+            }
+        </div>
+
+        <!-- Descripción -->
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea
+                id="description"
+                rows="3"
+                formControlName="description"
+                placeholder="Describe your playlist..."
+            ></textarea>
+            @if (editForm.get('description')?.touched && editForm.get('description')?.hasError('maxlength')) {
+                <span class="error-msg">Description cannot exceed 255 characters.</span>
+            }
+        </div>
+
+        <!-- URL de la Portada -->
+        <div class="form-group">
+            <label for="pictureUrl">Cover Picture URL</label>
+            <input
+                id="pictureUrl"
+                type="url"
+                formControlName="pictureUrl"
+                placeholder="https://example.com/cover.jpg"
+            />
+            @if (editForm.get('pictureUrl')?.touched && editForm.get('pictureUrl')?.hasError('pattern')) {
+                <span class="error-msg">Enter a valid URL (e.g. https://example.com/cover.jpg).</span>
+            }
+        </div>
+
+        <!-- Checkbox Privacidad -->
+        <div class="form-group checkbox-group">
+            <label>
+                <input
+                    type="checkbox"
+                    formControlName="isPrivate"
+                />
+                Make this playlist private
+            </label>
+        </div>
+
+        <!-- Footer de Botones Unificado -->
+        <div class="form-actions">
+            <button type="button" class="btn btn-cancel" (click)="onCancel()">
+                Cancel
+            </button>
+            <button type="submit" class="btn btn-submit" [disabled]="isSaving || editForm.invalid">
+                {{ isSaving ? 'Saving...' : 'Save Changes' }}
+            </button>
+        </div>
+    </form>
+</div>

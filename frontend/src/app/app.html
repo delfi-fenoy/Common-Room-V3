@@ -15,3 +15,10 @@
 @if (showLayout()) {
     <app-footer></app-footer>
 }
+
+<!-- ? --- Contenedor Global de Modales --- -->
+<app-modal>
+    @if (modalService.title() === 'Banned Users Management') {
+        <app-ban-modal></app-ban-modal>
+    }
+</app-modal>

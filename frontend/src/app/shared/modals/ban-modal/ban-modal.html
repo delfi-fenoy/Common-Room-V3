@@ -1,0 +1,49 @@
+<div class="ban-management-container">
+    <!-- ? --- Barra de Búsqueda --- -->
+    <div class="search-box-section">
+        <div class="form-group search-group">
+            <label for="searchUser">Search Banned User</label>
+            <div class="search-input-wrapper">
+                <input
+                    id="searchUser"
+                    type="text"
+                    [(ngModel)]="searchQuery"
+                    placeholder="Enter username..."
+                    (keyup.enter)="onSearch()"
+                />
+                <button type="button" class="btn btn-submit" (click)="onSearch()" [disabled]="isLoading">
+                    {{ isLoading ? 'Searching...' : 'Search' }}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ? --- Lista de Usuarios Baneados --- -->
+    <div class="banned-list-section">
+        @if (bannedUsers.length === 0) {
+            <p class="empty-message">No active bans loaded. Search for a username above.</p>
+        } @else {
+            <div class="banned-cards-wrapper">
+                @for (ban of bannedUsers; track ban.id) {
+                    <div class="ban-card-item">
+                        <div class="ban-details">
+                            <span class="banned-username">{{ ban.bannedUsername }}</span>
+                            <span class="ban-reason"><strong>Reason:</strong> {{ ban.reason }}</span>
+                            <span class="ban-date"><strong>Banned at:</strong> {{ ban.bannedAt | date:'short' }}</span>
+                        </div>
+                        <button type="button" class="btn btn-unban" (click)="unbanUser(ban.bannedUsername)">
+                            Unban
+                        </button>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+    <!-- ? --- Footer de Botones Unificado --- -->
+    <div class="form-actions">
+        <button type="button" class="btn btn-cancel" (click)="onClose()">
+            Close
+        </button>
+    </div>
+</div>

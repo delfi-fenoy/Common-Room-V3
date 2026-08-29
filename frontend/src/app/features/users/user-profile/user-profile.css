@@ -1,4 +1,4 @@
-/* * ======== Container General ======== */
+/* * ======== User Profile | Container ======== */
 .user-profile-container {
     display: flex;
     flex-direction: column;
@@ -54,7 +54,7 @@
     object-fit: cover;
 }
 
-/* ? ------- Info Column ------- */
+/* ? ------- User Information Column ------- */
 .info-column {
     display: flex;
     flex-direction: column;
@@ -72,6 +72,7 @@
     box-sizing: border-box;
 }
 
+/* User Title & Header */
 .info-header .user-title {
     display: flex;
     justify-content: space-between;
@@ -95,7 +96,7 @@
     color: #ffd700;
     padding: 0.15rem 0.5rem;
     border-radius: 0.4rem;
-    border: 1px solid var(--brown-400);
+    border: 0.1rem solid var(--brown-400);
 }
 
 .user-date {
@@ -104,6 +105,7 @@
     color: var(--brown-200);
 }
 
+/* User Description Body */
 .info-body {
     display: flex;
     flex-direction: column;
@@ -128,6 +130,7 @@
     overflow-wrap: anywhere;
 }
 
+/* Profile Actions Footer */
 .info-footer {
     display: flex;
     align-items: center;
@@ -136,7 +139,14 @@
     padding: 0.5rem 1rem;
 }
 
-.review-count {
+.counts-group {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.review-count,
+.playlist-count {
     font-size: 0.95rem;
     color: var(--brown-100);
 }
@@ -152,7 +162,7 @@
     font-weight: bold;
     border-radius: 0.5rem;
     cursor: pointer;
-    transition: transform 0.2s ease, background-color 0.2s ease;
+    transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
     border: 0.15rem solid var(--brown-400);
 }
 
@@ -180,13 +190,69 @@
     transform: scale(1.03);
 }
 
+/* <----- Estilos para el botón de Ban -----> */
+.ban-btn {
+    background-color: rgba(229, 57, 53, 0.15);
+    color: #ff5252;
+    border-color: #ff5252;
+}
+
+.ban-btn:hover {
+    background-color: #ff5252;
+    color: #ffffff;
+    transform: scale(1.03);
+}
+
+/* * ========== Profile Tabs Wrapper & Navigation ========== */
+.profile-tabs-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.profile-tabs-nav {
+    display: flex;
+    gap: 0.4rem;
+    width: 100%;
+    padding-left: 0.5rem;
+    z-index: 1;
+}
+
+.tab-btn {
+    background-color: var(--brown-600);
+    border: 0.35rem solid var(--brown-500);
+    border-bottom: none;
+    color: var(--brown-200);
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 0.65rem 1.5rem;
+    border-radius: 0.75rem 0.75rem 0 0;
+    cursor: pointer;
+    margin-bottom: -0.35rem; /* Elimina la brecha con la sección */
+    transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+    background-color: var(--brown-500);
+    color: var(--brown-100);
+}
+
+.tab-btn.active {
+    background-color: var(--green-600);
+    color: #ffffff;
+    border-color: var(--brown-500);
+    border-bottom: 0.35rem solid var(--green-600); /* Tapa la línea superior del panel */
+    position: relative;
+    z-index: 2;
+}
+
 /* * ========== Reviews Section ========== */
 .reviews-section {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
-    padding: 1.25rem;
+    padding: 1.5rem 1.25rem 1.25rem 1.25rem;
     background-color: var(--green-600);
     border: 0.35rem solid var(--brown-500);
     border-radius: 0.75rem;
@@ -194,12 +260,7 @@
     box-sizing: border-box;
 }
 
-.title-reviews {
-    margin: 0 0 1.2rem 0;
-    font-size: 2rem;
-    color: var(--brown-200);
-}
-
+/* ? ------- Reviews Grid ------- */
 .reviews-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -216,7 +277,130 @@
     padding: 2rem;
 }
 
-/* <----- Estado Usuario No Encontrado -----> */
+app-review-card {
+    width: 100%;
+    min-width: 0;
+}
+
+/* * ========== Playlists Section ========== */
+.playlists-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 1.5rem 1.25rem 1.25rem 1.25rem;
+    background-color: var(--green-600);
+    border: 0.35rem solid var(--brown-500);
+    border-radius: 0.75rem;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+}
+
+.playlists-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+    gap: 1.2rem;
+    width: 100%;
+}
+
+.no-data-msg,
+.loading-msg {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--brown-200);
+    padding: 2rem;
+}
+
+.playlist-card {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--brown-600);
+    border: 0.2rem solid var(--brown-400);
+    border-radius: 0.6rem;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.playlist-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--purple-400);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.playlist-card-img {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background-color: var(--brown-700);
+}
+
+.playlist-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.private-badge {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.4rem;
+    background-color: rgba(0, 0, 0, 0.65);
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.4rem;
+    font-size: 0.85rem;
+}
+
+.playlist-card-info {
+    padding: 0.6rem 0.8rem;
+    background-color: var(--brown-600);
+}
+
+.playlist-card-info h3 {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--brown-100);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ? ------- Pagination Controls ------- */
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.page-btn {
+    background-color: var(--brown-500);
+    color: var(--brown-100);
+    border: 0.15rem solid var(--brown-400);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.page-btn:hover:not(:disabled) {
+    background-color: var(--purple-300);
+    border-color: var(--purple-400);
+    color: var(--purple-700);
+}
+
+.page-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.page-info {
+    color: var(--brown-100);
+    font-weight: bold;
+}
+
+/* * ========== User Not Found Card ========== */
 .not-found-card {
     display: flex;
     flex-direction: column;
@@ -270,42 +454,7 @@
     transform: scale(1.05);
 }
 
-/* ? ------- Pagination Controls ------- */
-.pagination-controls {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    margin-top: 1.5rem;
-}
-
-.page-btn {
-    background-color: var(--brown-500);
-    color: var(--brown-100);
-    border: 0.15rem solid var(--brown-400);
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.page-btn:hover:not(:disabled) {
-    background-color: var(--purple-300);
-    border-color: var(--purple-400);
-    color: var(--purple-700);
-}
-
-.page-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.page-info {
-    color: var(--brown-100);
-    font-weight: bold;
-}
-
-/* ! ========== Responsive ========== */
+/* ! __________ Responsive __________ */
 @media (max-width: 850px) {
     .user-container {
         flex-direction: column;
@@ -334,11 +483,32 @@
         align-items: flex-start;
     }
 
+    .counts-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.3rem;
+    }
+
     .profile-actions {
         width: 100%;
     }
 
     .action-btn {
         flex: 1;
+    }
+
+    .profile-tabs-nav {
+        padding-left: 0;
+    }
+
+    .tab-btn {
+        flex: 1;
+        padding: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .reviews-section,
+    .playlists-section {
+        border-radius: 0.75rem;
     }
 }

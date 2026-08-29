@@ -9,13 +9,13 @@
                 <div class="user-info" [routerLink]="['/users', user.username]">
                     @if (user.role === 'ADMIN') {
                         <img
-                            [src]="user.profilePictureUrl || 'assets/img/userAdmin.jpg'"
+                            [src]="user.profilePictureUrl || 'assets/img/default-img/admin-noimg.jpg'"
                             alt="{{ user.username || 'User Avatar' }}"
                             (error)="noProfilePicture($event)"
                         />
                     } @else {
                         <img
-                            [src]="user.profilePictureUrl || 'assets/img/userv2.jpg'"
+                            [src]="user.profilePictureUrl || 'assets/img/default-img/user-noimg.jpg'"
                             alt="{{ user.username || 'User Avatar' }}"
                             (error)="noProfilePicture($event)"
                         />

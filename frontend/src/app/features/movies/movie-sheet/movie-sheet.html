@@ -27,12 +27,22 @@
 
             <!-- ? --- Columna Derecha: Detalles de la Película --- -->
             <div class="info-column">
-                <!-- Título y Rating -->
+                <!-- Título, Botón Playlist y Rating -->
                 <div class="block-box title-box">
                     <h1>{{ chosenMovie.title }}</h1>
-                    @if (chosenMovie.voteAverage != null) {
-                        <span class="rating-badge">⭐ {{ chosenMovie.voteAverage }}</span>
-                    }
+
+                    <!-- <----- Contenedor para Botón y Rating ----->
+                    <div class="title-actions">
+                        @if (isLoggedIn) {
+                            <button (click)="openAddPlaylistModal()" class="add-playlist-btn" title="Add to Playlist">
+                                + Playlist
+                            </button>
+                        }
+
+                        @if (chosenMovie.voteAverage != null) {
+                            <span class="rating-badge">⭐ {{ chosenMovie.voteAverage }}</span>
+                        }
+                    </div>
                 </div>
 
                 <!-- Sinopsis -->
@@ -114,10 +124,9 @@
                 }
             </div>
 
-            <!-- Divisor horizontal entre reseña propia y lista de la comunidad -->
             <hr class="reviews-divider" />
 
-            <!-- ? === 2. Lista de Reseñas Generales (Grid Paginado) === -->
+            <!-- ? === 2. Lista de Reseñas Generales === -->
             <div class="reviews-container">
                 @if (isLoadingReviews) {
                     <p class="loading-reviews">Loading reviews...</p>
@@ -161,19 +170,26 @@
             }
         </section>
     } @else {
-        <!-- ? --- Mensaje de Película No Encontrada --- -->
         <div class="not-found-container">
             <h3>No movie was found with that information.</h3>
         </div>
     }
 
-    <!-- ! ========== Modal Formulario de Reseña (Crear / Editar) ========== -->
-    @if (modalService.isOpen() && modalService.type() === 'custom') {
+    <!-- ! ========== Modal Formulario de Reseña ========== -->
+    @if (modalService.isOpen() && modalService.type() === 'custom' && currentModalContext === 'review') {
         <app-review-form-modal
             [movie]="chosenMovie"
             [review]="selectedReview"
             (submitted)="refreshReviews()"
         ></app-review-form-modal>
+    }
+
+    <!-- ! ========== Modal Playlist (Agregar Película) ========== -->
+    @if (modalService.isOpen() && modalService.type() === 'custom' && currentModalContext === 'playlist') {
+        <app-playlist-modal
+            [mode]="'add-movie'"
+            [movie]="chosenMovie"
+        ></app-playlist-modal>
     }
 
     <!-- ! ========== Modal Genérico (Alertas / Confirmaciones) ========== -->

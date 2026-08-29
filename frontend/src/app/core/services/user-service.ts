@@ -13,7 +13,7 @@ export class UserService {
     constructor(private http: HttpClient) {}
 
     /* ------ Metodo para obtener la lista paginada de usuarios ------ */
-    getUsers( page: number = 1, size: number = 10, role?: string,): Observable<PageResponse<UserPreview>> {
+    getUsers(page: number = 1, size: number = 10, role?: string): Observable<PageResponse<UserPreview>> {
         let params = new HttpParams()
             .set('page', page.toString())
             .set('size', size.toString());
@@ -27,10 +27,14 @@ export class UserService {
 
     /* ------ Metodo para buscar usuarios paginados ------ */
     searchUsers(query: string, role?: string, page: number = 1): Observable<PageResponse<UserPreview>> {
-        let params = new HttpParams().set('query', query).set('page', page.toString());
-        if (role && role !== 'all') params = params.set('role', role);
+        let params = new HttpParams().set('page', page.toString()); // Query se pasa en el Path Variable, no en HttpParams
+        
+        if (role && role !== 'all') {
+            params = params.set('role', role);
+        }
 
-        return this.http.get<PageResponse<UserPreview>>(`${this.URL}/search`, { params });
+        // Se ajusta la ruta a /users/search/{query}
+        return this.http.get<PageResponse<UserPreview>>(`${this.URL}/search/${encodeURIComponent(query)}`, { params });
     }
 
     /* ------ Metodo para acceder al perfil publico de un usuario ------ */

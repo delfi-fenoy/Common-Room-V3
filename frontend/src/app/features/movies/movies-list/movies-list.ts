@@ -1,9 +1,11 @@
+// <----- movies-list.ts ----->
 import { Component, HostListener, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { MoviePreview } from '../../../core/models';
 import { MovieService } from '../../../core/services/movie-service';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { MovieCard } from '../../../shared/components/movie-card/movie-card';
 
 // Filtro de películas: relevancia, popularidad, recientes o próximas
 export type MovieFilterType = 'relevance' | 'popular' | 'recent' | 'upcoming';
@@ -33,7 +35,7 @@ export const TMDB_GENRES = [
 @Component({
     selector: 'app-movies-list',
     standalone: true,
-    imports: [RouterLink, FormsModule],
+    imports: [FormsModule, MovieCard],
     templateUrl: './movies-list.html',
     styleUrl: './movies-list.css',
 })
@@ -239,11 +241,5 @@ export class MoviesList implements OnInit {
     // ? ----- Método para volver hacia arriba -----
     scrollToTop(): void {
         window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // * -------- Método para reemplazar posters sin imagen --------
-    onImgError(event: Event): void {
-        const img = event.target as HTMLImageElement;
-        img.src = 'assets/img/default-img/movie-noimg.jpg';
     }
 }

@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth-service';
-import { Modal } from '../../../shared/components/modal/modal';
+import { Modal } from '../../../shared/modals/modal/modal';
 import { ModalService } from '../../../shared/services/modal-services';
 
 @Component({

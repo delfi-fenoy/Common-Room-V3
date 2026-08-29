@@ -52,21 +52,7 @@
     <section class="movies-section">
         @for (movie of movies; track movie.id) {
             <!-- ? --- Movie Card --- -->
-            <div class="movie-card" [routerLink]="[movie.id]">
-                <div class="img-wrapper">
-                    <img
-                        [src]="movie.posterUrl || 'assets/img/default-img/movie-noimg.jpg'"
-                        alt="{{ movie.title || 'Poster not available' }}"
-                        (error)="onImgError($event)"
-                    />
-
-                    <div class="info-overlay">
-                        <h1>{{ movie.title }}</h1>
-                        <h3>{{ movie.releaseDate }}</h3>
-                        <p>{{ movie.synopsis }}</p>
-                    </div>
-                </div>
-            </div>
+            <app-movie-card [movie]="movie" />
         }
     </section>
 
