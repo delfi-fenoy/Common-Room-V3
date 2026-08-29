@@ -2,18 +2,24 @@
     <form [formGroup]="editForm" (ngSubmit)="onSubmit()" class="modal-form">
         <!-- Nombre de la Playlist -->
         <div class="form-group">
-            <label for="name">Playlist Name</label>
+            <label for="name">Playlist Name <span class="required">*</span></label>
             <input
                 id="name"
                 type="text"
                 formControlName="name"
+                maxlength="30"
                 placeholder="Enter playlist name"
             />
-            @if (editForm.get('name')?.touched && editForm.get('name')?.hasError('required')) {
-                <span class="error-msg">Playlist name is required.</span>
-            } @else if (editForm.get('name')?.touched && editForm.get('name')?.hasError('maxlength')) {
-                <span class="error-msg">Playlist name cannot exceed 30 characters.</span>
-            }
+            <div class="field-footer">
+                @if (editForm.get('name')?.touched && editForm.get('name')?.hasError('required')) {
+                    <span class="error-msg">Playlist name is required.</span>
+                } @else if (editForm.get('name')?.touched && editForm.get('name')?.hasError('maxlength')) {
+                    <span class="error-msg">Playlist name cannot exceed 30 characters.</span>
+                }
+                <span class="char-counter">
+                    {{ editForm.get('name')?.value?.length || 0 }}/30
+                </span>
+            </div>
         </div>
 
         <!-- Descripción -->
@@ -23,11 +29,17 @@
                 id="description"
                 rows="3"
                 formControlName="description"
+                maxlength="255"
                 placeholder="Describe your playlist..."
             ></textarea>
-            @if (editForm.get('description')?.touched && editForm.get('description')?.hasError('maxlength')) {
-                <span class="error-msg">Description cannot exceed 255 characters.</span>
-            }
+            <div class="field-footer">
+                @if (editForm.get('description')?.touched && editForm.get('description')?.hasError('maxlength')) {
+                    <span class="error-msg">Description cannot exceed 255 characters.</span>
+                }
+                <span class="char-counter">
+                    {{ editForm.get('description')?.value?.length || 0 }}/255
+                </span>
+            </div>
         </div>
 
         <!-- URL de la Portada -->

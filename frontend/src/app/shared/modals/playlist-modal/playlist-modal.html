@@ -3,31 +3,45 @@
         <!-- * ================= 1. MODO: CREAR PLAYLIST ================= -->
         @if (mode === 'create') {
             <form (ngSubmit)="onCreateSubmit()" class="modal-form">
+                <!-- Nombre de la Playlist -->
                 <div class="form-group">
-                    <label for="pName">Playlist Name</label>
+                    <label for="pName">Playlist Name <span class="required">*</span></label>
                     <input
                         id="pName"
                         type="text"
                         [(ngModel)]="playlistName"
                         name="playlistName"
+                        maxlength="30"
                         placeholder="e.g. My Favorite Movies"
                         required
                         [disabled]="isSubmitting"
                     />
+                    <div class="field-footer">
+                        @if (!playlistName.trim() && isSubmitting) {
+                            <span class="error-msg">Playlist name is required.</span>
+                        }
+                        <span class="char-counter">{{ playlistName.length }}/30</span>
+                    </div>
                 </div>
 
+                <!-- Descripción -->
                 <div class="form-group">
                     <label for="pDesc">Description (optional)</label>
                     <textarea
                         id="pDesc"
                         [(ngModel)]="playlistDescription"
                         name="playlistDescription"
+                        maxlength="255"
                         rows="3"
                         placeholder="Tell us something about this playlist..."
                         [disabled]="isSubmitting"
                     ></textarea>
+                    <div class="field-footer">
+                        <span class="char-counter">{{ playlistDescription.length }}/255</span>
+                    </div>
                 </div>
 
+                <!-- Checkbox Privado -->
                 <div class="form-group checkbox-group">
                     <label class="checkbox-label">
                         <input
@@ -87,7 +101,7 @@
                     } @else if (playlists.length === 0) {
                         <p class="status-msg">No playlists found.</p>
                     } @else {
-                        <!-- ? ----- Sección 1: Playlists donde YA esta la película ----- -->
+                        <!-- Sección 1: En la playlist -->
                         @if (inPlaylists.length > 0) {
                             <div class="section-header">In this playlist</div>
                             <ul class="playlist-items">
@@ -103,16 +117,14 @@
                                                     [alt]="playlist.name"
                                                 />
                                             } @else {
-                                                <span class="default-icon">🎵</span>
+                                                <span class="default-icon">🍿</span>
                                             }
                                         </div>
 
                                         <div class="playlist-meta">
                                             <span class="playlist-name">{{ playlist.name }}</span>
                                             <span class="playlist-visibility">
-                                                {{
-                                                    playlist.isPrivate ? '🔒 Private' : '🌐 Public'
-                                                }}
+                                                {{ playlist.isPrivate ? '🔒 Private' : '🌐 Public' }}
                                             </span>
                                         </div>
 
@@ -124,12 +136,11 @@
                             </ul>
                         }
 
-                        <!-- ? ----- Divisor Entre Secciones ----- -->
                         @if (inPlaylists.length > 0 && notInPlaylists.length > 0) {
                             <hr class="section-divider" />
                         }
 
-                        <!-- ? ----- Sección 2: Playlists donde NO esta la película ----- -->
+                        <!-- Sección 2: Agregar a la playlist -->
                         @if (notInPlaylists.length > 0) {
                             <div class="section-header">Add to playlist</div>
                             <ul class="playlist-items">
@@ -145,16 +156,14 @@
                                                     [alt]="playlist.name"
                                                 />
                                             } @else {
-                                                <span class="default-icon">🎵</span>
+                                                <span class="default-icon">🍿</span>
                                             }
                                         </div>
 
                                         <div class="playlist-meta">
                                             <span class="playlist-name">{{ playlist.name }}</span>
                                             <span class="playlist-visibility">
-                                                {{
-                                                    playlist.isPrivate ? '🔒 Private' : '🌐 Public'
-                                                }}
+                                                {{ playlist.isPrivate ? '🔒 Private' : '🌐 Public' }}
                                             </span>
                                         </div>
 

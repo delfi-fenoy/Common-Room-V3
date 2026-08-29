@@ -269,3 +269,26 @@
     opacity: 0.5;
     cursor: not-allowed;
 }
+
+.required {
+    color: #ff6b6b;
+}
+
+.field-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.25rem;
+}
+
+.char-counter {
+    font-size: 0.75rem;
+    color: var(--brown-200);
+    margin-left: auto;
+}
+
+.error-msg {
+    color: #ff6b6b;
+    font-size: 0.8rem;
+    margin: 0;
+}

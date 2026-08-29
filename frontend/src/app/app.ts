@@ -4,14 +4,15 @@ import { filter } from 'rxjs';
 import { Header } from './shared/components/header/header';
 import { Sidebar } from './shared/components/sidebar/sidebar';
 import { Footer } from './shared/components/footer/footer';
-import { Modal } from './shared/modals/modal/modal';
 import { BanModal } from './shared/modals/ban-modal/ban-modal';
+import { Modal } from './shared/modals/modal/modal';
+import { ReviewFormModal } from './shared/modals/review-form-modal/review-form-modal';
 import { ModalService } from './shared/services/modal-services';
 
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [RouterOutlet, Header, Sidebar, Footer, Modal, BanModal],
+    imports: [RouterOutlet, Header, Sidebar, Footer, BanModal, Modal, ReviewFormModal],
     templateUrl: './app.html',
     styleUrl: './app.css',
 })

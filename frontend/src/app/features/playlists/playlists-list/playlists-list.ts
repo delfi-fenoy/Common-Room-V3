@@ -5,11 +5,12 @@ import { Title } from '@angular/platform-browser';
 
 import { PlaylistPreview } from '../../../core/models';
 import { PlaylistService } from '../../../core/services/playlist-service';
+import { PlaylistCard } from '../../../shared/components/playlist-card/playlist-card';
 
 @Component({
     selector: 'app-playlists-list',
     standalone: true,
-    imports: [CommonModule, RouterLink],
+    imports: [CommonModule, PlaylistCard],
     templateUrl: './playlists-list.html',
     styleUrl: './playlists-list.css',
 })
@@ -85,14 +86,4 @@ export class PlaylistsList implements OnInit {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // * -------- Métodos para reemplazar imágenes fallidas --------
-    noPlaylistPicture(event: Event): void {
-        const img = event.target as HTMLImageElement;
-        img.src = 'assets/img/default-img/playlist-noimg.jpg';
-    }
-
-    noUserPicture(event: Event): void {
-        const img = event.target as HTMLImageElement;
-        img.src = 'assets/img/default-img/user-noimg.jpg';
-    }
 }

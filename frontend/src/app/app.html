@@ -3,7 +3,7 @@
     <app-header (toggleSidebarEvent)="onToggleSidebar()"></app-header>
 
     <!-- Menú Lateral / Sidebar -->
-    <app-sidebar [isOpen]="isSidebarOpen()" (closeSidebarEvent)="closeSidebar()"> </app-sidebar>
+    <app-sidebar [isOpen]="isSidebarOpen()" (closeSidebarEvent)="closeSidebar()"></app-sidebar>
 }
 
 <!-- Contenido de las páginas según la ruta -->
@@ -16,9 +16,3 @@
     <app-footer></app-footer>
 }
 
-<!-- ? --- Contenedor Global de Modales --- -->
-<app-modal>
-    @if (modalService.title() === 'Banned Users Management') {
-        <app-ban-modal></app-ban-modal>
-    }
-</app-modal>

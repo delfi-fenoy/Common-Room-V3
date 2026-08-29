@@ -269,6 +269,50 @@
     transform: scale(1.15);
 }
 
+/* <----- Seccion de Paginacion -----> */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.2rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 2px solid var(--brown-500);
+}
+
+.pagination-btn {
+    padding: 0.4rem 0.9rem;
+    border-radius: 0.4rem;
+    background-color: var(--brown-500);
+    color: var(--brown-100);
+    border: 0.12rem solid var(--brown-400);
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background-color: var(--purple-300);
+    color: var(--purple-700);
+    border-color: var(--purple-400);
+    transform: translateY(-1px);
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pagination-info {
+    color: var(--brown-100);
+    font-size: 0.95rem;
+}
+
+.pagination-info strong {
+    color: var(--brown-200);
+}
+
 .loading-container,
 .not-found-container {
     color: var(--green-100);
@@ -307,5 +351,10 @@
 
     .movies-grid {
         grid-template-columns: 1fr;
+    }
+
+    .pagination-container {
+        flex-direction: column;
+        gap: 0.6rem;
     }
 }

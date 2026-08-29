@@ -189,7 +189,7 @@ public class PlaylistService {
         userService.validateUserNotBanned(playlist.getUser().getUsername(), "Unable to access content from this user account.");
         checkPlaylistAccess(playlist); // Si la playlist es privada
 
-        Pageable pageable = PageRequest.of(page-1, 5);
+        Pageable pageable = PageRequest.of(page-1, 12);
         Page<MovieList> movies = movieListRepository.findByPlaylistId(playlistId, pageable);
         return movies.map(movieList -> movieService.findMoviePreviewById(movieList.getMovieId()));
     }

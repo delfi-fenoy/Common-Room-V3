@@ -6,7 +6,6 @@
         </div>
     } @else if (playlist) {
         <div class="sheet-content">
-
             <!-- ! ==================== SIDEBAR IZQUIERDO (Metadata y Acciones) ==================== -->
             <aside class="playlist-sidebar">
                 <!-- Portada de la Playlist -->
@@ -28,13 +27,15 @@
                     }
                 </div>
 
-                <!-- Acciones (Edit / Delete) exclusivas para el Creador -->
-                @if (isOwner) {
-                    <div class="actions-box">
-                        <button class="btn-edit" (click)="openEditModal()">✏️ Edit</button>
+                <!-- Acciones (Edit / Delete) -->
+                <div class="actions-box">
+                    @if (isAdmin) {
                         <button class="btn-delete" (click)="deletePlaylist()">🗑️ Delete</button>
-                    </div>
-                }
+                        @if (isOwner) {
+                            <button class="btn-edit" (click)="openEditModal()">✏️ Edit</button>
+                        }
+                    }
+                </div>
 
                 <!-- Descripción -->
                 <div class="block-box description-box">
@@ -46,13 +47,15 @@
                 @let user = playlist.userPreviewDTO;
                 <div class="block-box owner-box">
                     <h3>Created by</h3>
-                    <div 
-                        class="owner-card" 
+                    <div
+                        class="owner-card"
                         [routerLink]="['/users', user?.username]"
                         [title]="'View ' + (user?.username || 'user') + '\'s profile'"
                     >
                         <img
-                            [src]="user?.profilePictureUrl || 'assets/img/default-img/user-noimg.jpg'"
+                            [src]="
+                                user?.profilePictureUrl || 'assets/img/default-img/user-noimg.jpg'
+                            "
                             [alt]="user?.username || 'User'"
                             (error)="noUserPicture($event)"
                         />
@@ -67,7 +70,7 @@
             <!-- ! ==================== SECCIÓN PRINCIPAL (Grid de Películas) ==================== -->
             <main class="movies-main">
                 <div class="movies-header">
-                    <h2>Movies in playlist ({{ movies.length }})</h2>
+                    <h2>Movies in playlist ({{ totalElements }})</h2>
                 </div>
 
                 @if (movies.length === 0) {
@@ -78,10 +81,10 @@
                     <div class="movies-grid">
                         @for (movie of movies; track movie.id) {
                             <div class="grid-card-wrapper">
-                                @if (isOwner) {
-                                    <button 
-                                        class="btn-remove-overlay" 
-                                        (click)="removeMovie(movie.id)" 
+                                @if (isOwner || isAdmin) {
+                                    <button
+                                        class="btn-remove-overlay"
+                                        (click)="removeMovie(movie.id)"
                                         title="Remove movie from playlist"
                                     >
                                         ✕
@@ -91,28 +94,49 @@
                             </div>
                         }
                     </div>
+
+                    <!-- <----- Controles de Paginación ----->
+                    @if (totalPages > 1) {
+                        <div class="pagination-container">
+                            <button
+                                class="pagination-btn"
+                                [disabled]="currentPage === 1"
+                                (click)="goToPage(currentPage - 1)"
+                            >
+                                &laquo; Previous
+                            </button>
+
+                            <span class="pagination-info">
+                                Page <strong>{{ currentPage }}</strong> of
+                                <strong>{{ totalPages }}</strong>
+                            </span>
+
+                            <button
+                                class="pagination-btn"
+                                [disabled]="currentPage === totalPages"
+                                (click)="goToPage(currentPage + 1)"
+                            >
+                                Next &raquo;
+                            </button>
+                        </div>
+                    }
                 }
             </main>
-
         </div>
     } @else {
         <div class="not-found-container">
             <h3>Playlist not found or unreachable.</h3>
         </div>
     }
-
-    <!-- ! ========== Modal Custom: Editar Playlist ========== -->
+    <!-- ! ========== Modal Contextual: Editar Playlist ========== -->
     @if (modalService.isOpen() && modalService.type() === 'custom') {
         <app-modal>
-            <app-edit-playlist-modal
-                [playlist]="playlist!"
-                (submitted)="onPlaylistUpdated()"
-            ></app-edit-playlist-modal>
+            @if (modalService.title() === 'Edit Playlist') {
+                <app-edit-playlist-modal
+                    [playlist]="playlist!"
+                    (submitted)="onPlaylistUpdated()"
+                ></app-edit-playlist-modal>
+            }
         </app-modal>
-    }
-
-    <!-- ! ========== Modal Genérico (Alertas / Confirmaciones) ========== -->
-    @if (modalService.isOpen() && modalService.type() !== 'custom') {
-        <app-modal></app-modal>
     }
 </div>

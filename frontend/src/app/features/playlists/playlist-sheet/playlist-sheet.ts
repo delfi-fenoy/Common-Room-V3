@@ -34,16 +34,23 @@ export class PlaylistSheet implements OnInit {
     movies: MoviePreview[] = []; // Películas asociadas a la playlist
     isLoadingPlaylist: boolean = true; // Indica si la playlist se está cargando
 
+    // <----- Variables para Paginación de Películas ----->
+    currentPage: number = 1; // Página actual
+    totalPages: number = 1; // Cantidad total de páginas
+    totalElements: number = 0; // Total de películas en la playlist
+
     // ? ----- Estado de Usuario y Permisos -----
     isLoggedIn: boolean = false;
     currentUsername: string | null = null;
     isOwner: boolean = false; // Indica si el usuario actual es el creador de la playlist
+    isAdmin: boolean = false; // Indica si el usuario actual es Administrador
 
     // * ======== Lifecycle Hooks ========
     ngOnInit(): void {
         // Carga la información del usuario y sus permisos desde el servicio de autenticación
         this.isLoggedIn = this.auth.isLoggedIn();
         this.currentUsername = this.auth.getUsername();
+        this.isAdmin = this.auth.getUserRole() === 'ADMIN';
 
         // Escucha cambios en los parámetros de ruta (/playlists/:id) para recalcular cuando cambia de playlist
         this.route.params.subscribe((params) => {
@@ -52,50 +59,56 @@ export class PlaylistSheet implements OnInit {
                 this.isLoadingPlaylist = true;
                 this.playlist = null;
                 this.movies = [];
+                this.currentPage = 1; // Resetear a la primera página si cambia la playlist
                 this.cdr.markForCheck();
 
-                this.loadPlaylist(playlistId);
+                this.loadPlaylist(playlistId, 1);
             }
         });
     }
 
     // ! -------- Método para cargar la Playlist desde el Backend --------
-    loadPlaylist(id: number): void {
-        // 1. Cargamos la información general de la playlist
-        this.pService.getPlaylistById(id).subscribe({
-            next: (data) => {
-                this.playlist = data;
+    loadPlaylist(id: number, page: number = 1): void {
+        // 1. Cargamos la información general de la playlist si no la tenemos aún
+        if (!this.playlist) {
+            this.pService.getPlaylistById(id).subscribe({
+                next: (data) => {
+                    this.playlist = data;
 
-                // Verifica si el usuario actual es el dueño de la playlist
-                if (this.currentUsername && data.userPreviewDTO) {
-                    this.isOwner = data.userPreviewDTO.username === this.currentUsername;
-                } else {
-                    this.isOwner = false;
-                }
+                    // Verifica si el usuario actual es el dueño de la playlist
+                    if (this.currentUsername && data.userPreviewDTO) {
+                        this.isOwner = data.userPreviewDTO.username === this.currentUsername;
+                    } else {
+                        this.isOwner = false;
+                    }
 
-                // Actualiza el título de la pestaña en el navegador con el nombre de la playlist
-                if (data && data.name) {
-                    this.titleService.setTitle(`${data.name} | Common Room`);
-                }
+                    // Actualiza el título de la pestaña en el navegador con el nombre de la playlist
+                    if (data && data.name) {
+                        this.titleService.setTitle(`${data.name} | Common Room`);
+                    }
 
-                this.isLoadingPlaylist = false;
-                this.cdr.markForCheck();
-            },
-            error: (e) => {
-                console.error('Error al cargar la playlist:', e);
-                this.playlist = null;
-                this.movies = [];
-                this.titleService.setTitle('Playlist Details | Common Room');
-                this.isLoadingPlaylist = false;
-                this.cdr.markForCheck();
-            },
-        });
+                    this.isLoadingPlaylist = false;
+                    this.cdr.markForCheck();
+                },
+                error: (e) => {
+                    console.error('Error al cargar la playlist:', e);
+                    this.playlist = null;
+                    this.movies = [];
+                    this.titleService.setTitle('Playlist Details | Common Room');
+                    this.isLoadingPlaylist = false;
+                    this.cdr.markForCheck();
+                },
+            });
+        }
 
-        // 2. Cargamos las películas asociadas utilizando el endpoint dedicado del backend
-        this.pService.getMovieListByPlaylistId(id).subscribe({
+        // 2. Cargamos las películas asociadas utilizando la página requerida
+        this.pService.getMovieListByPlaylistId(id, page).subscribe({
             next: (response) => {
-                // Como el backend devuelve un Page<MoviePreview>, extraemos el contenido (.content)
+                // Como el backend devuelve un Page<MoviePreview>, extraemos el contenido y metadata
                 this.movies = response.content || [];
+                this.currentPage = page;
+                this.totalPages = response.totalPages || 1;
+                this.totalElements = response.totalElements || 0;
                 this.cdr.markForCheck();
             },
             error: (e) => {
@@ -104,6 +117,13 @@ export class PlaylistSheet implements OnInit {
                 this.cdr.markForCheck();
             },
         });
+    }
+
+    // <----- Método de Navegación de Paginación ----->
+    goToPage(page: number): void {
+        if (page >= 1 && page <= this.totalPages && page !== this.currentPage && this.playlist) {
+            this.loadPlaylist(this.playlist.id, page);
+        }
     }
 
     // ! -------- Gestión de Modales (Edición) --------
@@ -153,15 +173,17 @@ export class PlaylistSheet implements OnInit {
     private executeRemoveMovie(playlistId: number, movieId: number): void {
         this.pService.deleteMovieFromPlaylist(playlistId, movieId).subscribe({
             next: () => {
-                // Actualiza la lista localmente quitando la película borrada
-                this.movies = this.movies.filter((m) => m.id !== movieId);
-
                 this.modalService.openAlert(
                     'Success',
                     'Movie removed from the playlist.',
                     'success',
                 );
-                this.cdr.markForCheck();
+                // Si borramos el único elemento de una página superior a 1, nos movemos a la anterior
+                const targetPage = (this.movies.length === 1 && this.currentPage > 1) 
+                    ? this.currentPage - 1 
+                    : this.currentPage;
+                    
+                this.loadPlaylist(this.playlist!.id, targetPage);
             },
             error: (e) => {
                 console.error(e);
@@ -169,10 +191,13 @@ export class PlaylistSheet implements OnInit {
             },
         });
     }
+
     // ? ----- Refrescar Datos de la Playlist tras Editar -----
     onPlaylistUpdated(): void {
         if (this.playlist) {
-            this.loadPlaylist(this.playlist.id);
+            const playlistId = this.playlist.id;
+            this.playlist = null; // Reiniciamos para forzar recarga de info general
+            this.loadPlaylist(playlistId, 1);
         }
     }
 

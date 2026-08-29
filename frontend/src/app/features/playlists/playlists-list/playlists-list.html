@@ -10,38 +10,7 @@
     <!-- ! === Playlists Section === -->
     <section class="playlists-section">
         @for (playlist of playlists; track playlist.id) {
-            <!-- ? --- Playlist Card --- -->
-            <div class="playlist-card" [routerLink]="['/playlists', playlist.id]">
-                <div class="img-wrapper">
-                    <img
-                        [src]="playlist.pictureUrl || 'assets/img/default-img/playlist-noimg.jpg'"
-                        [alt]="playlist.name"
-                        (error)="noPlaylistPicture($event)"
-                    />
-
-                    <!-- Overlay inferior con Título y Usuario Creador -->
-                    <div class="info-overlay">
-                        <h1>{{ playlist.name }}</h1>
-
-                        <!-- <----- Creador de la Playlist ----->
-                        <div
-                            class="owner-info"
-                            [routerLink]="['/users', playlist.userPreviewDTO?.username]"
-                            (click)="$event.stopPropagation()"
-                        >
-                            <img
-                                [src]="
-                                    playlist.userPreviewDTO?.profilePictureUrl ||
-                                    'assets/img/default-img/user-noimg.jpg'
-                                "
-                                [alt]="playlist.userPreviewDTO?.username || 'User'"
-                                (error)="noUserPicture($event)"
-                            />
-                            <span>{{ playlist.userPreviewDTO?.username || 'Unknown' }}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+           <app-playlist-card [playlist]="playlist" />
         }
     </section>
 

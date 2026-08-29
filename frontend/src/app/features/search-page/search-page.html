@@ -83,11 +83,20 @@
         }
     }
 
-    <!-- ! ========== Tab: Playlists ========== -->
+    <!-- <----- Tab: Playlists -----> 
     @if (activeTab === 'playlists') {
-        <div class="no-results">
-            <p>Playlists feature coming soon!</p>
-        </div>
+        <section class="playlists-section">
+            @for (playlist of playlists; track playlist.id) {
+                <app-playlist-card [playlist]="playlist" />
+            }
+        </section>
+
+        <!-- Mensaje sin resultados -->
+        @if (!isLoading && playlists.length === 0) {
+            <div class="no-results">
+                <p>No playlists found for "{{ query }}"</p>
+            </div>
+        }
     }
 
     <!-- ? --- Loading Indicator --- -->

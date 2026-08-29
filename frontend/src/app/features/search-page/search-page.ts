@@ -4,15 +4,17 @@ import { Title } from '@angular/platform-browser';
 
 import { MovieService } from '../../core/services/movie-service';
 import { UserService } from '../../core/services/user-service';
-import { MoviePreview, UserPreview } from '../../core/models';
+import { PlaylistService } from '../../core/services/playlist-service';
+import { MoviePreview, UserPreview, PlaylistPreview } from '../../core/models';
 import { MovieCard } from '../../shared/components/movie-card/movie-card';
+import { PlaylistCard } from '../../shared/components/playlist-card/playlist-card';
 
 export type SearchTab = 'movies' | 'users' | 'playlists';
 
 @Component({
     selector: 'app-search-page',
     standalone: true,
-    imports: [RouterLink, MovieCard],
+    imports: [RouterLink, MovieCard, PlaylistCard],
     templateUrl: './search-page.html',
     styleUrl: './search-page.css',
 })
@@ -22,6 +24,7 @@ export class SearchPage implements OnInit {
     private titleService = inject(Title);
     private mService = inject(MovieService);
     private uService = inject(UserService);
+    private pService = inject(PlaylistService);
     private cdr = inject(ChangeDetectorRef);
 
     // * ======== Variables de Estado ========
@@ -37,6 +40,11 @@ export class SearchPage implements OnInit {
     users: UserPreview[] = [];
     usersPage: number = 1;
     hasMoreUsers: boolean = true;
+
+    // <----- Playlists ----->
+    playlists: PlaylistPreview[] = [];
+    playlistsPage: number = 1;
+    hasMorePlaylists: boolean = true;
 
     // ? ----- Paginación y Control -----
     isLoading: boolean = false;
@@ -69,6 +77,8 @@ export class SearchPage implements OnInit {
             this.searchMovies();
         } else if (tab === 'users' && this.users.length === 0 && this.hasMoreUsers) {
             this.searchUsers();
+        } else if (tab === 'playlists' && this.playlists.length === 0 && this.hasMorePlaylists) {
+            this.searchPlaylists();
         }
     }
 
@@ -76,15 +86,20 @@ export class SearchPage implements OnInit {
     private resetAndSearch(): void {
         this.movies = [];
         this.users = [];
+        this.playlists = []; 
         this.moviesPage = 1;
         this.usersPage = 1;
+        this.playlistsPage = 1;
         this.hasMoreMovies = true;
         this.hasMoreUsers = true;
+        this.hasMorePlaylists = true;
 
         if (this.activeTab === 'movies') {
             this.searchMovies();
         } else if (this.activeTab === 'users') {
             this.searchUsers();
+        } else if (this.activeTab === 'playlists') {
+            this.searchPlaylists(); 
         }
     }
 
@@ -136,6 +151,30 @@ export class SearchPage implements OnInit {
         });
     }
 
+    // <----- Buscar Playlists desde el Backend ----->
+    searchPlaylists(): void {
+        if (this.isLoading || !this.hasMorePlaylists || !this.query.trim()) return;
+        this.isLoading = true;
+
+        this.pService.searchPlaylists(this.query, this.playlistsPage).subscribe({
+            next: (pageResponse) => {
+                const newPlaylists = pageResponse.content.filter(
+                    (newPlaylist) => !this.playlists.some((existing) => existing.id === newPlaylist.id)
+                );
+                this.playlists = [...this.playlists, ...newPlaylists];
+                this.hasMorePlaylists = !pageResponse.last;
+                this.isLoading = false;
+                this.cdr.detectChanges();
+            },
+            error: (e) => {
+                console.error('Error al buscar playlists:', e);
+                this.isLoading = false;
+                this.hasMorePlaylists = false;
+                this.cdr.detectChanges();
+            },
+        });
+    }
+
     // ! -------- Listener de Scroll Global (Paginación Infinita) --------
     @HostListener('window:scroll', [])
     onWindowScroll(): void {
@@ -151,6 +190,9 @@ export class SearchPage implements OnInit {
             } else if (this.activeTab === 'users' && this.hasMoreUsers && this.users.length > 0) {
                 this.usersPage++;
                 this.searchUsers();
+            } else if (this.activeTab === 'playlists' && this.hasMorePlaylists && this.playlists.length > 0) {
+                this.playlistsPage++;
+                this.searchPlaylists();
             }
         }
     }

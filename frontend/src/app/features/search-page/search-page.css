@@ -136,6 +136,16 @@
     margin: 0 0 0.1rem 0;
 }
 
+/* <----- Playlists Section Grid -----> */
+.playlists-section {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.3rem;
+    margin: 0 auto 3rem auto;
+    max-width: 70rem; 
+    padding: 0 2rem; 
+}
+
 /* * ========== No Results Message ========== */
 .no-results {
     text-align: center;
@@ -193,21 +203,24 @@
 /* ! __________ Responsive __________ */
 @media (max-width: 1024px) {
     .movies-section,
-    .users-section {
+    .users-section,
+    .playlists-section {
         grid-template-columns: repeat(4, 1fr);
     }
 }
 
 @media (max-width: 768px) {
     .movies-section,
-    .users-section {
+    .users-section,
+    .playlists-section {
         grid-template-columns: repeat(3, 1fr);
     }
 }
 
 @media (max-width: 520px) {
     .movies-section,
-    .users-section {
+    .users-section,
+    .playlists-section {
         grid-template-columns: repeat(2, 1fr);
         padding: 0 1rem;
     }
