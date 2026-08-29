@@ -23,7 +23,7 @@ export class PlaylistService {
     }
 
     /* ------ Metodo para modificar una playlist existente ------ */
-    modifyPlaylist(playlistId: number, playlist: PlaylistDetails): Observable<PlaylistDetails> {
+    modifyPlaylist(playlistId: number, playlist: Partial<PlaylistDetails>): Observable<PlaylistDetails> {
         return this.http.put<PlaylistDetails>(`${this.URL}/${playlistId}`, playlist);
     }
 
