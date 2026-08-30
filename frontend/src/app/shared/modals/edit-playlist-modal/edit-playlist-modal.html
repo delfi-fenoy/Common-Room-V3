@@ -1,80 +1,82 @@
-<div class="edit-profile-container">
-    <form [formGroup]="editForm" (ngSubmit)="onSubmit()" class="modal-form">
-        <!-- Nombre de la Playlist -->
-        <div class="form-group">
-            <label for="name">Playlist Name <span class="required">*</span></label>
-            <input
-                id="name"
-                type="text"
-                formControlName="name"
-                maxlength="30"
-                placeholder="Enter playlist name"
-            />
-            <div class="field-footer">
-                @if (editForm.get('name')?.touched && editForm.get('name')?.hasError('required')) {
-                    <span class="error-msg">Playlist name is required.</span>
-                } @else if (editForm.get('name')?.touched && editForm.get('name')?.hasError('maxlength')) {
-                    <span class="error-msg">Playlist name cannot exceed 30 characters.</span>
-                }
-                <span class="char-counter">
-                    {{ editForm.get('name')?.value?.length || 0 }}/30
-                </span>
-            </div>
-        </div>
-
-        <!-- Descripción -->
-        <div class="form-group">
-            <label for="description">Description</label>
-            <textarea
-                id="description"
-                rows="3"
-                formControlName="description"
-                maxlength="255"
-                placeholder="Describe your playlist..."
-            ></textarea>
-            <div class="field-footer">
-                @if (editForm.get('description')?.touched && editForm.get('description')?.hasError('maxlength')) {
-                    <span class="error-msg">Description cannot exceed 255 characters.</span>
-                }
-                <span class="char-counter">
-                    {{ editForm.get('description')?.value?.length || 0 }}/255
-                </span>
-            </div>
-        </div>
-
-        <!-- URL de la Portada -->
-        <div class="form-group">
-            <label for="pictureUrl">Cover Picture URL</label>
-            <input
-                id="pictureUrl"
-                type="url"
-                formControlName="pictureUrl"
-                placeholder="https://example.com/cover.jpg"
-            />
-            @if (editForm.get('pictureUrl')?.touched && editForm.get('pictureUrl')?.hasError('pattern')) {
-                <span class="error-msg">Enter a valid URL (e.g. https://example.com/cover.jpg).</span>
-            }
-        </div>
-
-        <!-- Checkbox Privacidad -->
-        <div class="form-group checkbox-group">
-            <label>
+<app-modal>
+    <div class="edit-profile-container">
+        <form [formGroup]="editForm" (ngSubmit)="onSubmit()" class="modal-form">
+            <!-- Nombre de la Playlist -->
+            <div class="form-group">
+                <label for="name">Playlist Name <span class="required">*</span></label>
                 <input
-                    type="checkbox"
-                    formControlName="isPrivate"
+                    id="name"
+                    type="text"
+                    formControlName="name"
+                    maxlength="30"
+                    placeholder="Enter playlist name"
                 />
-                Make this playlist private
-            </label>
-        </div>
+                <div class="field-footer">
+                    @if (editForm.get('name')?.touched && editForm.get('name')?.hasError('required')) {
+                        <span class="error-msg">Playlist name is required.</span>
+                    } @else if (editForm.get('name')?.touched && editForm.get('name')?.hasError('maxlength')) {
+                        <span class="error-msg">Playlist name cannot exceed 30 characters.</span>
+                    }
+                    <span class="char-counter">
+                        {{ editForm.get('name')?.value?.length || 0 }}/30
+                    </span>
+                </div>
+            </div>
 
-        <!-- Footer de Botones Unificado -->
-        <div class="form-actions">
-            <button type="button" class="btn btn-cancel" (click)="onCancel()">
-                Cancel
-            </button>
-            <button type="submit" class="btn btn-submit" [disabled]="isSaving || editForm.invalid">
-                {{ isSaving ? 'Saving...' : 'Save Changes' }}
-            </button>
-        </div>
-    </form>
-</div>
+            <!-- Descripción -->
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea
+                    id="description"
+                    rows="3"
+                    formControlName="description"
+                    maxlength="255"
+                    placeholder="Describe your playlist..."
+                ></textarea>
+                <div class="field-footer">
+                    @if (editForm.get('description')?.touched && editForm.get('description')?.hasError('maxlength')) {
+                        <span class="error-msg">Description cannot exceed 255 characters.</span>
+                    }
+                    <span class="char-counter">
+                        {{ editForm.get('description')?.value?.length || 0 }}/255
+                    </span>
+                </div>
+            </div>
+
+            <!-- URL de la Portada -->
+            <div class="form-group">
+                <label for="pictureUrl">Cover Picture URL</label>
+                <input
+                    id="pictureUrl"
+                    type="url"
+                    formControlName="pictureUrl"
+                    placeholder="https://example.com/cover.jpg"
+                />
+                @if (editForm.get('pictureUrl')?.touched && editForm.get('pictureUrl')?.hasError('pattern')) {
+                    <span class="error-msg">Enter a valid URL (e.g. https://example.com/cover.jpg).</span>
+                }
+            </div>
+
+            <!-- Checkbox Privacidad -->
+            <div class="form-group checkbox-group">
+                <label>
+                    <input
+                        type="checkbox"
+                        formControlName="isPrivate"
+                    />
+                    Make this playlist private
+                </label>
+            </div>
+
+            <!-- Footer de Botones Unificado -->
+            <div class="form-actions">
+                <button type="button" class="btn btn-cancel" (click)="onCancel()">
+                    Cancel
+                </button>
+                <button type="submit" class="btn btn-submit" [disabled]="isSaving || editForm.invalid">
+                    {{ isSaving ? 'Saving...' : 'Save Changes' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</app-modal>

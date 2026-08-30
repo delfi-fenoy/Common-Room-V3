@@ -60,7 +60,6 @@
     padding: 0.5rem;
 }
 
-
 /* * ========== Users Section ========== */
 .users-section {
     display: grid;
@@ -83,7 +82,7 @@
     transition: border-color 0.4s ease-in-out, transform 0.4s ease, box-shadow 0.4s ease-in-out;
 }
 
-/* Hover: solo agranda la tarjeta y cambia el borde */
+/* Hover: agranda la tarjeta y cambia el borde */
 .user-card:hover {
     z-index: 5;
     transform: scale(1.05);
@@ -187,21 +186,18 @@
 }
 
 /* ! __________ Responsive __________ */
-/* Pantallas medianas (laptops / tablets horizontales) */
 @media (max-width: 1024px) {
     .users-section {
         grid-template-columns: repeat(4, 1fr);
     }
 }
 
-/* Tablets verticales */
 @media (max-width: 768px) {
     .users-section {
         grid-template-columns: repeat(3, 1fr);
     }
 }
 
-/* Celulares */
 @media (max-width: 520px) {
     .users-section {
         grid-template-columns: repeat(2, 1fr);

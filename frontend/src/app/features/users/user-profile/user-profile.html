@@ -12,12 +12,7 @@
                 <div class="avatar-column">
                     <div class="img-wrapper">
                         <img
-                            [src]="
-                                selectedUser.profilePictureUrl ||
-                                (selectedUser.role === 'ADMIN'
-                                    ? 'assets/img/default-img/admin-noimg.jpg'
-                                    : 'assets/img/default-img/user-noimg.jpg')
-                            "
+                            [src]="selectedUser.profilePictureUrl"
                             [alt]="selectedUser.username || 'User Picture'"
                             (error)="noProfilePicture($event)"
                         />
@@ -181,10 +176,7 @@
                                 >
                                     <div class="playlist-card-img">
                                         <img
-                                            [src]="
-                                                playlist.pictureUrl ||
-                                                'assets/img/default-img/playlist-noimg.jpg'
-                                            "
+                                            [src]="playlist.pictureUrl"
                                             [alt]="playlist.name"
                                             (error)="noPlaylistPicture($event)"
                                         />
@@ -241,7 +233,6 @@
     }
 
     <!-- ! ========== Modal Formulario (Editar Perfil / Editar Reseña) ========== -->
-    <!-- Modal Custom -->
     @if (modalService.isOpen() && modalService.type() === 'custom') {
         @if (activeModal === 'profile') {
             <app-modal>

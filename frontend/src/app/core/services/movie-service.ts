@@ -38,7 +38,12 @@ export class MovieService {
     }
 
     /* ------ Metodo para buscar y filtrar peliculas por criterios ------ */
-    searchOrDiscoverMovies( page: number = 1, query?: string, year?: string, genreId?: number): Observable<MoviePreview[]> {
+    searchOrDiscoverMovies(
+        page: number = 1,
+        query?: string,
+        year?: string,
+        genreId?: number,
+    ): Observable<MoviePreview[]> {
         let params = new HttpParams().set('page', page.toString());
 
         if (query && query.trim() !== '') {
@@ -47,7 +52,7 @@ export class MovieService {
         if (year && year.trim() !== '') {
             params = params.set('year', year.trim());
         }
-        
+
         // <----- Validación extra para evitar NaN ----->
         if (genreId !== undefined && genreId !== null && !isNaN(genreId)) {
             params = params.set('genre', genreId.toString());

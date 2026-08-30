@@ -9,7 +9,7 @@ import { AuthService } from '../../../core/services/auth-service';
 import { ModalService } from '../../../shared/services/modal-services';
 
 import { MovieDetails, Review } from '../../../core/models';
-import { ReviewCard } from '../../../shared/components/review-card/review-card';
+import { ReviewCard } from '../../../shared/cards/review-card/review-card';
 import { ReviewFormModal } from '../../../shared/modals/review-form-modal/review-form-modal';
 import { Modal } from '../../../shared/modals/modal/modal';
 import { PlaylistModal } from '../../../shared/modals/playlist-modal/playlist-modal';
@@ -65,6 +65,8 @@ export class MovieSheet implements OnInit {
             if (movieId) {
                 this.isLoadingMovie = true;
                 this.chosenMovie = null;
+                this.currentUserReview = null;
+                this.reviews = [];
                 this.cdr.markForCheck();
 
                 this.loadMovie(movieId);

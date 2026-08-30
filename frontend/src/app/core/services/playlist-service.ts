@@ -38,7 +38,10 @@ export class PlaylistService {
     }
 
     /* ------ Metodo para obtener las playlists publicas de un usuario ------ */
-    getUserPlaylists( username: string, page: number = 1,): Observable<PageResponse<PlaylistPreview>> {
+    getUserPlaylists(
+        username: string,
+        page: number = 1,
+    ): Observable<PageResponse<PlaylistPreview>> {
         const params = new HttpParams().set('page', page.toString());
         return this.http.get<PageResponse<PlaylistPreview>>(
             `http://localhost:8080/users/${username}/playlists`,
@@ -76,7 +79,10 @@ export class PlaylistService {
     }
 
     /* ------ Metodo para obtener las peliculas paginadas de una playlist ------ */
-    getMovieListByPlaylistId( playlistId: number, page: number = 1,): Observable<PageResponse<MoviePreview>> {
+    getMovieListByPlaylistId(
+        playlistId: number,
+        page: number = 1,
+    ): Observable<PageResponse<MoviePreview>> {
         const params = new HttpParams().set('page', page.toString());
         return this.http.get<PageResponse<MoviePreview>>(`${this.URL}/${playlistId}/movies`, {
             params,

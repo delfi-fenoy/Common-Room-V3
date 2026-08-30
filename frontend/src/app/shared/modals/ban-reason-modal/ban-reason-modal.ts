@@ -2,11 +2,12 @@ import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ModalService } from '../../../shared/services/modal-services';
+import { Modal } from '../modal/modal';
 
 @Component({
     selector: 'app-ban-reason-modal',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, Modal],
     templateUrl: './ban-reason-modal.html',
     styleUrl: './ban-reason-modal.css'
 })

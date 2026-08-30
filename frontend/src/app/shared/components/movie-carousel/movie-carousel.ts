@@ -1,11 +1,11 @@
 import { Component, Input, OnInit, OnDestroy, signal } from '@angular/core';
 import { MoviePreview } from '../../../core/models';
-import { MovieCard } from '../movie-card/movie-card';
+import { MovieCard } from '../../cards/movie-card/movie-card';
 
 @Component({
     selector: 'app-movie-carousel',
     standalone: true,
-    imports: [MovieCard], 
+    imports: [MovieCard],
     templateUrl: './movie-carousel.html',
     styleUrl: './movie-carousel.css',
 })

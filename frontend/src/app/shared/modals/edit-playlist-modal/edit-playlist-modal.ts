@@ -4,11 +4,12 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { PlaylistDetails } from '../../../core/models';
 import { PlaylistService } from '../../../core/services/playlist-service';
 import { ModalService } from '../../services/modal-services';
+import { Modal } from '../modal/modal';
 
 @Component({
     selector: 'app-edit-playlist-modal',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule],
+    imports: [CommonModule, ReactiveFormsModule, Modal],
     templateUrl: './edit-playlist-modal.html',
     styleUrl: './edit-playlist-modal.css',
 })

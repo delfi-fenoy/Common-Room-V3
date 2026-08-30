@@ -8,7 +8,7 @@ import { AuthService } from '../../../core/services/auth-service';
 import { ModalService } from '../../../shared/services/modal-services';
 
 import { PlaylistDetails, MoviePreview } from '../../../core/models';
-import { MovieCard } from '../../../shared/components/movie-card/movie-card';
+import { MovieCard } from '../../../shared/cards/movie-card/movie-card';
 import { EditPlaylistModal } from '../../../shared/modals/edit-playlist-modal/edit-playlist-modal';
 import { Modal } from '../../../shared/modals/modal/modal';
 
@@ -170,6 +170,7 @@ export class PlaylistSheet implements OnInit {
         );
     }
 
+    // <----- Actualización manual del contador al eliminar una película ----->
     private executeRemoveMovie(playlistId: number, movieId: number): void {
         this.pService.deleteMovieFromPlaylist(playlistId, movieId).subscribe({
             next: () => {
@@ -178,11 +179,17 @@ export class PlaylistSheet implements OnInit {
                     'Movie removed from the playlist.',
                     'success',
                 );
-                // Si borramos el único elemento de una página superior a 1, nos movemos a la anterior
-                const targetPage = (this.movies.length === 1 && this.currentPage > 1) 
-                    ? this.currentPage - 1 
-                    : this.currentPage;
-                    
+
+                // Actualizamos la cantidad total localmente
+                if (this.totalElements > 0) {
+                    this.totalElements--;
+                }
+
+                const targetPage =
+                    this.movies.length === 1 && this.currentPage > 1
+                        ? this.currentPage - 1
+                        : this.currentPage;
+
                 this.loadPlaylist(this.playlist!.id, targetPage);
             },
             error: (e) => {

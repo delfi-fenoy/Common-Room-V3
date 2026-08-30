@@ -5,7 +5,7 @@ import { Title } from '@angular/platform-browser';
 
 import { PlaylistPreview } from '../../../core/models';
 import { PlaylistService } from '../../../core/services/playlist-service';
-import { PlaylistCard } from '../../../shared/components/playlist-card/playlist-card';
+import { PlaylistCard } from '../../../shared/cards/playlist-card/playlist-card';
 
 @Component({
     selector: 'app-playlists-list',
@@ -85,5 +85,4 @@ export class PlaylistsList implements OnInit {
     scrollToTop(): void {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-
 }

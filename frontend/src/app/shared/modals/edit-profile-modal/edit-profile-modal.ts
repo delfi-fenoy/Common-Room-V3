@@ -6,11 +6,12 @@ import { User, ChangePassword, TokenResponse } from '../../../core/models';
 import { UserService } from '../../../core/services/user-service';
 import { AuthService } from '../../../core/services/auth-service';
 import { ModalService } from '../../services/modal-services';
+import { Modal } from '../modal/modal';
 
 @Component({
     selector: 'app-edit-profile-modal',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule],
+    imports: [CommonModule, ReactiveFormsModule, Modal],
     templateUrl: './edit-profile-modal.html',
     styleUrl: './edit-profile-modal.css',
 })

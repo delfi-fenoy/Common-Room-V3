@@ -7,6 +7,7 @@ export type UserFilterType = 'all' | 'ADMIN' | 'USER';
 
 @Component({
     selector: 'app-users-list',
+    standalone: true,
     imports: [RouterLink],
     templateUrl: './users-list.html',
     styleUrl: './users-list.css',
@@ -73,9 +74,9 @@ export class UsersList implements OnInit {
         this.currentPage = 1; // Reinicia la página para la nueva consulta
         this.users = []; // Limpia la lista previa
         this.hasMorePages = true;
-        setTimeout(() => {
-            this.loadUsers(); // Encola la ejecución para permitir que el DOM se limpie correctamente
-        }, 0);    }
+        
+        this.loadUsers();
+    }
 
     // ! -------- Listener de Scroll Global --------
     @HostListener('window:scroll', [])
@@ -104,10 +105,8 @@ export class UsersList implements OnInit {
     // * -------- Método para reemplazar fotos de perfil sin imagen o fallidas --------
     noProfilePicture(event: Event, role?: string): void {
         const img = event.target as HTMLImageElement;
-        if (role === 'ADMIN') {
-            img.src = 'assets/img/default-img/admin-noimg.jpg';
-        } else {
-            img.src = 'assets/img/default-img/user-noimg.jpg';
-        }
+        img.src = role === 'ADMIN'
+            ? 'assets/img/default-img/admin-noimg.jpg'
+            : 'assets/img/default-img/user-noimg.jpg';
     }
 }

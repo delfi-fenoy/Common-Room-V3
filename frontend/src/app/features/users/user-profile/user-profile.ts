@@ -12,7 +12,7 @@ import { AuthService } from '../../../core/services/auth-service';
 import { UserbanService } from '../../../core/services/userban-service';
 import { ModalService } from '../../../shared/services/modal-services';
 
-import { ReviewCard } from '../../../shared/components/review-card/review-card';
+import { ReviewCard } from '../../../shared/cards/review-card/review-card';
 import { Modal } from '../../../shared/modals/modal/modal';
 import { EditProfileModal } from '../../../shared/modals/edit-profile-modal/edit-profile-modal';
 import { ReviewFormModal } from '../../../shared/modals/review-form-modal/review-form-modal';
@@ -24,7 +24,15 @@ const RESERVED_USERNAMES = ['all', 'null', 'undefined', 'config', 'api', 'root',
 @Component({
     selector: 'app-user-profile',
     standalone: true,
-    imports: [CommonModule, RouterLink, ReviewCard, Modal, EditProfileModal, ReviewFormModal, BanReasonModal],
+    imports: [
+        CommonModule,
+        RouterLink,
+        ReviewCard,
+        Modal,
+        EditProfileModal,
+        ReviewFormModal,
+        BanReasonModal,
+    ],
     templateUrl: './user-profile.html',
     styleUrl: './user-profile.css',
 })
@@ -35,7 +43,7 @@ export class UserProfile implements OnInit, OnDestroy {
     private uService = inject(UserService);
     private rService = inject(ReviewService);
     private pService = inject(PlaylistService);
-    private userBanService = inject(UserbanService); // <--- Inyección del servicio de baneo
+    private userBanService = inject(UserbanService); // <--- Servicio de baneo
     private auth = inject(AuthService);
     public modalService = inject(ModalService);
     private titleService = inject(Title);
@@ -98,7 +106,6 @@ export class UserProfile implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        // Limpieza de suscripción al destruir el componente
         if (this.routeSubscription) {
             this.routeSubscription.unsubscribe();
         }
@@ -155,13 +162,18 @@ export class UserProfile implements OnInit, OnDestroy {
             },
             error: (e) => {
                 console.error('Error al cargar playlists:', e);
-                this.playlists = [];
-                this.totalPlaylistPages = 1;
-                this.totalPlaylistElements = 0;
-                this.isLoadingPlaylists = false;
-                this.cdr.markForCheck();
+                this.resetPlaylistState();
             },
         });
+    }
+
+    // <----- NUEVO: Helper privado para resetear estado de playlists ----->
+    private resetPlaylistState(): void {
+        this.playlists = [];
+        this.totalPlaylistPages = 1;
+        this.totalPlaylistElements = 0;
+        this.isLoadingPlaylists = false;
+        this.cdr.markForCheck();
     }
 
     // ? ----- Cambio de Página de Playlists -----
@@ -187,13 +199,17 @@ export class UserProfile implements OnInit, OnDestroy {
             },
             error: (e) => {
                 console.error('Error al cargar reseñas del usuario:', e);
-                this.reviews = [];
-                this.totalPages = 1;
-                this.totalElements = 0;
-                this.isLoadingReviews = false;
-                this.cdr.markForCheck();
+                this.resetReviewState();
             },
         });
+    }
+
+    private resetReviewState(): void {
+        this.reviews = [];
+        this.totalPages = 1;
+        this.totalElements = 0;
+        this.isLoadingReviews = false;
+        this.cdr.markForCheck();
     }
 
     // ? ----- Cambio de Página -----
@@ -286,9 +302,8 @@ export class UserProfile implements OnInit, OnDestroy {
     // <----- Banear Usuario (Exclusivo Admin) ----->
     banUser(): void {
         if (!this.selectedUser) return;
-        
-        // Abrimos el modal personalizado de razón de baneo
-        this.activeModal = 'ban'; // <----- Asignación corregida del valor 'ban'
+
+        this.activeModal = 'ban';
         this.modalService.openCustom(`Ban User: @${this.selectedUser.username}`);
     }
 
@@ -304,18 +319,14 @@ export class UserProfile implements OnInit, OnDestroy {
                 this.modalService.openAlert(
                     'Banned',
                     `User @${targetUsername} has been successfully banned.`,
-                    'success'
+                    'success',
                 );
                 this.router.navigate(['/movies']);
             },
             error: (e) => {
                 console.error(e);
-                this.modalService.openAlert(
-                    'Error',
-                    'Could not ban the user.',
-                    'error'
-                );
-            }
+                this.modalService.openAlert('Error', 'Could not ban the user.', 'error');
+            },
         });
     }
 
@@ -334,10 +345,14 @@ export class UserProfile implements OnInit, OnDestroy {
         }
     }
 
-    // * -------- Método para reemplazar imagen de perfil fallida --------
+    // * -------- Métodos para reemplazar imagen de perfil/playlist fallida --------
     noProfilePicture(event: Event): void {
         const img = event.target as HTMLImageElement;
-        img.src = 'assets/img/default-img/user-noimg.jpg';
+        const defaultPath =
+            this.selectedUser?.role === 'ADMIN'
+                ? 'assets/img/default-img/admin-noimg.jpg'
+                : 'assets/img/default-img/user-noimg.jpg';
+        img.src = defaultPath;
     }
 
     noPlaylistPicture(event: Event): void {
