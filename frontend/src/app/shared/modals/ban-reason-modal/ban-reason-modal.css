@@ -1,0 +1,92 @@
+/* * ======== Ban Reason Modal Container ======== */
+.ban-reason-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    width: 100%;
+    padding: 0.5rem;
+    box-sizing: border-box;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.form-group label {
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--brown-200);
+}
+
+.reason-textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 0.2rem solid var(--brown-400);
+    border-radius: 0.5rem;
+    background-color: var(--brown-700);
+    color: var(--brown-100);
+    font-family: inherit;
+    font-size: 0.95rem;
+    resize: vertical;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.reason-textarea:focus {
+    border-color: var(--purple-400);
+    box-shadow: 0 0 8px rgba(187, 134, 252, 0.3);
+}
+
+.reason-textarea::placeholder {
+    color: var(--brown-400);
+}
+
+/* * ======== Form Actions Footer ======== */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.btn {
+    padding: 0.6rem 1.25rem;
+    font-size: 0.95rem;
+    font-weight: bold;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-cancel {
+    background-color: var(--brown-500);
+    color: var(--brown-100);
+    border: 0.15rem solid var(--brown-400);
+}
+
+.btn-cancel:hover {
+    background-color: var(--brown-400);
+    color: #ffffff;
+}
+
+.btn-confirm-ban {
+    background-color: #e53935;
+    color: #ffffff;
+    border: 0.15rem solid #b71c1c;
+}
+
+.btn-confirm-ban:hover:not(:disabled) {
+    background-color: #d32f2f;
+    transform: scale(1.02);
+}
+
+.btn-confirm-ban:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}

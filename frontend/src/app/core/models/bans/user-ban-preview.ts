@@ -1,4 +1,4 @@
-export interface UserBanPreviewDTO {
+export interface UserBanPreview {
     id: number;
     bannedAt: string;
     reason: string;

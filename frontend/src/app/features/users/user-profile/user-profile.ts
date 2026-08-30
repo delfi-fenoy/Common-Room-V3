@@ -16,6 +16,7 @@ import { ReviewCard } from '../../../shared/components/review-card/review-card';
 import { Modal } from '../../../shared/modals/modal/modal';
 import { EditProfileModal } from '../../../shared/modals/edit-profile-modal/edit-profile-modal';
 import { ReviewFormModal } from '../../../shared/modals/review-form-modal/review-form-modal';
+import { BanReasonModal } from '../../../shared/modals/ban-reason-modal/ban-reason-modal';
 
 // ! Lista de palabras clave reservadas para rutas de usuario
 const RESERVED_USERNAMES = ['all', 'null', 'undefined', 'config', 'api', 'root', 'system'];
@@ -23,7 +24,7 @@ const RESERVED_USERNAMES = ['all', 'null', 'undefined', 'config', 'api', 'root',
 @Component({
     selector: 'app-user-profile',
     standalone: true,
-    imports: [CommonModule, RouterLink, ReviewCard, Modal, EditProfileModal, ReviewFormModal],
+    imports: [CommonModule, RouterLink, ReviewCard, Modal, EditProfileModal, ReviewFormModal, BanReasonModal],
     templateUrl: './user-profile.html',
     styleUrl: './user-profile.css',
 })
@@ -52,7 +53,7 @@ export class UserProfile implements OnInit, OnDestroy {
     activeTab: 'reviews' | 'playlists' = 'reviews';
 
     // ? ----- Control de Modales -----
-    activeModal: 'profile' | 'review' | null = null;
+    activeModal: 'profile' | 'review' | 'ban' | null = null;
     selectedReview: Review | null = null;
 
     // ? ----- Paginación de Reseñas -----
@@ -285,34 +286,37 @@ export class UserProfile implements OnInit, OnDestroy {
     // <----- Banear Usuario (Exclusivo Admin) ----->
     banUser(): void {
         if (!this.selectedUser) return;
+        
+        // Abrimos el modal personalizado de razón de baneo
+        this.activeModal = 'ban'; // <----- Asignación corregida del valor 'ban'
+        this.modalService.openCustom(`Ban User: @${this.selectedUser.username}`);
+    }
 
-        this.modalService.openConfirm(
-            'Ban User',
-            `Are you sure you want to ban user ${this.selectedUser.username}?`,
-            () => {
-                // Pasamos los dos argumentos de forma independiente
-                this.userBanService
-                    .banUser(this.selectedUser!.username, 'Violation of community guidelines')
-                    .subscribe({
-                        next: () => {
-                            this.modalService.openAlert(
-                                'Banned',
-                                `User ${this.selectedUser!.username} has been successfully banned.`,
-                                'success',
-                            );
-                            this.router.navigate(['/users']);
-                        },
-                        error: (e) => {
-                            console.error(e);
-                            this.modalService.openAlert(
-                                'Error',
-                                'Could not ban the user.',
-                                'error',
-                            );
-                        },
-                    });
+    // Callback llamado por (confirmed) del modal
+    onConfirmBan(reason: string): void {
+        if (!this.selectedUser) return;
+
+        const targetUsername = this.selectedUser.username;
+
+        this.userBanService.banUser(targetUsername, reason).subscribe({
+            next: () => {
+                this.modalService.close();
+                this.modalService.openAlert(
+                    'Banned',
+                    `User @${targetUsername} has been successfully banned.`,
+                    'success'
+                );
+                this.router.navigate(['/movies']);
             },
-        );
+            error: (e) => {
+                console.error(e);
+                this.modalService.openAlert(
+                    'Error',
+                    'Could not ban the user.',
+                    'error'
+                );
+            }
+        });
     }
 
     // ? ----- Refrescar Datos de Perfil -----

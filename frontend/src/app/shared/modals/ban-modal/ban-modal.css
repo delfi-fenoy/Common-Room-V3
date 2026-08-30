@@ -34,30 +34,47 @@
     display: block;
 }
 
+/* * ======== Cards y Lista Desplegable ======== */
 .banned-cards-wrapper {
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
-    max-height: 250px;
+    max-height: 320px;
     overflow-y: auto;
+    padding-right: 0.3rem;
 }
 
 .ban-card-item {
+    background-color: var(--brown-600);
+    border: 0.2rem solid var(--brown-400);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    transition: border-color 0.2s ease;
+}
+
+.ban-card-item.expanded {
+    border-color: var(--purple-400);
+}
+
+.ban-card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 0.8rem 1rem;
+    cursor: pointer;
     background-color: var(--brown-600);
-    border: 0.2rem solid var(--brown-400);
-    padding: 0.8rem;
-    border-radius: 0.5rem;
+    user-select: none;
+    transition: background-color 0.2s ease;
 }
 
-.ban-details {
+.ban-card-header:hover {
+    background-color: var(--brown-500);
+}
+
+.user-info {
     display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-    color: var(--brown-100);
-    font-size: 0.9rem;
+    align-items: center;
+    gap: 0.6rem;
 }
 
 .banned-username {
@@ -66,14 +83,67 @@
     color: var(--purple-300);
 }
 
-.empty-message {
+.ban-badge {
+    background-color: #ff6b6b;
+    color: #ffffff;
+    font-size: 0.7rem;
+    font-weight: bold;
+    padding: 0.15rem 0.4rem;
+    border-radius: 0.3rem;
+}
+
+.chevron-icon {
+    font-size: 0.8rem;
+    color: var(--brown-200);
+}
+
+/* Body Desplegable */
+.ban-card-body {
+    padding: 0.8rem 1rem 1rem 1rem;
+    border-top: 0.15rem solid var(--brown-500);
+    background-color: var(--brown-700);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    font-size: 0.9rem;
+    color: var(--brown-100);
+}
+
+.ban-detail-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.ban-detail-row strong {
+    color: var(--brown-200);
+    font-size: 0.85rem;
+}
+
+.ban-reason {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    background-color: var(--brown-600);
+    padding: 0.5rem;
+    border-radius: 0.3rem;
+    border: 0.1rem solid var(--brown-500);
+}
+
+.card-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.4rem;
+}
+
+.empty-message, .status-message {
     text-align: center;
     color: var(--brown-200);
     font-style: italic;
-    padding: 1rem 0;
+    padding: 1.5rem 0;
 }
 
-/* * ======== Footer idéntico al de los demás modales ======== */
+/* * ======== Footer idéntico a los demás modales ======== */
 .form-actions {
     display: flex;
     justify-content: flex-end;
@@ -106,13 +176,13 @@
     color: var(--green-700);
 }
 
-.btn-submit:hover:not(:disabled), .btn-unban:hover {
-    background-color: var(--purple-300);
-    border-color: var(--purple-400);
-    color: var(--purple-700);
+.btn-unban {
+    background-color: var(--brown-600);
+    border-color: var(--brown-400);
 }
 
-.btn-unban {
-    background-color: var(--brown-700);
-    border-color: var(--brown-400);
+.btn-unban:hover:not(:disabled) {
+    background-color: #ff6b6b;
+    border-color: #ff8787;
+    color: #ffffff;
 }
