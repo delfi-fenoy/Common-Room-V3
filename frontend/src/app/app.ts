@@ -17,14 +17,15 @@ export class App {
     // * ---- Titulo de la aplicacion ----
     protected readonly title = signal('Common Room'); 
 
-    // * ---- Servicio de Modales Global ----
+    // * ---- Servicios Globales e Inyección ----
     public modalService = inject(ModalService);
+    private router = inject(Router);
 
     // * ---- Estados para el Layout y Navegacion ----
     showLayout = signal<boolean>(true); // Control de renderizado para Header, Sidebar y Footer
     isSidebarOpen = signal<boolean>(false); // Estado de apertura de la barra lateral
 
-    constructor(private router: Router) {
+    constructor() {
         /* ------ Suscripción a eventos de navegación para control de Layout ------ */
         this.router.events
             .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
