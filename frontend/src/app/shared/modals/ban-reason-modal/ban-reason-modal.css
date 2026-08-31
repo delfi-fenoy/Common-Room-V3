@@ -1,5 +1,5 @@
-/* * ======== Contenedor Principal ======== */
-.edit-playlist-container {
+/* * ========== Contenedor Principal ========== */
+.ban-reason-container {
     display: flex;
     flex-direction: column;
     gap: 1.2rem;
@@ -24,13 +24,8 @@
     color: var(--brown-200);
 }
 
-.required {
-    color: #ff6b6b;
-}
-
-/* * ======== Inputs y Textareas Homogéneos ======== */
-.form-group input,
-.form-group textarea {
+/* * ========== Inputs y Textareas Homogéneos ========== */
+.reason-textarea {
     width: 100%;
     padding: 0.65rem 0.8rem;
     background-color: var(--brown-600);
@@ -45,46 +40,13 @@
     font-family: inherit;
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
+.reason-textarea:focus {
     border-color: var(--purple-400);
     background-color: var(--brown-700);
 }
 
-/* * ======== Checkbox Personalizado ======== */
-.checkbox-group {
-    margin-top: 0.2rem;
-}
-
-.checkbox-group label {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    cursor: pointer;
-    color: var(--brown-100);
-    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
-    user-select: none;
-}
-
-.checkbox-group input[type="checkbox"] {
-    accent-color: var(--purple-400);
-    width: 1.15rem;
-    height: 1.15rem;
-    cursor: pointer;
-}
-
-/* * ======== Mensajes de Error y Contadores ======== */
-.field-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 0.25rem;
-}
-
-.char-counter {
-    font-size: 0.75rem;
-    color: var(--brown-200);
-    margin-left: auto;
+.reason-textarea::placeholder {
+    color: var(--brown-400);
 }
 
 .error-msg {
@@ -94,12 +56,12 @@
     margin-top: 0.2rem;
 }
 
-/* * ======== Footer idéntico a Todos los Modales (.form-actions) ======== */
+/* * ========== Footer Idéntico a Todos los Modales (.form-actions) ========== */
 .form-actions {
     display: flex;
     justify-content: flex-end;
     gap: 0.8rem;
-    margin: 1.4rem -1.2rem -1.4rem -1.2rem; /* Cancela el padding del modal contenedor */
+    margin: 1.4rem -1.2rem -1.4rem -1.2rem;
     padding: 0.8rem 1.2rem;
     background-color: var(--brown-600);
     border-top: 0.3rem solid var(--brown-400);
@@ -127,10 +89,11 @@
     color: var(--green-700);
 }
 
-.btn-submit:hover:not(:disabled) {
-    background-color: var(--purple-300);
-    border-color: var(--purple-400);
-    color: var(--purple-700);
+/* <----- Botón Acción Baneo / Destructivo -----> */
+.btn-confirm-ban:hover:not(:disabled) {
+    background-color: #ff6b6b;
+    border-color: #ff8787;
+    color: #ffffff;
 }
 
 .btn:disabled {

@@ -92,7 +92,7 @@ public class UserBanService {
 
         // Traer los registros de ban
         int pageNumber = Math.max(0, page-1);
-        Pageable pageable = PageRequest.of(pageNumber, 5);
+        Pageable pageable = PageRequest.of(pageNumber, 4);
         Page<UserBan> bans = userBanRepository.findByBannedUserId(user.getId(), pageable);
 
         return bans.map(UserBanMapper::entityToPreviewDTO); // Retornar previews de ban

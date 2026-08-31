@@ -28,7 +28,7 @@ export class UserService {
     /* ------ Metodo para buscar usuarios paginados ------ */
     searchUsers(query: string, role?: string, page: number = 1): Observable<PageResponse<UserPreview>> {
         let params = new HttpParams().set('page', page.toString()); // Query se pasa en el Path Variable, no en HttpParams
-        
+
         if (role && role !== 'all') {
             params = params.set('role', role);
         }

@@ -12,10 +12,11 @@ import { AuthService } from '../../../core/services/auth-service';
 import { UserbanService } from '../../../core/services/userban-service';
 import { ModalService } from '../../../shared/services/modal-services';
 
-import { ReviewCard } from '../../../shared/components/review-card/review-card';
-import { Modal } from '../../../shared/modals/modal/modal';
+import { ReviewCard } from '../../../shared/cards/review-card/review-card';
 import { EditProfileModal } from '../../../shared/modals/edit-profile-modal/edit-profile-modal';
 import { ReviewFormModal } from '../../../shared/modals/review-form-modal/review-form-modal';
+import { BanReasonModal } from '../../../shared/modals/ban-reason-modal/ban-reason-modal';
+import { Modal } from '../../../shared/modals/modal/modal';
 
 // ! Lista de palabras clave reservadas para rutas de usuario
 const RESERVED_USERNAMES = ['all', 'null', 'undefined', 'config', 'api', 'root', 'system'];
@@ -23,7 +24,15 @@ const RESERVED_USERNAMES = ['all', 'null', 'undefined', 'config', 'api', 'root',
 @Component({
     selector: 'app-user-profile',
     standalone: true,
-    imports: [CommonModule, RouterLink, ReviewCard, Modal, EditProfileModal, ReviewFormModal],
+    imports: [
+        CommonModule,
+        RouterLink,
+        ReviewCard,
+        EditProfileModal,
+        ReviewFormModal,
+        BanReasonModal,
+        Modal
+    ],
     templateUrl: './user-profile.html',
     styleUrl: './user-profile.css',
 })
@@ -34,7 +43,7 @@ export class UserProfile implements OnInit, OnDestroy {
     private uService = inject(UserService);
     private rService = inject(ReviewService);
     private pService = inject(PlaylistService);
-    private userBanService = inject(UserbanService); // <--- Inyección del servicio de baneo
+    private userBanService = inject(UserbanService); // <--- Servicio de baneo
     private auth = inject(AuthService);
     public modalService = inject(ModalService);
     private titleService = inject(Title);
@@ -52,7 +61,7 @@ export class UserProfile implements OnInit, OnDestroy {
     activeTab: 'reviews' | 'playlists' = 'reviews';
 
     // ? ----- Control de Modales -----
-    activeModal: 'profile' | 'review' | null = null;
+    activeModal: 'profile' | 'review' | 'ban' | null = null;
     selectedReview: Review | null = null;
 
     // ? ----- Paginación de Reseñas -----
@@ -71,11 +80,19 @@ export class UserProfile implements OnInit, OnDestroy {
 
     // Suscripción a los cambios de parámetros de la ruta
     private routeSubscription!: Subscription;
+    private authSubscription!: Subscription;
 
     // * ======== Lifecycle Hooks ========
     ngOnInit(): void {
-        this.currentUsername = this.auth.getUsername();
         this.isAdmin = this.auth.getUserRole() === 'ADMIN';
+
+        // <----- Escucha cambios en la sesión/username global ----->
+        this.authSubscription = this.auth.username$.subscribe((username) => {
+            this.currentUsername = username;
+            if (this.selectedUser) {
+                this.isMyProfile = this.currentUsername === this.selectedUser.username;
+            }
+        });
 
         // Escucha cambios en los parámetros de ruta (/users/:username)
         this.routeSubscription = this.route.params.subscribe((params) => {
@@ -97,9 +114,11 @@ export class UserProfile implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        // Limpieza de suscripción al destruir el componente
         if (this.routeSubscription) {
             this.routeSubscription.unsubscribe();
+        }
+        if (this.authSubscription) {
+            this.authSubscription.unsubscribe();
         }
     }
 
@@ -154,13 +173,18 @@ export class UserProfile implements OnInit, OnDestroy {
             },
             error: (e) => {
                 console.error('Error al cargar playlists:', e);
-                this.playlists = [];
-                this.totalPlaylistPages = 1;
-                this.totalPlaylistElements = 0;
-                this.isLoadingPlaylists = false;
-                this.cdr.markForCheck();
+                this.resetPlaylistState();
             },
         });
+    }
+
+    // <----- Helper privado para resetear estado de playlists ----->
+    private resetPlaylistState(): void {
+        this.playlists = [];
+        this.totalPlaylistPages = 1;
+        this.totalPlaylistElements = 0;
+        this.isLoadingPlaylists = false;
+        this.cdr.markForCheck();
     }
 
     // ? ----- Cambio de Página de Playlists -----
@@ -186,13 +210,17 @@ export class UserProfile implements OnInit, OnDestroy {
             },
             error: (e) => {
                 console.error('Error al cargar reseñas del usuario:', e);
-                this.reviews = [];
-                this.totalPages = 1;
-                this.totalElements = 0;
-                this.isLoadingReviews = false;
-                this.cdr.markForCheck();
+                this.resetReviewState();
             },
         });
+    }
+
+    private resetReviewState(): void {
+        this.reviews = [];
+        this.totalPages = 1;
+        this.totalElements = 0;
+        this.isLoadingReviews = false;
+        this.cdr.markForCheck();
     }
 
     // ? ----- Cambio de Página -----
@@ -286,33 +314,31 @@ export class UserProfile implements OnInit, OnDestroy {
     banUser(): void {
         if (!this.selectedUser) return;
 
-        this.modalService.openConfirm(
-            'Ban User',
-            `Are you sure you want to ban user ${this.selectedUser.username}?`,
-            () => {
-                // Pasamos los dos argumentos de forma independiente
-                this.userBanService
-                    .banUser(this.selectedUser!.username, 'Violation of community guidelines')
-                    .subscribe({
-                        next: () => {
-                            this.modalService.openAlert(
-                                'Banned',
-                                `User ${this.selectedUser!.username} has been successfully banned.`,
-                                'success',
-                            );
-                            this.router.navigate(['/users']);
-                        },
-                        error: (e) => {
-                            console.error(e);
-                            this.modalService.openAlert(
-                                'Error',
-                                'Could not ban the user.',
-                                'error',
-                            );
-                        },
-                    });
+        this.activeModal = 'ban';
+        this.modalService.openCustom(`Ban User: @${this.selectedUser.username}`);
+    }
+
+    // Callback llamado por (confirmed) del modal
+    onConfirmBan(reason: string): void {
+        if (!this.selectedUser) return;
+
+        const targetUsername = this.selectedUser.username;
+
+        this.userBanService.banUser(targetUsername, reason).subscribe({
+            next: () => {
+                this.modalService.close();
+                this.modalService.openAlert(
+                    'Banned',
+                    `User @${targetUsername} has been successfully banned.`,
+                    'success',
+                );
+                this.router.navigate(['/users']);
             },
-        );
+            error: (e) => {
+                console.error(e);
+                this.modalService.openAlert('Error', 'Could not ban the user.', 'error');
+            },
+        });
     }
 
     // ? ----- Refrescar Datos de Perfil -----
@@ -330,10 +356,14 @@ export class UserProfile implements OnInit, OnDestroy {
         }
     }
 
-    // * -------- Método para reemplazar imagen de perfil fallida --------
+    // * -------- Métodos para reemplazar imagen de perfil/playlist fallida --------
     noProfilePicture(event: Event): void {
         const img = event.target as HTMLImageElement;
-        img.src = 'assets/img/default-img/user-noimg.jpg';
+        const defaultPath =
+            this.selectedUser?.role === 'ADMIN'
+                ? 'assets/img/default-img/admin-noimg.jpg'
+                : 'assets/img/default-img/user-noimg.jpg';
+        img.src = defaultPath;
     }
 
     noPlaylistPicture(event: Event): void {

@@ -175,25 +175,19 @@
         </div>
     }
 
-    <!-- ! ========== Modal Formulario de Reseña ========== -->
-    @if (modalService.isOpen() && modalService.type() === 'custom' && currentModalContext === 'review') {
-        <app-review-form-modal
-            [movie]="chosenMovie"
-            [review]="selectedReview"
-            (submitted)="refreshReviews()"
-        ></app-review-form-modal>
-    }
-
-    <!-- ! ========== Modal Playlist (Agregar Película) ========== -->
-    @if (modalService.isOpen() && modalService.type() === 'custom' && currentModalContext === 'playlist') {
-        <app-playlist-modal
-            [mode]="'add-movie'"
-            [movie]="chosenMovie"
-        ></app-playlist-modal>
-    }
-
-    <!-- ! ========== Modal Genérico (Alertas / Confirmaciones) ========== -->
-    @if (modalService.isOpen() && modalService.type() !== 'custom') {
-        <app-modal></app-modal>
+    <!-- ! ========== Modales Personalizados de Formulario ========== -->
+    @if (modalService.isOpen() && modalService.type() === 'custom') {
+        @if (currentModalContext === 'review') {
+            <app-review-form-modal
+                [movie]="chosenMovie"
+                [review]="selectedReview"
+                (submitted)="refreshReviews()"
+            ></app-review-form-modal>
+        } @else if (currentModalContext === 'playlist') {
+            <app-playlist-modal
+                [mode]="'add-movie'"
+                [movie]="chosenMovie"
+            ></app-playlist-modal>
+        }
     }
 </div>

@@ -4,14 +4,13 @@ import { filter } from 'rxjs';
 import { Header } from './shared/components/header/header';
 import { Sidebar } from './shared/components/sidebar/sidebar';
 import { Footer } from './shared/components/footer/footer';
-import { Modal } from './shared/modals/modal/modal';
-import { BanModal } from './shared/modals/ban-modal/ban-modal';
 import { ModalService } from './shared/services/modal-services';
+import { Modal } from './shared/modals/modal/modal';
 
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [RouterOutlet, Header, Sidebar, Footer, Modal, BanModal],
+    imports: [RouterOutlet, Header, Sidebar, Footer, Modal],
     templateUrl: './app.html',
     styleUrl: './app.css',
 })
@@ -19,14 +18,15 @@ export class App {
     // * ---- Titulo de la aplicacion ----
     protected readonly title = signal('Common Room'); 
 
-    // * ---- Servicio de Modales Global ----
+    // * ---- Servicios Globales e Inyección ----
     public modalService = inject(ModalService);
+    private router = inject(Router);
 
     // * ---- Estados para el Layout y Navegacion ----
     showLayout = signal<boolean>(true); // Control de renderizado para Header, Sidebar y Footer
     isSidebarOpen = signal<boolean>(false); // Estado de apertura de la barra lateral
 
-    constructor(private router: Router) {
+    constructor() {
         /* ------ Suscripción a eventos de navegación para control de Layout ------ */
         this.router.events
             .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))

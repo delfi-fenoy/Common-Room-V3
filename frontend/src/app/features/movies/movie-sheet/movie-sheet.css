@@ -24,11 +24,11 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2rem;
+    gap: clamp(1.2rem, 3vw, 2rem);
     width: 100%;
     max-width: 80rem;
     margin: 0 auto;
-    padding: 1.5rem;
+    padding: clamp(0.8rem, 2.5vw, 1.5rem);
     box-sizing: border-box;
 }
 
@@ -36,19 +36,19 @@
 .movie-main-card {
     display: flex;
     flex-direction: row;
-    gap: 1.5rem;
+    gap: clamp(1rem, 2.5vw, 1.5rem);
     width: 100%;
     background-color: var(--green-500);
-    border: 0.35rem solid var(--brown-600);
+    border: clamp(0.2rem, 0.4vw, 0.35rem) solid var(--brown-600);
     border-radius: 0.75rem;
-    padding: 1.25rem;
+    padding: clamp(0.8rem, 2vw, 1.25rem);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
     box-sizing: border-box;
 }
 
 /* ? ------- Movie Poster ------- */
 .poster-column {
-    flex: 0 0 22rem;
+    flex: 0 0 clamp(14rem, 28vw, 22rem);
 }
 
 .img-wrapper {
@@ -73,13 +73,14 @@
     flex-direction: column;
     gap: 1rem;
     flex: 1;
+    min-width: 0;
 }
 
 .block-box {
     background-color: var(--brown-600);
-    border: 0.4rem solid var(--brown-500);
+    border: clamp(0.2rem, 0.4vw, 0.4rem) solid var(--brown-500);
     border-radius: 0.6rem;
-    padding: 1rem;
+    padding: clamp(0.75rem, 1.8vw, 1rem);
     color: var(--brown-100);
 }
 
@@ -88,14 +89,16 @@
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
+    flex-wrap: wrap;
 }
 
 .title-box h1 {
     margin: 0;
-    font-size: 2.2rem;
+    font-size: clamp(1.4rem, 3vw, 2.2rem);
     color: var(--brown-200);
     text-shadow: 1px 1px 2px var(--brown-700);
     transition: color 0.2s ease, text-decoration 0.2s ease;
+    word-break: break-word;
 }
 
 .title-box h1:hover {
@@ -115,7 +118,7 @@
     background-color: var(--brown-500);
     color: #ffd700;
     font-weight: bold;
-    font-size: 1.1rem;
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
     padding: 0.4rem 0.8rem;
     border-radius: 0.5rem;
     border: 0.15rem solid var(--brown-400);
@@ -129,7 +132,7 @@
     padding: 0.45rem 0.9rem;
     border-radius: 0.5rem;
     font-weight: bold;
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
     cursor: pointer;
     transition: background-color 0.2s ease, transform 0.2s ease, color 0.2s ease;
     margin: 0;
@@ -145,7 +148,7 @@
 .synopsis-box h3,
 .data-box h3 {
     margin: 0 0 0.5rem 0;
-    font-size: 1.2rem;
+    font-size: clamp(1.05rem, 2vw, 1.2rem);
     color: var(--brown-200);
     border-bottom: 2px solid var(--brown-400);
     padding-bottom: 0.2rem;
@@ -153,7 +156,7 @@
 
 .synopsis-box p {
     margin: 0;
-    font-size: 1rem;
+    font-size: clamp(0.9rem, 1.6vw, 1rem);
     line-height: 1.5;
     color: var(--brown-100);
 }
@@ -164,6 +167,7 @@
     align-items: center;
     gap: 0.5rem;
     margin-bottom: 0.8rem;
+    flex-wrap: wrap;
 }
 
 .genres-list {
@@ -205,8 +209,9 @@
 }
 
 .metadata-details li {
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 1.6vw, 0.95rem);
     color: var(--brown-100);
+    overflow-wrap: anywhere;
 }
 
 /* * ========== Reviews Section ========== */
@@ -215,9 +220,9 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
-    padding: 1.25rem;
+    padding: clamp(0.8rem, 2vw, 1.25rem);
     background-color: var(--green-600);
-    border: 0.35rem solid var(--brown-500);
+    border: clamp(0.2rem, 0.4vw, 0.35rem) solid var(--brown-500);
     border-radius: 0.75rem;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
     box-sizing: border-box;
@@ -225,13 +230,15 @@
 
 .title-reviews {
     margin: 0 0 1rem 0;
-    font-size: 2rem;
+    font-size: clamp(1.4rem, 3vw, 2rem);
     color: var(--brown-200);
+    text-align: center;
 }
 
 .login-text {
     font-style: italic;
     color: var(--brown-200);
+    text-align: center;
 }
 
 /* ? ------- Own Review ------- */
@@ -244,7 +251,7 @@
 
 .own-review-wrapper {
     width: 100%;
-    max-width: calc(50% - 0.6rem);
+    max-width: min(100%, 36rem);
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -264,7 +271,7 @@
 /* ? ------- Add Review Button ------- */
 .addReview-button {
     padding: 0.6rem 1.5rem;
-    font-size: 1.2rem;
+    font-size: clamp(1rem, 2.2vw, 1.2rem);
     font-weight: bold;
     border: none;
     border-radius: 0.6rem;
@@ -306,6 +313,7 @@
     width: 100%;
     color: var(--purple-200);
     opacity: 0.85;
+    font-size: clamp(1.2rem, 2.5vw, 1.6rem);
 }
 
 .loading-reviews,
@@ -319,8 +327,10 @@
 .pagination-controls {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    justify-content: center;
+    gap: clamp(0.8rem, 2vw, 1.5rem);
     margin-top: 1.5rem;
+    flex-wrap: wrap;
 }
 
 .page-btn {
@@ -331,6 +341,7 @@
     border-radius: 0.5rem;
     cursor: pointer;
     font-weight: bold;
+    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
@@ -348,6 +359,7 @@
 .page-info {
     color: var(--brown-100);
     font-weight: bold;
+    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
 }
 
 .not-found-container {
@@ -356,7 +368,7 @@
     color: var(--brown-300);
 }
 
-/* ! __________ Responsive __________ */
+/* ! =========== RESPONSIVE =========== */
 @media (max-width: 850px) {
     .movie-main-card {
         flex-direction: column;
@@ -383,5 +395,12 @@
 
     .reviews-container {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .title-actions {
+        width: 100%;
+        justify-content: space-between;
     }
 }

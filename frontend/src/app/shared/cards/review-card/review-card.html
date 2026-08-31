@@ -10,13 +10,13 @@
                     @if (user.role === 'ADMIN') {
                         <img
                             [src]="user.profilePictureUrl || 'assets/img/default-img/admin-noimg.jpg'"
-                            alt="{{ user.username || 'User Avatar' }}"
+                            [alt]="user.username || 'User Avatar'"
                             (error)="noProfilePicture($event)"
                         />
                     } @else {
                         <img
                             [src]="user.profilePictureUrl || 'assets/img/default-img/user-noimg.jpg'"
-                            alt="{{ user.username || 'User Avatar' }}"
+                            [alt]="user.username || 'User Avatar'"
                             (error)="noProfilePicture($event)"
                         />
                     }
@@ -77,11 +77,11 @@
             <div
                 class="review-image"
                 [routerLink]="['/movies', movie.id]"
-                title="Go to {{ movie.title }}"
+                [title]="'Go to ' + movie.title"
             >
                 <img
                     [src]="movie.posterUrl || 'assets/img/default-poster.jpg'"
-                    alt="{{ movie.title || 'Poster not available' }}"
+                    [alt]="movie.title || 'Poster not available'"
                     (error)="onImgError($event)"
                 />
             </div>
@@ -90,7 +90,7 @@
             <div class="review-content-user">
                 <!-- Movie Header -->
                 <div class="review-header mode-user-header">
-                    <h2 [routerLink]="['/movies', movie.id]" title="Go to {{ movie.title }}">
+                    <h2 [routerLink]="['/movies', movie.id]" [title]="'Go to ' + movie.title">
                         {{ movie.title }}
                     </h2>
 

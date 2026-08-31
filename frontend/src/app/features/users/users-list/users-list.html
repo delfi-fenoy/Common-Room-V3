@@ -24,19 +24,11 @@
             <!-- ? --- User Card --- -->
             <div class="user-card" [routerLink]="[user.username]">
                 <div class="img-wrapper">
-                    @if (user.role === 'ADMIN') {
-                        <img
-                            [src]="user.profilePictureUrl || 'assets/img/default-img/admin-noimg.jpg'"
-                            alt="{{ user.username || 'User picture' }}"
-                            (error)="noProfilePicture($event, 'ADMIN')"
-                        />
-                    } @else {
-                        <img
-                            [src]="user.profilePictureUrl || 'assets/img/default-img/user-noimg.jpg'"
-                            alt="{{ user.username || 'User picture' }}"
-                            (error)="noProfilePicture($event, 'USER')"
-                        />
-                    }
+                    <img
+                        [src]="user.profilePictureUrl"
+                        [alt]="user.username || 'User picture'"
+                        (error)="noProfilePicture($event, user.role)"
+                    />
 
                     <!-- <----- Rectángulo inferior fijo con el nombre y rol ----->
                     <div class="info-overlay">

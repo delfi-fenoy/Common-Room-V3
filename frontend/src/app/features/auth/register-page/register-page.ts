@@ -22,7 +22,7 @@ export class RegisterPage {
     // Permite deshabilitar el botón mostrando un "spinner" en el mouse, mientras se procesa la solicitud.
     isSubmitting = signal<boolean>(false);
 
-    // <----- Signal visibilidad de contraseña ----->
+    // ? ----- Signal visibilidad de contraseña -----
     showPassword = signal<boolean>(false);
 
     // * ---- Formulario Reactivo ----
@@ -43,7 +43,7 @@ export class RegisterPage {
         return this.registerForm.controls;
     }
 
-    // <----- Alternar visibilidad de contraseña ----->
+    // ? ----- Alternar visibilidad de contraseña -----
     togglePassword(): void {
         this.showPassword.update((val) => !val);
     }
@@ -61,9 +61,7 @@ export class RegisterPage {
 
         this.authService.register(this.registerForm.getRawValue()).subscribe({
             next: () => {
-                // <----- New Modal Success Alert ----->
                 this.modalService.openAlert('Success', 'Registration successful!', 'success');
-
                 this.registerForm.reset();
                 this.isSubmitting.set(false);
                 this.router.navigate(['/']);
@@ -71,8 +69,6 @@ export class RegisterPage {
             error: (e) => {
                 console.error(e);
                 this.isSubmitting.set(false);
-
-                // <----- New Modal Error Alert ----->
                 const errorMessage =
                     e?.error?.message || 'Error creating account. Please try again later.';
                 this.modalService.openAlert('Registration Error', errorMessage, 'error');

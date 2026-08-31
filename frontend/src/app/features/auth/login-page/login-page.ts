@@ -22,7 +22,7 @@ export class LoginPage {
     loginError = signal<boolean>(false);
     isSubmitting = signal<boolean>(false);
 
-    // <----- Signal visibilidad de contraseña ----->
+    // ? ----- Signal visibilidad de contraseña -----
     showPassword = signal<boolean>(false);
 
     // * ---- Formulario Reactivo ----
@@ -31,7 +31,7 @@ export class LoginPage {
         password: ['', Validators.required],
     });
 
-    // <----- Alternar visibilidad de contraseña ----->
+    // ? ----- Alternar visibilidad de contraseña -----
     togglePassword(): void {
         this.showPassword.update((val) => !val);
     }
@@ -45,9 +45,7 @@ export class LoginPage {
 
         this.authService.login(this.loginForm.getRawValue()).subscribe({
             next: () => {
-                // <----- New Modal Success Alert ----->
                 this.modalService.openAlert('Success', 'Login successful!', 'success');
-
                 this.loginForm.reset();
                 this.isSubmitting.set(false);
                 this.router.navigate(['/']);
@@ -55,8 +53,6 @@ export class LoginPage {
             error: (e) => {
                 console.error(e);
                 this.isSubmitting.set(false);
-
-                // <----- New Modal Alert ----->
                 const errorMessage =
                     e?.error?.message ||
                     'Invalid access. Please check your credentials and try again.';

@@ -1,3 +1,4 @@
+/* * ========== Contenedor Principal ========== */
 .edit-profile-container {
     display: flex;
     flex-direction: column;
@@ -5,7 +6,7 @@
     width: 100%;
 }
 
-/* * ======== Header de Pestañas (Resaltado en Purple) ======== */
+/* * ========== Header de Pestañas (Resaltado en Purple) ========== */
 .tabs-header {
     display: flex;
     gap: 0.8rem;
@@ -14,12 +15,13 @@
 }
 
 .tab-btn {
+    flex: 1;
     background: var(--brown-600);
     border: 0.2rem solid var(--brown-400);
     color: var(--brown-200);
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
     font-weight: bold;
-    padding: 0.65rem 1.25rem;
+    padding: 0.65rem 1rem;
     border-radius: 0.5rem;
     cursor: pointer;
     opacity: 0.75;
@@ -41,7 +43,7 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 }
 
-/* * ======== Formularios e Inputs Unificados ======== */
+/* * ========== Formularios e Inputs Unificados ========== */
 .modal-form {
     display: flex;
     flex-direction: column;
@@ -55,12 +57,12 @@
 }
 
 .form-group label {
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
     font-weight: bold;
     color: var(--brown-200);
 }
 
-/* <----- Contenedor para Password e Icono Toggle -----> */
+/* ? --- Contenedor Password e Ícono Toggle --- */
 .password-field {
     position: relative;
     display: flex;
@@ -69,10 +71,9 @@
 }
 
 .password-field input {
-    padding-right: 3.5rem; /* Espacio para que el texto del botón no pise el contenido */
+    padding-right: 3.5rem;
 }
 
-/* <----- Botón Toggle adaptado con texto SHOW / HIDE -----> */
 .toggle-password-btn {
     position: absolute;
     right: 0.6rem;
@@ -95,7 +96,7 @@
     color: var(--purple-300);
 }
 
-/* <----- Inputs y Textareas Homogéneos -----> */
+/* ? --- Inputs y Textareas Homogéneos --- */
 .form-group input,
 .form-group textarea {
     width: 100%;
@@ -104,7 +105,7 @@
     border: 0.2rem solid var(--brown-400);
     border-radius: 0.5rem;
     color: var(--brown-100);
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
     box-sizing: border-box;
     outline: none;
     resize: none;
@@ -118,6 +119,28 @@
     background-color: var(--brown-700);
 }
 
+/* ? --- Checkbox Personalizado --- */
+.checkbox-group {
+    margin-top: 0.2rem;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    color: var(--brown-100);
+    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
+    user-select: none;
+}
+
+.checkbox-group input[type="checkbox"] {
+    accent-color: var(--purple-400);
+    width: 1.15rem;
+    height: 1.15rem;
+    cursor: pointer;
+}
+
 .error-msg {
     color: #ff6b6b;
     font-size: 0.8rem;
@@ -125,12 +148,12 @@
     margin-top: 0.2rem;
 }
 
-/* * ======== Footer idéntico a Log Out (.modal-footer) ======== */
+/* * ========== Footer Idéntico a Todos los Modales (.form-actions) ========== */
 .form-actions {
     display: flex;
     justify-content: flex-end;
     gap: 0.8rem;
-    margin: 1.4rem -1.2rem -1.4rem -1.2rem; /* Cancela el padding del modal-body */
+    margin: 1.4rem -1.2rem -1.4rem -1.2rem;
     padding: 0.8rem 1.2rem;
     background-color: var(--brown-600);
     border-top: 0.3rem solid var(--brown-400);
@@ -138,7 +161,7 @@
 
 .btn {
     padding: 0.55rem 1.2rem;
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
     font-weight: bold;
     border-radius: 0.5rem;
     cursor: pointer;
@@ -167,4 +190,19 @@
 .btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+/* ! =========== RESPONSIVE =========== */
+@media (max-width: 480px) {
+    .tabs-header {
+        flex-direction: column;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .btn {
+        width: 100%;
+    }
 }

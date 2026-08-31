@@ -9,16 +9,15 @@ import { AuthService } from '../../../core/services/auth-service';
 import { ModalService } from '../../../shared/services/modal-services';
 
 import { MovieDetails, Review } from '../../../core/models';
-import { ReviewCard } from '../../../shared/components/review-card/review-card';
+import { ReviewCard } from '../../../shared/cards/review-card/review-card';
 import { ReviewFormModal } from '../../../shared/modals/review-form-modal/review-form-modal';
-import { Modal } from '../../../shared/modals/modal/modal';
 import { PlaylistModal } from '../../../shared/modals/playlist-modal/playlist-modal';
 import { TMDB_GENRES } from '../movies-list/movies-list';
 
 @Component({
     selector: 'app-movie-sheet',
     standalone: true,
-    imports: [CommonModule, RouterLink, ReviewCard, ReviewFormModal, Modal, PlaylistModal],
+    imports: [CommonModule, RouterLink, ReviewCard, ReviewFormModal, PlaylistModal],
     templateUrl: './movie-sheet.html',
     styleUrl: './movie-sheet.css',
 })
@@ -65,6 +64,8 @@ export class MovieSheet implements OnInit {
             if (movieId) {
                 this.isLoadingMovie = true;
                 this.chosenMovie = null;
+                this.currentUserReview = null;
+                this.reviews = [];
                 this.cdr.markForCheck();
 
                 this.loadMovie(movieId);
@@ -169,6 +170,7 @@ export class MovieSheet implements OnInit {
 
     // Abrir Modal de Editar Reseña
     openEditModal(review: Review): void {
+        this.modalService.close();
         this.selectedReview = review;
         this.currentModalContext = 'review';
         this.modalService.openCustom('Edit Review');

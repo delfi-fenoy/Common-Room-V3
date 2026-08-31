@@ -54,3 +54,8 @@
         }
     </nav>
 </aside>
+
+<!-- ! ====== Modal de Baneos Autónomo en el Sidebar ====== -->
+@if (modalService.isOpen() && modalService.type() === 'ban') {
+    <app-ban-modal></app-ban-modal>
+}

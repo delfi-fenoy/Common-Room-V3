@@ -12,7 +12,7 @@
                 <div class="avatar-column">
                     <div class="img-wrapper">
                         <img
-                            [src]="selectedUser.profilePictureUrl || (selectedUser.role === 'ADMIN' ? 'assets/img/default-img/admin-noimg.jpg' : 'assets/img/default-img/user-noimg.jpg')"
+                            [src]="selectedUser.profilePictureUrl"
                             [alt]="selectedUser.username || 'User Picture'"
                             (error)="noProfilePicture($event)"
                         />
@@ -30,7 +30,10 @@
                                     <span class="admin-badge" title="Administrator">⭐ Admin</span>
                                 }
                             </h1>
-                            <span class="user-date">Member since {{ selectedUser.createdAt | date: 'yyyy-MM-dd' }}</span>
+                            <span class="user-date"
+                                >Member since
+                                {{ selectedUser.createdAt | date: 'yyyy-MM-dd' }}</span
+                            >
                         </div>
                     </div>
 
@@ -43,23 +46,39 @@
                     <!-- Pie con Contador y Acciones -->
                     <div class="block-box info-footer">
                         <div class="counts-group">
-                            <span class="review-count">Total Reviews: <strong>{{ totalElements }}</strong></span>|
-                            <span class="playlist-count">Total Playlists: <strong>{{ totalPlaylistElements }}</strong></span>
+                            <span class="review-count"
+                                >Total Reviews: <strong>{{ totalElements }}</strong></span
+                            >|
+                            <span class="playlist-count"
+                                >Total Playlists: <strong>{{ totalPlaylistElements }}</strong></span
+                            >
                         </div>
 
                         @if (isMyProfile) {
                             <div class="profile-actions">
-                                <button (click)="openEditModal()" class="action-btn edit-btn" title="Edit Profile">
+                                <button
+                                    (click)="openEditModal()"
+                                    class="action-btn edit-btn"
+                                    title="Edit Profile"
+                                >
                                     ⚙️
                                 </button>
-                                <button (click)="deleteUser()" class="action-btn delete-btn" title="Delete User Account">
+                                <button
+                                    (click)="deleteUser()"
+                                    class="action-btn delete-btn"
+                                    title="Delete User Account"
+                                >
                                     🗑️
                                 </button>
                             </div>
                         } @else if (isAdmin) {
                             <!-- <----- Botón de Baneo para Administradores en perfiles ajenos ----->
                             <div class="profile-actions">
-                                <button (click)="banUser()" class="action-btn ban-btn" title="Ban User">
+                                <button
+                                    (click)="banUser()"
+                                    class="action-btn ban-btn"
+                                    title="Ban User"
+                                >
                                     🔨 Ban User
                                 </button>
                             </div>
@@ -73,16 +92,16 @@
         <div class="profile-tabs-wrapper">
             <!-- ! ========== Tab Selector Bar ========== -->
             <div class="profile-tabs-nav">
-                <button 
-                    class="tab-btn" 
-                    [class.active]="activeTab === 'reviews'" 
+                <button
+                    class="tab-btn"
+                    [class.active]="activeTab === 'reviews'"
                     (click)="setTab('reviews')"
                 >
                     Reviews ({{ totalElements }})
                 </button>
-                <button 
-                    class="tab-btn" 
-                    [class.active]="activeTab === 'playlists'" 
+                <button
+                    class="tab-btn"
+                    [class.active]="activeTab === 'playlists'"
                     (click)="setTab('playlists')"
                 >
                     Playlists ({{ totalPlaylistElements }})
@@ -124,7 +143,9 @@
                                 &laquo; Previous
                             </button>
 
-                            <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+                            <span class="page-info"
+                                >Page {{ currentPage }} of {{ totalPages }}</span
+                            >
 
                             <button
                                 [disabled]="currentPage === totalPages"
@@ -149,15 +170,20 @@
                             <p class="no-data-msg">No playlists created yet...</p>
                         } @else {
                             @for (playlist of playlists; track playlist.id) {
-                                <div class="playlist-card" [routerLink]="['/playlists', playlist.id]">
+                                <div
+                                    class="playlist-card"
+                                    [routerLink]="['/playlists', playlist.id]"
+                                >
                                     <div class="playlist-card-img">
                                         <img
-                                            [src]="playlist.pictureUrl || 'assets/img/default-img/playlist-noimg.jpg'"
+                                            [src]="playlist.pictureUrl"
                                             [alt]="playlist.name"
                                             (error)="noPlaylistPicture($event)"
                                         />
                                         @if (playlist.isPrivate) {
-                                            <span class="private-badge" title="Private Playlist">🔒</span>
+                                            <span class="private-badge" title="Private Playlist"
+                                                >🔒</span
+                                            >
                                         }
                                     </div>
                                     <div class="playlist-card-info">
@@ -179,7 +205,9 @@
                                 &laquo; Previous
                             </button>
 
-                            <span class="page-info">Page {{ currentPlaylistPage }} of {{ totalPlaylistPages }}</span>
+                            <span class="page-info"
+                                >Page {{ currentPlaylistPage }} of {{ totalPlaylistPages }}</span
+                            >
 
                             <button
                                 [disabled]="currentPlaylistPage === totalPlaylistPages"
@@ -204,25 +232,25 @@
         </div>
     }
 
-    <!-- ! ========== Modal Formulario (Editar Perfil / Editar Reseña) ========== -->
+    <!-- ! ========== Modal Formulario (Editar Perfil / Editar Reseña / Ban) ========== -->
     @if (modalService.isOpen() && modalService.type() === 'custom') {
-        @if (activeModal === 'profile') {
-            <app-modal>
+        <app-modal>
+            @if (activeModal === 'profile' && selectedUser) {
                 <app-edit-profile-modal
-                    [user]="selectedUser!"
+                    [user]="selectedUser"
                     (submitted)="refreshProfileData($event)"
                 ></app-edit-profile-modal>
-            </app-modal>
-        } @else if (activeModal === 'review' && selectedReview) {
-            <app-review-form-modal
-                [review]="selectedReview"
-                (submitted)="onReviewUpdated()"
-            ></app-review-form-modal>
-        }
-    }
-
-    <!-- ! ========== Modal Genérico (Alertas / Confirmaciones) ========== -->
-    @if (modalService.isOpen() && modalService.type() !== 'custom') {
-        <app-modal></app-modal>
+            } @else if (activeModal === 'ban' && selectedUser) {
+                <app-ban-reason-modal
+                    [username]="selectedUser.username"
+                    (confirmed)="onConfirmBan($event)"
+                ></app-ban-reason-modal>
+            } @else if (activeModal === 'review' && selectedReview) {
+                <app-review-form-modal
+                    [review]="selectedReview"
+                    (submitted)="onReviewUpdated()"
+                ></app-review-form-modal>
+            }
+        </app-modal>
     }
 </div>

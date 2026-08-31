@@ -9,7 +9,6 @@ import {
     ValidationErrors,
 } from '@angular/forms';
 
-import { Modal } from '../modal/modal';
 import { ModalService } from '../../services/modal-services';
 import { MovieDetails, Review } from '../../../core/models';
 import { ReviewService } from '../../../core/services/review-service';
@@ -17,7 +16,7 @@ import { ReviewService } from '../../../core/services/review-service';
 @Component({
     selector: 'app-review-form-modal',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, Modal],
+    imports: [CommonModule, ReactiveFormsModule],
     templateUrl: './review-form-modal.html',
     styleUrl: './review-form-modal.css',
 })
@@ -32,7 +31,7 @@ export class ReviewFormModal implements OnInit {
     review = input<Review | null>(null);
     submitted = output<void>();
 
-    // * ======== Variables de Estado del Formulario ========
+    // * ======== Formulario Reactivo y Estado de Puntuación ========
     reviewForm!: FormGroup;
     displayedRating: number = 5;
     finalRating: number = 5;
@@ -43,7 +42,11 @@ export class ReviewFormModal implements OnInit {
         this.finalRating = initialRating;
         this.displayedRating = initialRating;
 
-        // <----- Configuración de campos y validaciones ----->
+        this.initReviewForm(initialRating);
+    }
+
+    // <----- Inicializar Formulario de Reseña ----->
+    private initReviewForm(initialRating: number): void {
         this.reviewForm = this.fb.group({
             rating: [
                 initialRating,
@@ -54,20 +57,20 @@ export class ReviewFormModal implements OnInit {
         });
     }
 
-    // ? ----- Validador Personalizado de Rating (Pasos de 0.5) -----
+    // <----- Validador Personalizado de Rating (Pasos de 0.5) ----->
     multipleOfHalf(control: AbstractControl): ValidationErrors | null {
         if (control.value === null || control.value === undefined) return null;
         const value = Number(control.value);
         return value % 0.5 === 0 ? null : { notMultipleOfHalf: true };
     }
 
-    // ! -------- Selección e Interacción de Estrellas --------
+    // <----- Selección de Puntuación con Clic ----->
     selectRating(event: MouseEvent, index: number): void {
         const target = event.target as HTMLElement;
         const rect = target.getBoundingClientRect();
         const x = event.clientX - rect.left;
 
-        // <----- Determina si el clic fue en la mitad izquierda (0.5) o derecha (1.0) ----->
+        // Determinar si el clic fue en la mitad izquierda (0.5) o derecha (1.0)
         this.finalRating = x < rect.width / 2 ? index - 0.5 : index;
         this.displayedRating = this.finalRating;
 
@@ -76,6 +79,7 @@ export class ReviewFormModal implements OnInit {
         this.reviewForm.get('rating')?.updateValueAndValidity();
     }
 
+    // <----- Efecto Hover de Puntuación ----->
     hoverRating(event: MouseEvent, index: number): void {
         const target = event.target as HTMLElement;
         const rect = target.getBoundingClientRect();
@@ -84,11 +88,12 @@ export class ReviewFormModal implements OnInit {
         this.displayedRating = x < rect.width / 2 ? index - 0.5 : index;
     }
 
+    // <----- Restablecer Puntuación al Quitar Hover ----->
     clearHover(): void {
         this.displayedRating = this.finalRating;
     }
 
-    // ! -------- Envío del Formulario (Crear / Editar) --------
+    // <----- Guardar Reseña (Crear o Editar) ----->
     onSubmit(): void {
         if (this.reviewForm.invalid) return;
 
@@ -100,6 +105,7 @@ export class ReviewFormModal implements OnInit {
         }
     }
 
+    // <----- Crear Nueva Reseña ----->
     private addReview(): void {
         this.reviewService.createReview(this.reviewForm.value).subscribe({
             next: () => {
@@ -118,6 +124,7 @@ export class ReviewFormModal implements OnInit {
         });
     }
 
+    // <----- Actualizar Reseña Existente ----->
     private editReview(reviewId: number): void {
         const updatedReview = {
             ...this.reviewForm.value,
@@ -141,14 +148,14 @@ export class ReviewFormModal implements OnInit {
         });
     }
 
-    // ? ----- Cancelar y Cerrar Modal -----
-    onCancel(): void {
-        this.modalService.close();
-    }
-
-    // * -------- Método para reemplazar imagen de póster fallida --------
+    // <----- Manejo de Error al Cargar Imagen de Póster ----->
     onImgError(event: Event): void {
         const img = event.target as HTMLImageElement;
         img.src = 'assets/img/default-img/movie-noimg.jpg';
+    }
+
+    // <----- Cancelar y Cerrar Modal ----->
+    onCancel(): void {
+        this.modalService.close();
     }
 }

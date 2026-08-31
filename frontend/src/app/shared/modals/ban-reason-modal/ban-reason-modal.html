@@ -1,0 +1,26 @@
+<div class="ban-reason-container">
+    <!-- * ========== Formulario de Motivo de Baneo ========== -->
+    <div class="form-group">
+        <label for="banReason">Reason for Banning @{{ username }}</label>
+        <textarea
+            id="banReason"
+            [(ngModel)]="reason"
+            placeholder="Specify the community guidelines violation or reason..."
+            rows="4"
+            class="reason-textarea"
+        ></textarea>
+    </div>
+
+    <!-- * ========== Footer de Acciones ========== -->
+    <div class="form-actions">
+        <button type="button" class="btn btn-cancel" (click)="onCancel()">Cancel</button>
+        <button
+            type="button"
+            class="btn btn-confirm-ban"
+            (click)="onConfirm()"
+            [disabled]="!reason.trim()"
+        >
+            🔨 Confirm Ban
+        </button>
+    </div>
+</div>

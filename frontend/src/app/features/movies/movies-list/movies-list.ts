@@ -1,11 +1,10 @@
-// <----- movies-list.ts ----->
 import { Component, HostListener, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { MoviePreview } from '../../../core/models';
 import { MovieService } from '../../../core/services/movie-service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { MovieCard } from '../../../shared/components/movie-card/movie-card';
+import { MovieCard } from '../../../shared/cards/movie-card/movie-card';
 
 // Filtro de películas: relevancia, popularidad, recientes o próximas
 export type MovieFilterType = 'relevance' | 'popular' | 'recent' | 'upcoming';
@@ -53,7 +52,6 @@ export class MoviesList implements OnInit {
     isLoading = false;
     showScrollTopBtn = false;
     selectedFilter: MovieFilterType = 'relevance'; // Por defecto
-
     selectedYear: string = '';
     selectedGenre: number | null = null;
     genresList = TMDB_GENRES;
@@ -67,7 +65,8 @@ export class MoviesList implements OnInit {
             const rawGenre = params['genre'];
             if (rawGenre !== undefined && rawGenre !== '') {
                 const parsedGenre = Number(rawGenre);
-                const existsGenre = !isNaN(parsedGenre) && this.genresList.some((g) => g.id === parsedGenre);
+                const existsGenre =
+                    !isNaN(parsedGenre) && this.genresList.some((g) => g.id === parsedGenre);
 
                 // ! Si el parámetro género no existe en la lista, redirige a 404
                 if (!existsGenre) {
@@ -117,7 +116,7 @@ export class MoviesList implements OnInit {
                 this.currentPage,
                 undefined,
                 this.selectedYear,
-                this.selectedGenre ?? undefined
+                this.selectedGenre ?? undefined,
             );
         } else {
             request$ = this.getMoviesByFilter(this.selectedFilter, this.currentPage);
@@ -128,7 +127,7 @@ export class MoviesList implements OnInit {
             next: (data) => {
                 // ! Evita duplicados filtrando por ID
                 const newMovies = data.filter(
-                    (newMovie) => !this.movies.some((existing) => existing.id === newMovie.id)
+                    (newMovie) => !this.movies.some((existing) => existing.id === newMovie.id),
                 );
 
                 this.movies = [...this.movies, ...newMovies]; // Concatena las películas recibidas al array existente
@@ -213,9 +212,7 @@ export class MoviesList implements OnInit {
         this.currentPage = 1;
         this.movies = [];
         this.hasMorePages = true;
-        setTimeout(() => {
-            this.loadMovies();
-        }, 0);
+        this.loadMovies();
     }
 
     // ! -------- Listener de Scroll Global --------

@@ -1,7 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 
-export type ModalType = 'success' | 'error' | 'confirm' | 'custom';
-
+export type ModalType = 'success' | 'error' | 'confirm' | 'custom' | 'ban';
 @Injectable({
     providedIn: 'root',
 })
@@ -29,6 +28,7 @@ export class ModalService {
         this.message.set(message);
         this.type.set(type);
         this.isOpen.set(true);
+        console.log("Modal alerta abierto");
     }
 
     // * -------- Abrir Modal de Confirmación --------
@@ -38,6 +38,7 @@ export class ModalService {
         this.type.set('confirm');
         this.onConfirmCallback = onConfirm;
         this.isOpen.set(true);
+        console.log("Modal confirmacion abierto");
     }
 
     // * -------- Abrir Modal Personalizado (Formularios) --------
@@ -45,7 +46,16 @@ export class ModalService {
         this.title.set(title);
         this.type.set('custom');
         this.isOpen.set(true);
+        console.log("Modal Custom abierto");
     }
+
+    // * -------- Abrir Modal de Baneos / Admin --------
+        openBan(title: string = 'Manage Banned Users'): void {
+            this.title.set(title);
+            this.type.set('ban');
+            this.isOpen.set(true);
+            console.log("Modal Ban abierto");
+        }
 
     // * -------- Ejecutar Acción de Confirmación --------
     confirm(): void {

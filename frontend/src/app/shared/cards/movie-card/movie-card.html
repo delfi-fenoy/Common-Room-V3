@@ -2,7 +2,7 @@
     <div class="img-wrapper">
         <img
             [src]="movie.posterUrl || 'assets/img/default-img/movie-noimg.jpg'"
-            alt="{{ movie.title || 'Poster not available' }}"
+            [alt]="movie.title || 'Poster not available'"
             (error)="onImgError($event)"
         />
 

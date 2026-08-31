@@ -22,12 +22,12 @@
 }
 
 .form-group label {
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
     font-weight: bold;
     color: var(--brown-200);
 }
 
-/* <----- Inputs y Textareas Homogéneos -----> */
+/* ? --- Inputs y Textareas Homogéneos --- */
 .form-group input:not([type="checkbox"]),
 .form-group textarea {
     width: 100%;
@@ -36,7 +36,7 @@
     border: 0.2rem solid var(--brown-400);
     border-radius: 0.5rem;
     color: var(--brown-100);
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
     box-sizing: border-box;
     outline: none;
     resize: none;
@@ -50,7 +50,7 @@
     background-color: var(--brown-700);
 }
 
-/* <----- Estilos del Checkbox Privado -----> */
+/* ? --- Checkbox Privado --- */
 .checkbox-group {
     margin-top: 0.5rem;
     margin-bottom: 0.2rem;
@@ -69,12 +69,12 @@
     align-items: center;
     gap: 0.6rem;
     cursor: pointer;
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
     color: var(--brown-200);
     user-select: none;
 }
 
-/* <----- Botón Shortcut Nueva Playlist -----> */
+/* ? --- Botón Shortcut Nueva Playlist --- */
 .create-shortcut-btn {
     display: flex;
     align-items: center;
@@ -82,7 +82,7 @@
     background: transparent;
     border: none;
     color: var(--brown-200);
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
     font-weight: bold;
     cursor: pointer;
     padding: 0.2rem 0;
@@ -99,7 +99,7 @@
     line-height: 1;
 }
 
-/* <----- Divisores -----> */
+/* ? --- Divisores --- */
 .modal-divider {
     border: 0;
     height: 0.15rem;
@@ -128,7 +128,7 @@
     text-align: center;
     color: var(--brown-200);
     padding: 1rem 0;
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
 }
 
 .section-header {
@@ -197,7 +197,7 @@
 
 .playlist-name {
     font-weight: bold;
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
     color: var(--brown-100);
 }
 
@@ -226,12 +226,35 @@
     border-radius: 50%;
 }
 
-/* * ======== Footer Acciones (Estructura Unificada) ======== */
+.required {
+    color: #ff6b6b;
+}
+
+.field-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.25rem;
+}
+
+.char-counter {
+    font-size: 0.75rem;
+    color: var(--brown-200);
+    margin-left: auto;
+}
+
+.error-msg {
+    color: #ff6b6b;
+    font-size: 0.8rem;
+    margin: 0;
+}
+
+/* * ======== Footer Idéntico a Todos los Modales (.form-actions) ======== */
 .form-actions {
     display: flex;
     justify-content: flex-end;
     gap: 0.8rem;
-    margin: 1.4rem -1.2rem -1.4rem -1.2rem; /* <----- Homologado con edit-profile-modal -----> */
+    margin: 1.4rem -1.2rem -1.4rem -1.2rem;
     padding: 0.8rem 1.2rem;
     background-color: var(--brown-600);
     border-top: 0.3rem solid var(--brown-400);
@@ -239,7 +262,7 @@
 
 .btn {
     padding: 0.55rem 1.2rem;
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
     font-weight: bold;
     border-radius: 0.5rem;
     cursor: pointer;
@@ -268,4 +291,15 @@
 .btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+/* ! =========== RESPONSIVE =========== */
+@media (max-width: 480px) {
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .btn {
+        width: 100%;
+    }
 }

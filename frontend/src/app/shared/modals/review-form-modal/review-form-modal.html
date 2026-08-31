@@ -1,92 +1,95 @@
-<app-modal>
-    <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()" class="review-form">
-        <div class="body-modal">
-            <!-- ? --- Poster Izquierdo --- -->
+<form [formGroup]="reviewForm" (ngSubmit)="onSubmit()" class="review-form">
+    <!-- * ========== Cuerpo Principal del Modal ========== -->
+    <div class="body-modal">
+        <!-- ? --- Póster de Película (Lateral Izquierdo) --- -->
+        @if (movie()) {
+            <div class="image-modal">
+                <img
+                    [src]="movie()?.posterUrl || 'assets/img/default-img/movie-noimg.jpg'"
+                    [alt]="movie()?.title || 'Poster not available'"
+                    (error)="onImgError($event)"
+                />
+            </div>
+        }
+
+        <!-- ? --- Campos del Formulario (Lateral Derecho) --- -->
+        <div class="text-modal">
             @if (movie()) {
-                <div class="image-modal">
-                    <img
-                        [src]="movie()?.posterUrl || 'assets/img/default-img/movie-noimg.jpg'"
-                        [alt]="movie()?.title || 'Poster not available'"
-                        (error)="onImgError($event)"
-                    />
-                </div>
+                <h2 class="movie-title">{{ movie()?.title }}</h2>
             }
 
-            <!-- ? --- Formulario Derecho --- -->
-            <div class="text-modal">
-                @if (movie()) {
-                    <h2 class="movie-title">{{ movie()?.title }}</h2>
-                }
+            <!-- Subsección: Selector e Interacción de Estrellas -->
+            <div class="rating-group">
+                <label class="field-label">Rating <span class="required">*</span></label>
 
-                <!-- ? --- Selector de Estrellas (Con Medias Estrellas) --- -->
-                <div class="rating-group">
-                    <label class="field-label">Rating <span class="required">*</span></label>
-
-                    <div class="stars-wrapper" (mouseleave)="clearHover()">
-                        @for (i of [1, 2, 3, 4, 5]; track i) {
-                            <span
-                                class="star"
-                                (mousemove)="hoverRating($event, i)"
-                                (click)="selectRating($event, i)"
-                            >
-                                @if (displayedRating >= i) {
-                                    ★
-                                } @else if (displayedRating === i - 0.5) {
-                                    ⯪
-                                } @else {
-                                    ☆
-                                }
-                            </span>
-                        }
-                    </div>
-
-                    <!-- Mensajes de Error de Puntuación -->
-                    @if (reviewForm.get('rating')?.hasError('required') && reviewForm.get('rating')?.touched) {
-                        <p class="error-msg">Rating is required.</p>
-                    } @else if (
-                        (reviewForm.get('rating')?.hasError('min') || reviewForm.get('rating')?.hasError('max')) &&
-                        reviewForm.get('rating')?.touched
-                    ) {
-                        <p class="error-msg">Rating must be between 0.5 and 5 stars.</p>
-                    } @else if (
-                        reviewForm.get('rating')?.hasError('notMultipleOfHalf') &&
-                        reviewForm.get('rating')?.touched
-                    ) {
-                        <p class="error-msg">Rating must be a multiple of 0.5.</p>
+                <div class="stars-wrapper" (mouseleave)="clearHover()">
+                    @for (i of [1, 2, 3, 4, 5]; track i) {
+                        <span
+                            class="star"
+                            (mousemove)="hoverRating($event, i)"
+                            (click)="selectRating($event, i)"
+                        >
+                            @if (displayedRating >= i) {
+                                ★
+                            } @else if (displayedRating === i - 0.5) {
+                                ⯪
+                            } @else {
+                                ☆
+                            }
+                        </span>
                     }
                 </div>
 
-                <!-- ? --- Comentario --- -->
-                <div class="comment-wrapper">
-                    <label for="comment" class="field-label">Comment</label>
-                    <textarea
-                        id="comment"
-                        formControlName="comment"
-                        rows="4"
-                        placeholder="Write your review about the movie..."
-                    ></textarea>
+                <!-- Mensajes de Error de Puntuación -->
+                @if (
+                    reviewForm.get('rating')?.hasError('required') &&
+                    reviewForm.get('rating')?.touched
+                ) {
+                    <p class="error-msg">Rating is required.</p>
+                } @else if (
+                    (reviewForm.get('rating')?.hasError('min') ||
+                        reviewForm.get('rating')?.hasError('max')) &&
+                    reviewForm.get('rating')?.touched
+                ) {
+                    <p class="error-msg">Rating must be between 0.5 and 5 stars.</p>
+                } @else if (
+                    reviewForm.get('rating')?.hasError('notMultipleOfHalf') &&
+                    reviewForm.get('rating')?.touched
+                ) {
+                    <p class="error-msg">Rating must be a multiple of 0.5.</p>
+                }
+            </div>
 
-                    <div class="comment-footer">
-                        @if (
-                            reviewForm.get('comment')?.hasError('maxlength') &&
-                            reviewForm.get('comment')?.touched
-                        ) {
-                            <p class="error-msg">Comment cannot exceed 700 characters.</p>
-                        }
-                        <span class="char-counter">
-                            {{ reviewForm.get('comment')?.value?.length || 0 }}/700
-                        </span>
-                    </div>
+            <!-- Subsección: Campo de Comentario -->
+            <div class="comment-wrapper">
+                <label for="comment" class="field-label">Comment</label>
+                <textarea
+                    id="comment"
+                    formControlName="comment"
+                    rows="4"
+                    placeholder="Write your review about the movie..."
+                ></textarea>
+
+                <div class="comment-footer">
+                    @if (
+                        reviewForm.get('comment')?.hasError('maxlength') &&
+                        reviewForm.get('comment')?.touched
+                    ) {
+                        <p class="error-msg">Comment cannot exceed 700 characters.</p>
+                    }
+                    <span class="char-counter">
+                        {{ reviewForm.get('comment')?.value?.length || 0 }}/700
+                    </span>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- * ========== Acciones del Formulario ========== -->
-        <div class="form-actions">
-            <button type="button" class="btn btn-cancel" (click)="onCancel()">Cancel</button>
-            <button type="submit" class="btn btn-confirm" [disabled]="reviewForm.invalid">
-                {{ review()?.id ? 'Update' : 'Save' }}
-            </button>
-        </div>
-    </form>
-</app-modal>
+    <!-- * ========== Footer de Acciones ========== -->
+    <div class="form-actions">
+        <button type="button" class="btn btn-cancel" (click)="onCancel()">Cancel</button>
+        <button type="submit" class="btn btn-confirm" [disabled]="reviewForm.invalid">
+            {{ review()?.id ? 'Update' : 'Save' }}
+        </button>
+    </div>
+</form>

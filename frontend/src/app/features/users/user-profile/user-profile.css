@@ -166,6 +166,10 @@
     border: 0.15rem solid var(--brown-400);
 }
 
+.action-btn:hover {
+    transform: scale(1.03);
+}
+
 .edit-btn {
     background-color: var(--brown-500);
     color: var(--brown-100);
@@ -175,7 +179,6 @@
     background-color: var(--purple-300);
     border-color: var(--purple-400);
     color: var(--purple-700);
-    transform: scale(1.03);
 }
 
 .delete-btn {
@@ -187,7 +190,6 @@
 .delete-btn:hover {
     background-color: #e53935;
     color: #ffffff;
-    transform: scale(1.03);
 }
 
 /* <----- Estilos para el botón de Ban -----> */
@@ -200,7 +202,6 @@
 .ban-btn:hover {
     background-color: #ff5252;
     color: #ffffff;
-    transform: scale(1.03);
 }
 
 /* * ========== Profile Tabs Wrapper & Navigation ========== */
@@ -246,8 +247,9 @@
     z-index: 2;
 }
 
-/* * ========== Reviews Section ========== */
-.reviews-section {
+/* * ========== Reviews & Playlists Shared Tab Sections ========== */
+.reviews-section,
+.playlists-section {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -282,20 +284,7 @@ app-review-card {
     min-width: 0;
 }
 
-/* * ========== Playlists Section ========== */
-.playlists-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    padding: 1.5rem 1.25rem 1.25rem 1.25rem;
-    background-color: var(--green-600);
-    border: 0.35rem solid var(--brown-500);
-    border-radius: 0.75rem;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
-    box-sizing: border-box;
-}
-
+/* ? ------- Playlists Grid ------- */
 .playlists-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
@@ -505,10 +494,5 @@ app-review-card {
         flex: 1;
         padding: 0.5rem;
         font-size: 0.9rem;
-    }
-
-    .reviews-section,
-    .playlists-section {
-        border-radius: 0.75rem;
     }
 }

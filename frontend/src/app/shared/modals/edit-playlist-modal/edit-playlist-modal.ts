@@ -26,11 +26,12 @@ export class EditPlaylistModal implements OnInit {
     editForm!: FormGroup;
     isSaving = false;
 
+    // * ======== Lifecycle Hooks ========
     ngOnInit(): void {
         this.initForm();
     }
 
-    // <----- Inicializar Formulario con Límites de BDD ----->
+    // <----- Inicializar Formulario Reactivo con Datos de la Playlist ----->
     private initForm(): void {
         this.editForm = this.fb.group({
             name: [this.playlist?.name || '', [Validators.required, Validators.maxLength(30)]],
@@ -43,10 +44,7 @@ export class EditPlaylistModal implements OnInit {
         });
     }
 
-    onCancel(): void {
-        this.modalService.close();
-    }
-
+    // <----- Enviar Cambios de la Playlist al Servidor ----->
     onSubmit(): void {
         if (this.editForm.invalid) {
             this.editForm.markAllAsTouched();
@@ -56,7 +54,6 @@ export class EditPlaylistModal implements OnInit {
         this.isSaving = true;
         const updatedData: Partial<PlaylistDetails> = this.editForm.value;
 
-        // <----- Modify Playlist ----->
         this.pService.modifyPlaylist(this.playlist.id, updatedData).subscribe({
             next: () => {
                 this.isSaving = false;
@@ -69,5 +66,10 @@ export class EditPlaylistModal implements OnInit {
                 this.modalService.openAlert('Error', 'Could not update the playlist.', 'error');
             },
         });
+    }
+
+    // <----- Cancelar y Cerrar Modal ----->
+    onCancel(): void {
+        this.modalService.close();
     }
 }
