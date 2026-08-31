@@ -1,4 +1,4 @@
-/* ? Overlay de fondo */
+/* ? Overlay / Fondo Oscuro del Modal */
 .modal-backdrop {
     position: fixed;
     top: 0;
@@ -10,14 +10,19 @@
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    padding: clamp(0.75rem, 3vw, 1.5rem);
+    box-sizing: border-box;
     animation: fadeIn 0.2s ease-out;
 }
 
-/* * ========== Modal Container ========== */
+/* * ========== Contenedor Principal del Modal ========== */
 .modal-container {
     background: var(--brown-500);
-    width: 90%;
-    max-width: 55rem;
+    width: 100%;
+    max-width: 35rem;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
     border-radius: 0.8rem;
     overflow: hidden;
     border: 0.3rem solid var(--brown-300);
@@ -25,30 +30,36 @@
     animation: scaleUp 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* * ========== Modal Header ========== */
+/* * ========== Header del Modal ========== */
 .modal-header {
-    padding: 1rem 1.2rem;
+    padding: clamp(0.8rem, 2vw, 1rem) clamp(1rem, 2.5vw, 1.2rem);
     display: flex;
     justify-content: space-between;
     align-items: center;
     background: var(--brown-600);
     border-bottom: 0.3rem solid var(--brown-400);
+    flex-shrink: 0;
 }
 
 .modal-header h3 {
     margin: 0;
-    font-size: 1.25rem;
+    font-size: clamp(1.1rem, 2.5vw, 1.25rem);
     color: var(--brown-100);
     font-weight: bold;
 }
 
+/* ? --- Botón para Cerrar Modal --- */
 .close-btn {
     background: none;
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
     color: var(--brown-200);
-    transition: color 0.2s, transform 0.2s;
+    transition: color 0.2s ease, transform 0.2s ease;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .close-btn:hover {
@@ -56,35 +67,40 @@
     transform: scale(1.1);
 }
 
-/* * ========== Modal Body ========== */
+/* * ========== Body del Modal ========== */
 .modal-body {
-    padding: 1.4rem 1.2rem;
+    padding: clamp(1rem, 3vw, 1.4rem) clamp(0.8rem, 2.5vw, 1.2rem);
     color: var(--brown-100);
     background: var(--brown-500);
+    overflow-y: auto;
+    box-sizing: border-box;
+    flex: 1;
 }
 
 .modal-message {
-    font-size: 1.05rem;
+    font-size: clamp(0.95rem, 2vw, 1.05rem);
     line-height: 1.4;
     text-align: center;
     color: var(--brown-100);
 }
 
-/* * ========== Modal Footer ========== */
+/* * ========== Footer del Modal ========== */
 .modal-footer {
-    padding: 0.8rem 1.2rem;
+    padding: clamp(0.6rem, 1.5vw, 0.8rem) clamp(0.8rem, 2.5vw, 1.2rem);
     display: flex;
     justify-content: flex-end;
+    align-items: center;
     gap: 0.8rem;
     background: var(--brown-600);
     border-top: 0.3rem solid var(--brown-400);
+    flex-shrink: 0;
 }
 
-/* Estilos para los botones dentro del footer */
+/* ? --- Botones Generales del Modal Footer --- */
 .modal-footer .btn {
     padding: 0.55rem 1.2rem;
     border-radius: 0.5rem;
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
     font-weight: bold;
     cursor: pointer;
     background-color: var(--brown-500);
@@ -113,7 +129,7 @@
     transform: scale(0.98);
 }
 
-/* * ========== Modals Types (Bordes de Estado) ========== */
+/* * ========== Variaciones de Modales (Bordes de Estado) ========== */
 .modal-header.success { 
     border-bottom: 0.3rem solid var(--green-300); 
 }
@@ -126,7 +142,13 @@
     border-bottom: 0.3rem solid var(--purple-300); 
 }
 
-/* * ========== Animations ========== */
+/* <----- Estilo exclusivo para Baneos / Admin -----> */
+.modal-header.ban {
+    border-bottom: 0.3rem solid #ff6b6b;
+    background: var(--brown-700);
+}
+
+/* * ========== Animaciones ========== */
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -135,4 +157,16 @@
 @keyframes scaleUp {
     from { transform: scale(0.85); opacity: 0; }
     to { transform: scale(1); opacity: 1; }
+}
+
+/* ! =========== RESPONSIVE =========== */
+@media (max-width: 480px) {
+    .modal-footer {
+        flex-direction: column-reverse;
+        width: 100%;
+    }
+
+    .modal-footer .btn {
+        width: 100%;
+    }
 }

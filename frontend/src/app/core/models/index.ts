@@ -1,6 +1,5 @@
 /* ! ======== Barrel Export de Modelos / DTOs ======== */
 /* Centraliza la exportación de todos los modelos del proyecto. */
-/* Permite importar cualquier interfaz usando la ruta limpia `@core/models`. */
 
 /* ------ Modulo de Autenticación ------ */
 export * from './auth/change-passwords';

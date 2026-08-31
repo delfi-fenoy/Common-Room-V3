@@ -13,7 +13,7 @@ import { BanModal } from '../../modals/ban-modal/ban-modal';
 })
 export class Sidebar {
     // * ---- Inyección de Dependencias ----
-    private modalService = inject(ModalService);
+    public modalService = inject(ModalService);
     private authService = inject(AuthService);
 
     // * ---- Estado Recibido desde App Component ----
@@ -35,6 +35,6 @@ export class Sidebar {
     // <----- Abrir el Modal de Baneos a través de ModalService ----->
     openBanModal(): void {
         this.closeSidebar(); 
-        this.modalService.openCustom('Manage Banned Users');
+        this.modalService.openBan('Manage Banned Users'); // <----- Usar método dedicado
     }
 }

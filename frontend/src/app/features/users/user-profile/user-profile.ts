@@ -80,11 +80,19 @@ export class UserProfile implements OnInit, OnDestroy {
 
     // Suscripción a los cambios de parámetros de la ruta
     private routeSubscription!: Subscription;
+    private authSubscription!: Subscription;
 
     // * ======== Lifecycle Hooks ========
     ngOnInit(): void {
-        this.currentUsername = this.auth.getUsername();
         this.isAdmin = this.auth.getUserRole() === 'ADMIN';
+
+        // <----- Escucha cambios en la sesión/username global ----->
+        this.authSubscription = this.auth.username$.subscribe((username) => {
+            this.currentUsername = username;
+            if (this.selectedUser) {
+                this.isMyProfile = this.currentUsername === this.selectedUser.username;
+            }
+        });
 
         // Escucha cambios en los parámetros de ruta (/users/:username)
         this.routeSubscription = this.route.params.subscribe((params) => {
@@ -108,6 +116,9 @@ export class UserProfile implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         if (this.routeSubscription) {
             this.routeSubscription.unsubscribe();
+        }
+        if (this.authSubscription) {
+            this.authSubscription.unsubscribe();
         }
     }
 

@@ -175,25 +175,26 @@
         </div>
     }
 
-    <!-- ! ========== Modal Formulario de Reseña ========== -->
-    @if (modalService.isOpen() && modalService.type() === 'custom' && currentModalContext === 'review') {
-        <app-review-form-modal
-            [movie]="chosenMovie"
-            [review]="selectedReview"
-            (submitted)="refreshReviews()"
-        ></app-review-form-modal>
-    }
-
-    <!-- ! ========== Modal Playlist (Agregar Película) ========== -->
-    @if (modalService.isOpen() && modalService.type() === 'custom' && currentModalContext === 'playlist') {
-        <app-playlist-modal
-            [mode]="'add-movie'"
-            [movie]="chosenMovie"
-        ></app-playlist-modal>
-    }
-
-    <!-- ! ========== Modal Genérico (Alertas / Confirmaciones) ========== -->
-    @if (modalService.isOpen() && modalService.type() !== 'custom') {
-        <app-modal></app-modal>
+    <!-- ! ========== Control Unificado de Modales ========== -->
+    @if (modalService.isOpen()) {
+        <!-- 1. Modales de Formulario / Personalizados -->
+        @if (modalService.type() === 'custom') {
+            @if (currentModalContext === 'review') {
+                <app-review-form-modal
+                    [movie]="chosenMovie"
+                    [review]="selectedReview"
+                    (submitted)="refreshReviews()"
+                ></app-review-form-modal>
+            } @else if (currentModalContext === 'playlist') {
+                <app-playlist-modal
+                    [mode]="'add-movie'"
+                    [movie]="chosenMovie"
+                ></app-playlist-modal>
+            }
+        } 
+        <!-- 2. Modales de Sistema (Alert, Confirm) -->
+        @else if (modalService.type() === 'success' || modalService.type() === 'error' || modalService.type() === 'confirm') {
+            <app-modal></app-modal>
+        }
     }
 </div>

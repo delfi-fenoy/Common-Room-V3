@@ -15,7 +15,8 @@
     left: 50%;
     transform: translateX(-50%);
     width: 100vw;
-    height: 26rem; 
+    width: 100dvw;
+    height: clamp(16rem, 35vh, 26rem); 
     background: linear-gradient(180deg, rgba(43, 59, 42, 0.363) 0%, rgba(0, 0, 0, 0) 100%);
     pointer-events: none;
     z-index: 0;
@@ -28,14 +29,23 @@
     text-align: center;
     user-select: none;
     pointer-events: none;
-    padding: 2.5rem 1rem 1.5rem 1rem;
-    margin-bottom: 2rem;
+    padding: clamp(1.5rem, 5vw, 2.5rem) 1rem clamp(1rem, 3vw, 1.5rem) 1rem;
+    margin-bottom: clamp(1rem, 4vw, 2rem);
     background: transparent;
 }
 
 .main-logo {
-    width: clamp(16rem, 50vw, 36rem); /*clamp(min, ideal, max) */
+    width: clamp(14rem, 65vw, 36rem); /* clamp(min, ideal, max) */
+    max-width: 100%;
+    height: auto;
     margin: 0 auto;
     display: block;
     filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.7)); 
+}
+
+/* ! =========== RESPONSIVE =========== */
+@media (max-width: 480px) {
+    .home-container {
+        padding: 0 0.85rem 2.5rem 0.85rem;
+    }
 }

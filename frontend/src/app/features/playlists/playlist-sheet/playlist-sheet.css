@@ -3,18 +3,18 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2rem;
+    gap: clamp(1.2rem, 3vw, 2rem);
     width: 100%;
     max-width: 85rem;
     margin: 0 auto;
-    padding: 1.5rem;
+    padding: clamp(0.8rem, 2.5vw, 1.5rem);
     box-sizing: border-box;
 }
 
 .sheet-content {
     display: grid;
-    grid-template-columns: 22rem 1fr;
-    gap: 1.5rem;
+    grid-template-columns: clamp(16rem, 25vw, 22rem) 1fr;
+    gap: clamp(1rem, 2.5vw, 1.5rem);
     width: 100%;
     align-items: start;
 }
@@ -30,11 +30,12 @@
 .playlist-cover {
     width: 100%;
     aspect-ratio: 1 / 1;
-    border: 0.4rem solid var(--brown-200);
+    border: clamp(0.25rem, 0.5vw, 0.4rem) solid var(--brown-200);
     border-radius: 0.75rem;
     background-color: var(--brown-700);
     overflow: hidden;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+    box-sizing: border-box;
 }
 
 .playlist-cover img {
@@ -45,10 +46,11 @@
 
 .block-box {
     background-color: var(--brown-600);
-    border: 0.4rem solid var(--brown-500);
+    border: clamp(0.2rem, 0.4vw, 0.4rem) solid var(--brown-500);
     border-radius: 0.6rem;
-    padding: 1rem;
+    padding: clamp(0.75rem, 1.8vw, 1rem);
     color: var(--brown-100);
+    box-sizing: border-box;
 }
 
 .title-box {
@@ -59,7 +61,7 @@
 
 .title-box h1 {
     margin: 0;
-    font-size: 1.8rem;
+    font-size: clamp(1.3rem, 2.8vw, 1.8rem);
     color: var(--brown-200);
     text-shadow: 1px 1px 2px var(--brown-700);
     word-break: break-word;
@@ -97,7 +99,7 @@
     padding: 0.5rem;
     border-radius: 0.5rem;
     font-weight: bold;
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
     cursor: pointer;
     border: 0.15rem solid var(--brown-400);
     transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
@@ -130,7 +132,7 @@
 .description-box h3,
 .owner-box h3 {
     margin: 0 0 0.5rem 0;
-    font-size: 1.1rem;
+    font-size: clamp(1rem, 2vw, 1.1rem);
     color: var(--brown-200);
     border-bottom: 2px solid var(--brown-400);
     padding-bottom: 0.2rem;
@@ -138,7 +140,7 @@
 
 .description-box p {
     margin: 0;
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 1.6vw, 0.95rem);
     line-height: 1.4;
     color: var(--brown-100);
     white-space: pre-wrap;
@@ -157,6 +159,7 @@
     cursor: pointer;
     text-decoration: none;
     transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    min-width: 0;
 }
 
 .owner-card:hover {
@@ -176,17 +179,22 @@
     border-radius: 50%;
     object-fit: cover;
     border: 0.12rem solid var(--brown-300);
+    flex-shrink: 0;
 }
 
 .owner-info {
     display: flex;
     flex-direction: column;
+    min-width: 0;
 }
 
 .owner-info strong {
     color: var(--brown-100);
     font-size: 0.95rem;
     transition: color 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .owner-info small {
@@ -200,9 +208,9 @@
     flex-direction: column;
     gap: 1.25rem;
     width: 100%;
-    padding: 1.25rem;
+    padding: clamp(0.8rem, 2vw, 1.25rem);
     background-color: var(--green-600);
-    border: 0.35rem solid var(--brown-500);
+    border: clamp(0.2rem, 0.4vw, 0.35rem) solid var(--brown-500);
     border-radius: 0.75rem;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
     box-sizing: border-box;
@@ -219,21 +227,26 @@
 
 .movies-header h2 {
     margin: 0;
-    font-size: 1.8rem;
+    font-size: clamp(1.3rem, 2.5vw, 1.8rem);
     color: var(--brown-200);
 }
 
 .empty-movies {
-    padding: 3rem;
+    padding: 3rem 1rem;
     text-align: center;
     color: var(--purple-200);
 }
 
-/* * ========== Grid de Películas (4 Columnas) ========== */
+.empty-movies h3 {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    margin: 0;
+}
+
+/* * ========== Grid de Películas ========== */
 .movies-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1.2rem;
+    gap: clamp(0.8rem, 2vw, 1.2rem);
 }
 
 .grid-card-wrapper {
@@ -245,23 +258,24 @@
 /* <----- Botón X reubicado estéticamente sobre la esquina de la tarjeta -----> */
 .btn-remove-overlay {
     position: absolute;
-    top: -0.5rem;
-    right: -0.5rem;
+    top: -0.4rem;
+    right: -0.4rem;
     z-index: 20;
     background-color: #8b0000;
     color: #fff;
     border: 0.15rem solid var(--brown-100);
     border-radius: 50%;
-    width: 2rem;
-    height: 2rem;
+    width: clamp(1.8rem, 4vw, 2.2rem);
+    height: clamp(1.8rem, 4vw, 2.2rem);
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: clamp(0.75rem, 1.5vw, 0.9rem);
     font-weight: bold;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
     transition: transform 0.2s ease, background-color 0.2s ease;
+    padding: 0;
 }
 
 .btn-remove-overlay:hover {
@@ -269,15 +283,16 @@
     transform: scale(1.15);
 }
 
-/* <----- Seccion de Paginacion -----> */
+/* <----- Sección de Paginación -----> */
 .pagination-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 1.2rem;
+    gap: clamp(0.8rem, 2vw, 1.2rem);
     margin-top: 1rem;
     padding-top: 1rem;
     border-top: 2px solid var(--brown-500);
+    flex-wrap: wrap;
 }
 
 .pagination-btn {
@@ -287,7 +302,7 @@
     color: var(--brown-100);
     border: 0.12rem solid var(--brown-400);
     font-weight: bold;
-    font-size: 0.9rem;
+    font-size: clamp(0.8rem, 1.8vw, 0.9rem);
     cursor: pointer;
     transition: background-color 0.2s ease, transform 0.2s ease;
 }
@@ -306,7 +321,7 @@
 
 .pagination-info {
     color: var(--brown-100);
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
 }
 
 .pagination-info strong {
@@ -317,11 +332,11 @@
 .not-found-container {
     color: var(--green-100);
     text-align: center;
-    padding: 3rem;
-    font-size: 1.2rem;
+    padding: 3rem 1rem;
+    font-size: clamp(1rem, 2vw, 1.2rem);
 }
 
-/* ! __________ Responsive Design __________ */
+/* ! =========== RESPONSIVE =========== */
 @media (max-width: 1200px) {
     .movies-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -331,6 +346,11 @@
 @media (max-width: 992px) {
     .sheet-content {
         grid-template-columns: 1fr;
+    }
+
+    .playlist-sidebar {
+        max-width: 26rem;
+        margin: 0 auto;
     }
 
     .movies-grid {
@@ -345,8 +365,8 @@
 }
 
 @media (max-width: 480px) {
-    .sheet-container {
-        padding: 1rem;
+    .playlist-sidebar {
+        max-width: 100%;
     }
 
     .movies-grid {
@@ -354,7 +374,6 @@
     }
 
     .pagination-container {
-        flex-direction: column;
         gap: 0.6rem;
     }
 }

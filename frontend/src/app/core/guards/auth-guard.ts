@@ -5,6 +5,5 @@ import { AuthService } from '../services/auth-service';
 export const authGuard: CanActivateFn = (route, state) => {
     const auth = inject(AuthService); // Inyectamos AuthService para saber si el user está logueado
     const router = inject(Router); // Para redirigir
-    // si el user esta logueado, devuelve true, sino redirige al login
-    return auth.isLoggedIn() ? true : router.parseUrl('/login');
+    return auth.isLoggedIn() ? true : router.parseUrl('/login'); // Si el user esta logueado, devuelve true, sino redirige al login
 };

@@ -1,4 +1,4 @@
-/* * ======== Layout del Contenido del Modal ======== */
+/* * ========== Layout del Contenido del Modal ========== */
 .review-form {
     display: flex;
     flex-direction: column;
@@ -11,7 +11,7 @@
     align-items: flex-start;
 }
 
-/* ? ------- Poster Lateral ------- */
+/* ? --- Poster Lateral --- */
 .image-modal {
     width: 35%;
     max-width: 180px;
@@ -26,7 +26,7 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
 }
 
-/* ? ------- Columna de Controles ------- */
+/* ? --- Columna de Controles --- */
 .text-modal {
     flex: 1;
     display: flex;
@@ -36,14 +36,14 @@
 
 .movie-title {
     margin: 0;
-    font-size: 1.3rem;
+    font-size: clamp(1.1rem, 2vw, 1.3rem);
     color: var(--brown-200);
     border-bottom: 0.3rem solid var(--brown-400);
     padding-bottom: 0.3rem;
 }
 
 .field-label {
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
     font-weight: bold;
     color: var(--brown-200);
     margin-bottom: 0.3rem;
@@ -54,7 +54,7 @@
     color: #ff6b6b;
 }
 
-/* * ======== Sistema de Estrellas ======== */
+/* * ========== Sistema de Estrellas ========== */
 .stars-wrapper {
     display: flex;
     align-items: center;
@@ -67,7 +67,7 @@
 }
 
 .star {
-    font-size: 2rem;
+    font-size: clamp(1.5rem, 3vw, 2rem);
     color: #ffd700;
     user-select: none;
     transition: transform 0.15s ease;
@@ -81,16 +81,15 @@
     margin-left: auto;
     font-weight: bold;
     color: var(--brown-100);
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
 }
 
-/* * ======== Textarea Comentario (Mismo estilo que Edit Profile) ======== */
+/* * ========== Textarea Comentario ========== */
 .comment-wrapper {
     display: flex;
     flex-direction: column;
 }
 
-/* <----- Inputs y Textareas Homogéneos -----> */
 .comment-wrapper textarea {
     width: 100%;
     padding: 0.65rem 0.8rem;
@@ -98,11 +97,11 @@
     border: 0.2rem solid var(--brown-400);
     border-radius: 0.5rem;
     color: var(--brown-100);
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
     font-family: inherit;
     box-sizing: border-box;
     outline: none;
-    resize: none; /* Deshabilita el cambio de tamaño */
+    resize: none;
     transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
@@ -130,12 +129,12 @@
     margin: 0.2rem 0 0 0;
 }
 
-/* * ======== Footer idéntico a Log Out (.modal-footer) ======== */
+/* * ========== Footer Idéntico a Todos los Modales (.form-actions) ========== */
 .form-actions {
     display: flex;
     justify-content: flex-end;
     gap: 0.8rem;
-    margin: 1.4rem -1.2rem -1.4rem -1.2rem; /* Cancela el padding del modal-body */
+    margin: 1.4rem -1.2rem -1.4rem -1.2rem;
     padding: 0.8rem 1.2rem;
     background-color: var(--brown-600);
     border-top: 0.3rem solid var(--brown-400);
@@ -144,7 +143,7 @@
 .btn {
     padding: 0.55rem 1.2rem;
     border-radius: 0.5rem;
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
     font-weight: bold;
     cursor: pointer;
     background-color: var(--brown-500);
@@ -174,7 +173,7 @@
     cursor: not-allowed;
 }
 
-/* ! __________ Responsive __________ */
+/* ! =========== RESPONSIVE =========== */
 @media (max-width: 550px) {
     .body-modal {
         flex-direction: column;
@@ -186,6 +185,16 @@
     }
 
     .text-modal {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .btn {
         width: 100%;
     }
 }

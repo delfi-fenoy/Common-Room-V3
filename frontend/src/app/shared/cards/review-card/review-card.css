@@ -6,7 +6,7 @@
     max-width: 100%;
     min-width: 0;
     gap: 0.5rem;
-    padding: 0.6rem;
+    padding: clamp(0.5rem, 1.5vw, 0.6rem);
     background-color: var(--brown-400);
     border: 0.3rem solid var(--brown-300);
     border-radius: 0.8rem;
@@ -48,6 +48,7 @@
     padding: 0.2rem 0.4rem;
     border-radius: 0.4rem;
     transition: background-color 0.2s ease, transform 0.2s ease;
+    min-width: 0;
 }
 
 /* <----- Hover para Ir al Perfil de Usuario -----> */
@@ -67,6 +68,7 @@
     flex-direction: column;
     justify-content: center;
     gap: 0.1rem;
+    min-width: 0;
 }
 
 .user-text span {
@@ -75,10 +77,13 @@
 }
 
 .user-text strong {
-    font-size: 1rem;
+    font-size: clamp(0.85rem, 1.8vw, 1rem);
     font-weight: bold;
     color: var(--brown-600);
     transition: color 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .user-info:hover .user-text strong {
@@ -95,7 +100,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size: 1rem;
+    font-size: clamp(0.9rem, 2vw, 1rem);
     cursor: pointer;
     transition: color 0.2s ease, transform 0.2s ease;
 }
@@ -113,6 +118,7 @@
     height: 2.5rem;
     background-color: var(--brown-500);
     margin: 0 0.2rem;
+    flex-shrink: 0;
 }
 
 /* ? ------- Star Rating Box ------- */
@@ -120,12 +126,13 @@
     display: flex;
     align-items: center;
     padding: 0.3rem 0.6rem;
-    font-size: 1.2rem;
+    font-size: clamp(0.95rem, 2vw, 1.2rem);
     color: #ffd700;
     border: 0.15rem solid var(--brown-500);
     background-color: var(--brown-400);
     border-radius: 0.3rem;
     pointer-events: none;
+    flex-shrink: 0;
 }
 
 .review-card.mode-user .star-container {
@@ -144,11 +151,14 @@
 
 .buttons-container button {
     background-color: var(--purple-500);
-    padding: 0.5rem;
+    padding: 0.45rem;
     border-radius: 50%;
     border: 0.15rem solid var(--purple-400);
     cursor: pointer;
     transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .buttons-container button:hover {
@@ -169,7 +179,7 @@
 
 .comment-section p {
     margin: 0;
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 1.6vw, 0.95rem);
     color: var(--brown-700);
     white-space: pre-wrap;
     overflow-wrap: break-word;
@@ -190,14 +200,14 @@
 
 .review-footer h3 {
     margin: 0;
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 1.6vw, 0.95rem);
     font-weight: normal;
     text-decoration: underline;
 }
 
 .review-footer h2 {
     margin: 0;
-    font-size: 0.9rem;
+    font-size: clamp(0.8rem, 1.5vw, 0.9rem);
     font-weight: bold;
 }
 
@@ -256,7 +266,7 @@
     flex: 1;
 }
 
-/* ! __________ Responsive __________ */
+/* ! =========== RESPONSIVE =========== */
 @media (max-width: 600px) {
     .review-card.mode-user {
         flex-direction: column;
@@ -264,14 +274,30 @@
 
     .review-image {
         width: 100%;
-        height: 180px;
+        height: auto;
+        max-height: 240px;
     }
 
     .review-header {
         flex-wrap: wrap;
+        gap: 0.4rem;
     }
 
     .header-divider {
         display: none;
+    }
+}
+
+@media (max-width: 420px) {
+    .review-header {
+        justify-content: space-between;
+    }
+
+    .user-info {
+        width: 100%;
+    }
+
+    .buttons-container {
+        margin-left: 0;
     }
 }

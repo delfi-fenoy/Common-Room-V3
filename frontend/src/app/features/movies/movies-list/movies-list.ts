@@ -1,4 +1,3 @@
-// <----- movies-list.ts ----->
 import { Component, HostListener, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { MoviePreview } from '../../../core/models';
 import { MovieService } from '../../../core/services/movie-service';
@@ -53,7 +52,6 @@ export class MoviesList implements OnInit {
     isLoading = false;
     showScrollTopBtn = false;
     selectedFilter: MovieFilterType = 'relevance'; // Por defecto
-
     selectedYear: string = '';
     selectedGenre: number | null = null;
     genresList = TMDB_GENRES;

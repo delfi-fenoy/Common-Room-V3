@@ -3,13 +3,12 @@ import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { filter } from 'rxjs';
 import { AuthService } from '../../../core/services/auth-service';
-import { Modal } from '../../modals/modal/modal';
 import { ModalService } from '../../services/modal-services';
 
 @Component({
     selector: 'app-header',
     standalone: true,
-    imports: [RouterLink, FormsModule, Modal],
+    imports: [RouterLink, FormsModule],
     templateUrl: './header.html',
     styleUrl: './header.css',
 })

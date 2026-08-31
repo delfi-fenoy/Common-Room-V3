@@ -171,6 +171,7 @@ export class MovieSheet implements OnInit {
 
     // Abrir Modal de Editar Reseña
     openEditModal(review: Review): void {
+        this.modalService.close();
         this.selectedReview = review;
         this.currentModalContext = 'review';
         this.modalService.openCustom('Edit Review');

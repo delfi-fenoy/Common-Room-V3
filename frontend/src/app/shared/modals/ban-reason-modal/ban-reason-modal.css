@@ -1,4 +1,4 @@
-/* * ======== Contenedor Principal ======== */
+/* * ========== Contenedor Principal ========== */
 .ban-reason-container {
     display: flex;
     flex-direction: column;
@@ -19,12 +19,12 @@
 }
 
 .form-group label {
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
     font-weight: bold;
     color: var(--brown-200);
 }
 
-/* * ======== Inputs y Textareas Homogéneos ======== */
+/* * ========== Inputs y Textareas Homogéneos ========== */
 .reason-textarea {
     width: 100%;
     padding: 0.65rem 0.8rem;
@@ -32,7 +32,7 @@
     border: 0.2rem solid var(--brown-400);
     border-radius: 0.5rem;
     color: var(--brown-100);
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
     box-sizing: border-box;
     outline: none;
     resize: none;
@@ -56,12 +56,12 @@
     margin-top: 0.2rem;
 }
 
-/* * ======== Footer idéntico a todos los Modales (.form-actions) ======== */
+/* * ========== Footer Idéntico a Todos los Modales (.form-actions) ========== */
 .form-actions {
     display: flex;
     justify-content: flex-end;
     gap: 0.8rem;
-    margin: 1.4rem -1.2rem -1.4rem -1.2rem; /* Cancela el padding del modal-body */
+    margin: 1.4rem -1.2rem -1.4rem -1.2rem;
     padding: 0.8rem 1.2rem;
     background-color: var(--brown-600);
     border-top: 0.3rem solid var(--brown-400);
@@ -69,7 +69,7 @@
 
 .btn {
     padding: 0.55rem 1.2rem;
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
     font-weight: bold;
     border-radius: 0.5rem;
     cursor: pointer;
@@ -89,7 +89,7 @@
     color: var(--green-700);
 }
 
-/* <----- Botón Acción de Baneo / Destructiva -----> */
+/* <----- Botón Acción Baneo / Destructivo -----> */
 .btn-confirm-ban:hover:not(:disabled) {
     background-color: #ff6b6b;
     border-color: #ff8787;
@@ -99,4 +99,15 @@
 .btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+/* ! =========== RESPONSIVE =========== */
+@media (max-width: 480px) {
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .btn {
+        width: 100%;
+    }
 }

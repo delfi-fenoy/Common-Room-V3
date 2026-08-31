@@ -130,13 +130,11 @@
     }
     <!-- ! ========== Modal Contextual: Editar Playlist ========== -->
     @if (modalService.isOpen() && modalService.type() === 'custom') {
-        <app-modal>
-            @if (modalService.title() === 'Edit Playlist') {
-                <app-edit-playlist-modal
-                    [playlist]="playlist!"
-                    (submitted)="onPlaylistUpdated()"
-                ></app-edit-playlist-modal>
-            }
-        </app-modal>
+        @if (modalService.title() === 'Edit Playlist' && playlist) {
+            <app-edit-playlist-modal
+                [playlist]="playlist"
+                (submitted)="onPlaylistUpdated()"
+            ></app-edit-playlist-modal>
+        }
     }
 </div>
