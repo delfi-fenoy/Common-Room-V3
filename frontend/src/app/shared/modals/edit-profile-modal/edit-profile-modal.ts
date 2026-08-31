@@ -1,17 +1,23 @@
 import { Component, Input, Output, EventEmitter, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import {
+    ReactiveFormsModule,
+    FormBuilder,
+    FormGroup,
+    Validators,
+    AbstractControl,
+    ValidationErrors,
+} from '@angular/forms';
 import { User, ChangePassword, TokenResponse } from '../../../core/models';
 import { UserService } from '../../../core/services/user-service';
 import { AuthService } from '../../../core/services/auth-service';
 import { ModalService } from '../../services/modal-services';
-import { Modal } from '../modal/modal';
 
 @Component({
     selector: 'app-edit-profile-modal',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, Modal],
+    imports: [CommonModule, ReactiveFormsModule],
     templateUrl: './edit-profile-modal.html',
     styleUrl: './edit-profile-modal.css',
 })
@@ -21,48 +27,48 @@ export class EditProfileModal implements OnInit {
     private uService = inject(UserService);
     private authService = inject(AuthService);
     public modalService = inject(ModalService);
-    private router = inject(Router); 
+    private router = inject(Router);
 
-    // * ======== Entradas y Salidas ========
+    // * ======== Inputs y Outputs ========
     @Input({ required: true }) user!: User;
     @Output() submitted = new EventEmitter<string>();
 
-    // * ======== Estado de Pestañas ========
+    // * ======== Estado de Navegación por Pestañas ========
     activeTab: 'profile' | 'password' = 'profile';
 
-    // * ======== Formularios ========
+    // * ======== Formularios Reactivos y Carga ========
     profileForm!: FormGroup;
     passwordForm!: FormGroup;
-
     isLoadingProfile = false;
     isLoadingPassword = false;
 
-    // <----- Signals para visibilidad de contraseñas ----->
+    // * ======== Signals para Visibilidad de Contraseñas ========
     showOldPassword = signal<boolean>(false);
     showNewPassword = signal<boolean>(false);
     showConfirmPassword = signal<boolean>(false);
 
+    // * ======== Lifecycle Hooks ========
     ngOnInit(): void {
         this.initProfileForm();
         this.initPasswordForm();
     }
 
-    // <----- Inicializar Formulario de Perfil (Validadores unificados con Register) ----->
+    // <----- Inicializar Formulario de Información de Perfil ----->
     private initProfileForm(): void {
         this.profileForm = this.fb.group({
             username: [
-                this.user?.username || '', 
-                [Validators.required, Validators.minLength(5), Validators.maxLength(20)]
+                this.user?.username || '',
+                [Validators.required, Validators.minLength(5), Validators.maxLength(20)],
             ],
             profilePictureUrl: [
-                this.user?.profilePictureUrl || '', 
-                [Validators.pattern(/^(https?:\/\/)?([\w\-]+\.)+[a-z]{2,6}(:\d+)?(\/[^\s]*)?$/i)]
+                this.user?.profilePictureUrl || '',
+                [Validators.pattern(/^(https?:\/\/)?([\w\-]+\.)+[a-z]{2,6}(:\d+)?(\/[^\s]*)?$/i)],
             ],
             description: [this.user?.description || '', [Validators.maxLength(250)]],
         });
     }
 
-    // <----- Inicializar Formulario de Contraseña (Validadores unificados con Register) ----->
+    // <----- Inicializar Formulario de Cambio de Contraseña ----->
     private initPasswordForm(): void {
         this.passwordForm = this.fb.group(
             {
@@ -74,7 +80,7 @@ export class EditProfileModal implements OnInit {
         );
     }
 
-    // <----- Validador Custom: Confirmar Contraseña ----->
+    // <----- Validador Personalizado: Coincidencia de Contraseñas ----->
     private passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
         const newPass = control.get('newPassword')?.value;
         const confirmPass = control.get('confirmPassword')?.value;
@@ -83,25 +89,25 @@ export class EditProfileModal implements OnInit {
             : null;
     }
 
-    // <----- Métodos para alternar visibilidad de contraseñas ----->
+    // <----- Métodos para Alternar Visibilidad de Contraseñas ----->
     toggleOldPassword(): void {
-        this.showOldPassword.update(val => !val);
+        this.showOldPassword.update((val) => !val);
     }
 
     toggleNewPassword(): void {
-        this.showNewPassword.update(val => !val);
+        this.showNewPassword.update((val) => !val);
     }
 
     toggleConfirmPassword(): void {
-        this.showConfirmPassword.update(val => !val);
+        this.showConfirmPassword.update((val) => !val);
     }
 
-    // * ======== Cambio de Pestaña ========
+    // <----- Cambiar de Pestaña Activa ----->
     setTab(tab: 'profile' | 'password'): void {
         this.activeTab = tab;
     }
 
-    // * ======== Submit Perfil ========
+    // <----- Guardar Cambios de Perfil ----->
     onSaveProfile(): void {
         if (this.profileForm.invalid) {
             this.profileForm.markAllAsTouched();
@@ -126,9 +132,9 @@ export class EditProfileModal implements OnInit {
                 }
 
                 this.submitted.emit(newUsername);
-
                 this.modalService.openAlert('Success', 'Profile updated successfully!', 'success');
 
+                // Si se actualizó el username, redirigir a la nueva URL
                 if (currentUsername !== newUsername) {
                     this.router.navigate(['/users', newUsername]);
                 }
@@ -145,7 +151,7 @@ export class EditProfileModal implements OnInit {
         });
     }
 
-    // * ======== Submit Contraseña ========
+    // <----- Guardar Nueva Contraseña ----->
     onChangePassword(): void {
         if (this.passwordForm.invalid) {
             this.passwordForm.markAllAsTouched();
@@ -159,7 +165,6 @@ export class EditProfileModal implements OnInit {
             next: () => {
                 this.isLoadingPassword = false;
                 this.passwordForm.reset();
-
                 this.modalService.openAlert('Success', 'Password changed successfully!', 'success');
             },
             error: (err) => {
@@ -174,6 +179,7 @@ export class EditProfileModal implements OnInit {
         });
     }
 
+    // <----- Cerrar Modal ----->
     close(): void {
         this.modalService.close();
     }

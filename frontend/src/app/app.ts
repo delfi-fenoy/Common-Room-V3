@@ -5,11 +5,12 @@ import { Header } from './shared/components/header/header';
 import { Sidebar } from './shared/components/sidebar/sidebar';
 import { Footer } from './shared/components/footer/footer';
 import { ModalService } from './shared/services/modal-services';
+import { Modal } from './shared/modals/modal/modal';
 
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [RouterOutlet, Header, Sidebar, Footer],
+    imports: [RouterOutlet, Header, Sidebar, Footer, Modal],
     templateUrl: './app.html',
     styleUrl: './app.css',
 })

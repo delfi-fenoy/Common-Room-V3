@@ -13,10 +13,10 @@ import { UserbanService } from '../../../core/services/userban-service';
 import { ModalService } from '../../../shared/services/modal-services';
 
 import { ReviewCard } from '../../../shared/cards/review-card/review-card';
-import { Modal } from '../../../shared/modals/modal/modal';
 import { EditProfileModal } from '../../../shared/modals/edit-profile-modal/edit-profile-modal';
 import { ReviewFormModal } from '../../../shared/modals/review-form-modal/review-form-modal';
 import { BanReasonModal } from '../../../shared/modals/ban-reason-modal/ban-reason-modal';
+import { Modal } from '../../../shared/modals/modal/modal';
 
 // ! Lista de palabras clave reservadas para rutas de usuario
 const RESERVED_USERNAMES = ['all', 'null', 'undefined', 'config', 'api', 'root', 'system'];
@@ -28,10 +28,10 @@ const RESERVED_USERNAMES = ['all', 'null', 'undefined', 'config', 'api', 'root',
         CommonModule,
         RouterLink,
         ReviewCard,
-        Modal,
         EditProfileModal,
         ReviewFormModal,
         BanReasonModal,
+        Modal
     ],
     templateUrl: './user-profile.html',
     styleUrl: './user-profile.css',
@@ -178,7 +178,7 @@ export class UserProfile implements OnInit, OnDestroy {
         });
     }
 
-    // <----- NUEVO: Helper privado para resetear estado de playlists ----->
+    // <----- Helper privado para resetear estado de playlists ----->
     private resetPlaylistState(): void {
         this.playlists = [];
         this.totalPlaylistPages = 1;
@@ -332,7 +332,7 @@ export class UserProfile implements OnInit, OnDestroy {
                     `User @${targetUsername} has been successfully banned.`,
                     'success',
                 );
-                this.router.navigate(['/movies']);
+                this.router.navigate(['/users']);
             },
             error: (e) => {
                 console.error(e);

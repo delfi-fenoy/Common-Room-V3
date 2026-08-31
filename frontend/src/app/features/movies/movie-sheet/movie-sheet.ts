@@ -11,14 +11,13 @@ import { ModalService } from '../../../shared/services/modal-services';
 import { MovieDetails, Review } from '../../../core/models';
 import { ReviewCard } from '../../../shared/cards/review-card/review-card';
 import { ReviewFormModal } from '../../../shared/modals/review-form-modal/review-form-modal';
-import { Modal } from '../../../shared/modals/modal/modal';
 import { PlaylistModal } from '../../../shared/modals/playlist-modal/playlist-modal';
 import { TMDB_GENRES } from '../movies-list/movies-list';
 
 @Component({
     selector: 'app-movie-sheet',
     standalone: true,
-    imports: [CommonModule, RouterLink, ReviewCard, ReviewFormModal, Modal, PlaylistModal],
+    imports: [CommonModule, RouterLink, ReviewCard, ReviewFormModal, PlaylistModal],
     templateUrl: './movie-sheet.html',
     styleUrl: './movie-sheet.css',
 })

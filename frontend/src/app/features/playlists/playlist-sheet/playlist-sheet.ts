@@ -10,11 +10,12 @@ import { ModalService } from '../../../shared/services/modal-services';
 import { PlaylistDetails, MoviePreview } from '../../../core/models';
 import { MovieCard } from '../../../shared/cards/movie-card/movie-card';
 import { EditPlaylistModal } from '../../../shared/modals/edit-playlist-modal/edit-playlist-modal';
+import { Modal } from '../../../shared/modals/modal/modal';
 
 @Component({
     selector: 'app-playlist-sheet',
     standalone: true,
-    imports: [CommonModule, RouterLink, MovieCard, EditPlaylistModal],
+    imports: [CommonModule, RouterLink, MovieCard, EditPlaylistModal, Modal],
     templateUrl: './playlist-sheet.html',
     styleUrl: './playlist-sheet.css',
 })

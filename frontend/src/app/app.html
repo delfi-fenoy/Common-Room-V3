@@ -15,3 +15,8 @@
 @if (showLayout()) {
     <app-footer></app-footer>
 }
+
+<!-- Solo intercepta Alertas y Confirmaciones Globales -->
+@if (modalService.isOpen() && (modalService.type() === 'success' || modalService.type() === 'error' || modalService.type() === 'confirm')) {
+    <app-modal></app-modal>
+}

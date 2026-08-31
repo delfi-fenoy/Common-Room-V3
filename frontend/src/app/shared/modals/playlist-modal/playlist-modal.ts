@@ -12,51 +12,48 @@ import { FormsModule } from '@angular/forms';
 import { forkJoin, Observable } from 'rxjs';
 import { PlaylistService } from '../../../core/services/playlist-service';
 import { ModalService } from '../../services/modal-services';
-import { Modal } from '../modal/modal';
 import { MovieDetails, PlaylistDetails, PlaylistPreview } from '../../../core/models';
 
 @Component({
     selector: 'app-playlist-modal',
     standalone: true,
-    imports: [CommonModule, FormsModule, Modal],
+    imports: [CommonModule, FormsModule],
     templateUrl: './playlist-modal.html',
     styleUrl: './playlist-modal.css',
 })
 export class PlaylistModal implements OnInit {
-    // * ======== Inputs & Outputs ========
-    @Input() mode: 'create' | 'add-movie' = 'add-movie';
-    @Input() movie: MovieDetails | null = null;
-    @Output() playlistCreated = new EventEmitter<PlaylistDetails>();
-
     // * ======== Inyección de Servicios ========
     private playlistService = inject(PlaylistService);
     public modalService = inject(ModalService);
     private cdr = inject(ChangeDetectorRef);
 
-    // * ======== Estado de 'add-movie' Mode ========
-    playlists: PlaylistPreview[] = [];
+    // * ======== Inputs y Outputs ========
+    @Input() mode: 'create' | 'add-movie' = 'add-movie';
+    @Input() movie: MovieDetails | null = null;
+    @Output() playlistCreated = new EventEmitter<PlaylistDetails>();
 
-    // <----- Tracking Local para Confirmar Cambios ----->
+    // * ======== Estado para Modo 'add-movie' ========
+    playlists: PlaylistPreview[] = [];
     initialMovieMap: Map<number, boolean> = new Map();
     selectedMovieMap: Map<number, boolean> = new Map();
-
     searchQuery: string = '';
     isLoadingPlaylists: boolean = true;
     isSavingChanges: boolean = false;
 
-    // * ======== Estado de Formulario 'create' Mode ========
+    // * ======== Estado para Modo 'create' ========
     playlistName: string = '';
     playlistDescription: string = '';
     isPrivate: boolean = false;
     isSubmitting: boolean = false;
 
+    // * ======== Lifecycle Hooks ========
     ngOnInit(): void {
         if (this.mode === 'add-movie' && this.movie) {
             this.loadUserPlaylists();
         }
     }
 
-    // <----- Carga de Playlists del Usuario ----->
+    // <----- Carga Inicial de Playlists del Usuario ----->
     loadUserPlaylists(): void {
         this.isLoadingPlaylists = true;
         this.playlistService.getMyPlaylists(1).subscribe({
@@ -72,7 +69,7 @@ export class PlaylistModal implements OnInit {
         });
     }
 
-    // <----- Verificar Presencia de la Película en cada Playlist ----->
+    // <----- Verificar si la Película ya Pertenece a las Playlists ----->
     private checkMovieInPlaylists(): void {
         if (!this.movie || this.playlists.length === 0) {
             this.isLoadingPlaylists = false;
@@ -108,7 +105,7 @@ export class PlaylistModal implements OnInit {
         });
     }
 
-    // <----- Filtrar Listas según Estado y Búsqueda ----->
+    // <----- Getters para Filtrar Listas según Selección y Búsqueda ----->
     get inPlaylists(): PlaylistPreview[] {
         const query = this.searchQuery.trim().toLowerCase();
         return this.playlists.filter((p) => {
@@ -134,7 +131,7 @@ export class PlaylistModal implements OnInit {
         this.cdr.markForCheck();
     }
 
-    // <----- Confirmar y Guardar Cambios en Servidor ----->
+    // <----- Confirmar y Guardar Cambios de Películas en Playlists ----->
     onConfirmSave(): void {
         if (!this.movie || this.isSavingChanges) return;
 
@@ -146,10 +143,10 @@ export class PlaylistModal implements OnInit {
             const currentStatus = this.selectedMovieMap.get(playlist.id) || false;
 
             if (!initialStatus && currentStatus) {
-                // <----- Agregar Película a la Lista ----->
+                // Agregar película
                 requests.push(this.playlistService.addMovieToPlaylist(playlist.id, this.movie!.id));
             } else if (initialStatus && !currentStatus) {
-                // <----- Eliminar Película de la Lista ----->
+                // Eliminar película
                 requests.push(
                     this.playlistService.deleteMovieFromPlaylist(playlist.id, this.movie!.id),
                 );
@@ -181,12 +178,12 @@ export class PlaylistModal implements OnInit {
         });
     }
 
-    // <----- Cambiar a Modo Crear Playlist ----->
+    // <----- Cambiar a Vista de Crear Playlist ----->
     switchToCreateMode(): void {
         this.mode = 'create';
     }
 
-    // <----- Submit de Formulario Crear Playlist ----->
+    // <----- Crear Nueva Playlist ----->
     onCreateSubmit(): void {
         if (!this.playlistName.trim() || this.isSubmitting) return;
 
@@ -202,6 +199,7 @@ export class PlaylistModal implements OnInit {
                 this.isSubmitting = false;
                 this.playlistCreated.emit(created);
 
+                // Si viene de agregarse desde una película, vincularla inmediatamente
                 if (this.movie) {
                     this.playlistService.addMovieToPlaylist(created.id, this.movie.id).subscribe({
                         next: () => {

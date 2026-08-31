@@ -1,31 +1,29 @@
-<!-- ? Si se abre el modal -->
+<!-- * ========== Modal Genérico y Contenedor Base ========== -->
 @if (modalService.isOpen()) {
-    <!-- ? --- Overlay que previene que se cierre al hacer click dentro del contenido --- -->
     <div class="modal-backdrop" (click)="modalService.close()">
-        <!-- ! ====== Estructura del Modal ====== -->
         <div class="modal-container" (click)="$event.stopPropagation()">
-            <!-- ? --- Header --- -->
+            <!-- ? --- Cabecera del Modal --- -->
             <div class="modal-header" [class]="modalService.type()">
                 <h3>{{ modalService.title() }}</h3>
                 <button class="close-btn" (click)="modalService.close()">&times;</button>
             </div>
 
-            <!-- ? --- Body | Puede tener 2 caminos --- -->
+            <!-- ? --- Cuerpo del Modal (Mensaje Simple o Contenido Proyectado) --- -->
             <div class="modal-body">
-                <!-- Si es ('success','error','confirm') mostrara el mensaje -->
-                @if (modalService.type() !== 'custom') {
+                @if (modalService.type() !== 'custom' && modalService.type() !== 'ban') {
                     <p class="modal-message">{{ modalService.message() }}</p>
                 } @else {
-                    <!-- Si no, mostrar contenido proyectado (custom) ej: formularios -->
                     <ng-content></ng-content>
                 }
             </div>
 
-            <!-- ? --- Footer (Botones) | Mismo que el Body, dependiendo del tipo --- -->
+            <!-- ? --- Pie de Página para Alertas y Confirmaciones --- -->
             @if (modalService.type() === 'confirm') {
                 <div class="modal-footer">
                     <button class="btn btn-secondary" (click)="modalService.close()">Cancel</button>
-                    <button class="btn btn-primary" (click)="modalService.confirm()">Confirm</button>
+                    <button class="btn btn-primary" (click)="modalService.confirm()">
+                        Confirm
+                    </button>
                 </div>
             } @else if (modalService.type() === 'success' || modalService.type() === 'error') {
                 <div class="modal-footer">
