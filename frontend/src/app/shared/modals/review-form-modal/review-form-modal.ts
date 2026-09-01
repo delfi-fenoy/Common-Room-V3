@@ -52,7 +52,7 @@ export class ReviewFormModal implements OnInit {
                 initialRating,
                 [Validators.required, Validators.min(0.5), Validators.max(5), this.multipleOfHalf],
             ],
-            comment: [this.review()?.comment ?? '', [Validators.maxLength(700)]],
+            comment: [this.review()?.comment ?? null, [Validators.maxLength(700)]],
             movieId: [this.movie()?.id ?? this.review()?.movieId ?? null],
         });
     }

@@ -177,17 +177,16 @@
 
     <!-- ! ========== Modales Personalizados de Formulario ========== -->
     @if (modalService.isOpen() && modalService.type() === 'custom') {
-        @if (currentModalContext === 'review') {
-            <app-review-form-modal
-                [movie]="chosenMovie"
-                [review]="selectedReview"
-                (submitted)="refreshReviews()"
-            ></app-review-form-modal>
-        } @else if (currentModalContext === 'playlist') {
-            <app-playlist-modal
-                [mode]="'add-movie'"
-                [movie]="chosenMovie"
-            ></app-playlist-modal>
-        }
+        <app-modal>
+            @if (currentModalContext === 'review') {
+                <app-review-form-modal
+                    [movie]="chosenMovie"
+                    [review]="selectedReview"
+                    (submitted)="refreshReviews()"
+                ></app-review-form-modal>
+            } @else if (currentModalContext === 'playlist') {
+                <app-playlist-modal [mode]="'add-movie'" [movie]="chosenMovie"></app-playlist-modal>
+            }
+        </app-modal>
     }
 </div>
