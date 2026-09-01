@@ -168,7 +168,7 @@ public class PlaylistService {
     @Transactional(readOnly = true)
     public Page<PlaylistPreviewDTO> getPublicPlaylists(int page){
         Pageable pageable = PageRequest.of(page-1, 20);
-        Page<Playlist> playlists = playlistRepository.findByIsPrivateFalse(pageable);
+        Page<Playlist> playlists = playlistRepository.findByIsPrivateFalseAndUserIsBannedFalse(pageable);
         long totalElements = playlists.getTotalElements();
 
         return PlaylistMapper.entityToPreviewDTOPage(playlists, pageable, totalElements);

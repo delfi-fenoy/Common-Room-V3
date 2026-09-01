@@ -34,7 +34,11 @@
                     <!-- <----- Contenedor para Botón y Rating ----->
                     <div class="title-actions">
                         @if (isLoggedIn) {
-                            <button (click)="openAddPlaylistModal()" class="add-playlist-btn" title="Add to Playlist">
+                            <button
+                                (click)="openAddPlaylistModal()"
+                                class="add-playlist-btn"
+                                title="Add to Playlist"
+                            >
                                 + Playlist
                             </button>
                         }

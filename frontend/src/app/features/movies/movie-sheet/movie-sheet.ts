@@ -13,7 +13,7 @@ import { ReviewCard } from '../../../shared/cards/review-card/review-card';
 import { ReviewFormModal } from '../../../shared/modals/review-form-modal/review-form-modal';
 import { PlaylistModal } from '../../../shared/modals/playlist-modal/playlist-modal';
 import { TMDB_GENRES } from '../movies-list/movies-list';
-import { Modal } from '../../../shared/modals/modal/modal';
+import { Modal } from "../../../shared/modals/modal/modal";
 
 @Component({
     selector: 'app-movie-sheet',
