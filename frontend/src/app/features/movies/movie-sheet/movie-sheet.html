@@ -34,7 +34,11 @@
                     <!-- <----- Contenedor para Botón y Rating ----->
                     <div class="title-actions">
                         @if (isLoggedIn) {
-                            <button (click)="openAddPlaylistModal()" class="add-playlist-btn" title="Add to Playlist">
+                            <button
+                                (click)="openAddPlaylistModal()"
+                                class="add-playlist-btn"
+                                title="Add to Playlist"
+                            >
                                 + Playlist
                             </button>
                         }
@@ -177,17 +181,16 @@
 
     <!-- ! ========== Modales Personalizados de Formulario ========== -->
     @if (modalService.isOpen() && modalService.type() === 'custom') {
-        @if (currentModalContext === 'review') {
-            <app-review-form-modal
-                [movie]="chosenMovie"
-                [review]="selectedReview"
-                (submitted)="refreshReviews()"
-            ></app-review-form-modal>
-        } @else if (currentModalContext === 'playlist') {
-            <app-playlist-modal
-                [mode]="'add-movie'"
-                [movie]="chosenMovie"
-            ></app-playlist-modal>
-        }
+        <app-modal>
+            @if (currentModalContext === 'review') {
+                <app-review-form-modal
+                    [movie]="chosenMovie"
+                    [review]="selectedReview"
+                    (submitted)="refreshReviews()"
+                ></app-review-form-modal>
+            } @else if (currentModalContext === 'playlist') {
+                <app-playlist-modal [mode]="'add-movie'" [movie]="chosenMovie"></app-playlist-modal>
+            }
+        </app-modal>
     }
 </div>
