@@ -1,28 +1,29 @@
 <div class="movies-container">
-    <!-- ! ====== Filters Section ====== -->
+    <!-- * ========== Sección de Filtros ========== -->
     <section class="filters-section">
         <div class="filters-container">
+            <!-- Selector: Orden (Filter) -->
             <label for="filter-select">Sort by:</label>
-            
-            <!-- ? --- Relevance Filter --- -->
-            <select 
-                id="filter-select" 
-                class="filter-dropdown" 
-                [(ngModel)]="selectedFilter" 
-                (ngModelChange)="onFilterChange($event)">
+            <select
+                id="filter-select"
+                class="filter-dropdown"
+                [(ngModel)]="selectedFilter"
+                (ngModelChange)="onFilterChange($event)"
+            >
                 <option value="relevance">Relevance</option>
                 <option value="popular">Popular</option>
                 <option value="recent">Recent</option>
                 <option value="upcoming">Upcoming</option>
             </select>
 
-            <!-- ? --- Genre Filter --- -->
+            <!-- Selector: Género -->
             <label for="genre-select">Genre:</label>
-            <select 
-                id="genre-select" 
-                class="filter-dropdown" 
-                [(ngModel)]="selectedGenre" 
-                (ngModelChange)="onGenreChange($event)">
+            <select
+                id="genre-select"
+                class="filter-dropdown"
+                [(ngModel)]="selectedGenre"
+                (ngModelChange)="onGenreChange($event)"
+            >
                 <option [ngValue]="null">All Genres</option>
                 @for (genre of genresList; track genre.id) {
                     <option [ngValue]="genre.id">
@@ -31,13 +32,14 @@
                 }
             </select>
 
-            <!-- ? --- Year Filter --- -->
+            <!-- Selector: Año -->
             <label for="year-select">Year:</label>
-            <select 
-                id="year-select" 
-                class="filter-dropdown" 
-                [(ngModel)]="selectedYear" 
-                (ngModelChange)="onYearChange($event)">
+            <select
+                id="year-select"
+                class="filter-dropdown"
+                [(ngModel)]="selectedYear"
+                (ngModelChange)="onYearChange($event)"
+            >
                 <option value="">All Years</option>
                 @for (year of yearsList; track year) {
                     <option [value]="year.toString()">
@@ -47,16 +49,15 @@
             </select>
         </div>
     </section>
-    
-    <!-- ! === Movies Section === -->
+
+    <!-- * ========== Grid Principal de Películas ========== -->
     <section class="movies-section">
         @for (movie of movies; track movie.id) {
-            <!-- ? --- Movie Card --- -->
             <app-movie-card [movie]="movie" />
         }
     </section>
 
-    <!-- ? --- Loading Spinner --- -->
+    <!-- ? --- Spinner de Carga Infinito --- -->
     @if (isLoading) {
         <div class="loading-indicator">
             <div class="spinner"></div>
@@ -64,11 +65,10 @@
         </div>
     }
 
-    <!-- ? --- Button to Top --- -->
+    <!-- ? --- Botón Flotante para Volver Arriba --- -->
     @if (showScrollTopBtn) {
         <button class="scroll-top-btn" (click)="scrollToTop()" aria-label="Scroll to top">
-            <img src="assets/img/buttons-icons/arrow-button.png" alt="Scroll to top"/>
+            <img src="assets/img/buttons-icons/arrow-button.png" alt="Scroll to top" />
         </button>
     }
-
 </div>

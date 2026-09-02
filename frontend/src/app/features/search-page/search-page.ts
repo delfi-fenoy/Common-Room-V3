@@ -6,6 +6,7 @@ import { MovieService } from '../../core/services/movie-service';
 import { UserService } from '../../core/services/user-service';
 import { PlaylistService } from '../../core/services/playlist-service';
 import { MoviePreview, UserPreview, PlaylistPreview } from '../../core/models';
+
 import { MovieCard } from '../../shared/cards/movie-card/movie-card';
 import { PlaylistCard } from '../../shared/cards/playlist-card/playlist-card';
 
@@ -31,22 +32,22 @@ export class SearchPage implements OnInit {
     query: string = '';
     activeTab: SearchTab = 'movies';
 
-    // ? ----- Películas -----
+    // ? ----- Datos de Películas -----
     movies: MoviePreview[] = [];
     moviesPage: number = 1;
     hasMoreMovies: boolean = true;
 
-    // ? ----- Usuarios -----
+    // ? ----- Datos de Usuarios -----
     users: UserPreview[] = [];
     usersPage: number = 1;
     hasMoreUsers: boolean = true;
 
-    // <----- Playlists ----->
+    // ? ----- Datos de Playlists -----
     playlists: PlaylistPreview[] = [];
     playlistsPage: number = 1;
     hasMorePlaylists: boolean = true;
 
-    // ? ----- Paginación y Control -----
+    // ? ----- Estado de Carga y Scroll -----
     isLoading: boolean = false;
     showScrollTopBtn: boolean = false;
 
@@ -67,13 +68,12 @@ export class SearchPage implements OnInit {
         });
     }
 
-    // ! -------- Cambiar Tab --------
+    // <----- Cambio de Pestaña Activa ----->
     selectTab(tab: SearchTab): void {
         if (this.activeTab === tab) return;
         this.activeTab = tab;
-        this.isLoading = false; // Previene bloqueos si quedó una petición colgada
+        this.isLoading = false;
 
-        // Si la pestaña no tiene resultados cargados, realiza la búsqueda inicial
         if (tab === 'movies' && this.movies.length === 0 && this.hasMoreMovies) {
             this.searchMovies();
         } else if (tab === 'users' && this.users.length === 0 && this.hasMoreUsers) {
@@ -83,7 +83,7 @@ export class SearchPage implements OnInit {
         }
     }
 
-    // ! -------- Resetear e Iniciar Búsqueda --------
+    // <----- Resetear Búsqueda General ----->
     private resetAndSearch(): void {
         this.movies = [];
         this.users = [];
@@ -104,7 +104,7 @@ export class SearchPage implements OnInit {
         }
     }
 
-    // ! -------- Buscar Películas desde el Backend --------
+    // <----- Búsqueda de Películas ----->
     searchMovies(): void {
         if (this.isLoading || !this.hasMoreMovies || !this.query.trim()) return;
         this.isLoading = true;
@@ -128,7 +128,7 @@ export class SearchPage implements OnInit {
         });
     }
 
-    // ! -------- Buscar Usuarios desde el Backend --------
+    // <----- Búsqueda de Usuarios ----->
     searchUsers(): void {
         if (this.isLoading || !this.hasMoreUsers || !this.query.trim()) return;
         this.isLoading = true;
@@ -152,7 +152,7 @@ export class SearchPage implements OnInit {
         });
     }
 
-    // <----- Buscar Playlists desde el Backend ----->
+    // <----- Búsqueda de Playlists ----->
     searchPlaylists(): void {
         if (this.isLoading || !this.hasMorePlaylists || !this.query.trim()) return;
         this.isLoading = true;
@@ -177,7 +177,7 @@ export class SearchPage implements OnInit {
         });
     }
 
-    // ! -------- Listener de Scroll Global (Paginación Infinita) --------
+    // <----- Listener de Scroll Infinito ----->
     @HostListener('window:scroll', [])
     onWindowScroll(): void {
         this.showScrollTopBtn = window.scrollY > 400;
@@ -203,18 +203,17 @@ export class SearchPage implements OnInit {
         }
     }
 
-    // ? ----- Método para volver hacia arriba -----
+    // <----- Desplazar suavemente arriba ----->
     scrollToTop(): void {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // * -------- Método para reemplazar foto de perfil fallida --------
+    // <----- Reemplazo de Imagen de Perfil Fallida ----->
     noProfilePicture(event: Event, role?: string): void {
         const img = event.target as HTMLImageElement;
-        if (role === 'ADMIN') {
-            img.src = 'assets/img/default-img/admin-noimg.jpg';
-        } else {
-            img.src = 'assets/img/default-img/user-noimg.jpg';
-        }
+        img.src =
+            role === 'ADMIN'
+                ? 'assets/img/default-img/admin-noimg.jpg'
+                : 'assets/img/default-img/user-noimg.jpg';
     }
 }

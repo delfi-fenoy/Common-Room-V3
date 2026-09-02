@@ -1,241 +1,341 @@
-/* * ========== Contenedor Principal ========== */
-.ban-management-container {
+/* * ======== Layout del Contenido del Modal ======== */
+.ban-modal-container {
     display: flex;
     flex-direction: column;
     gap: 1.2rem;
     width: 100%;
-}
-
-.search-input-wrapper {
-    display: flex;
-    gap: 0.8rem;
-}
-
-.search-input-wrapper input {
-    flex: 1;
-    padding: 0.65rem 0.8rem;
-    background-color: var(--brown-600);
-    border: 0.2rem solid var(--brown-400);
-    border-radius: 0.5rem;
     color: var(--brown-100);
-    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
-    outline: none;
-    box-sizing: border-box;
-    transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
-.search-input-wrapper input:focus {
-    border-color: var(--purple-400);
-    background-color: var(--brown-700);
+/* * ======== Estilo Sofisticado del Scrollbar ======== */
+.users-list::-webkit-scrollbar,
+.history-list::-webkit-scrollbar {
+    width: 6px;
 }
 
-.form-group label {
-    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
-    font-weight: bold;
-    color: var(--brown-200);
-    margin-bottom: 0.35rem;
-    display: block;
+.users-list::-webkit-scrollbar-track,
+.history-list::-webkit-scrollbar-track {
+    background: var(--brown-700);
+    border-radius: 4px;
 }
 
-/* * ========== Cards y Lista Desplegable ========== */
-.banned-cards-wrapper {
+.users-list::-webkit-scrollbar-thumb,
+.history-list::-webkit-scrollbar-thumb {
+    background: var(--brown-400);
+    border-radius: 4px;
+}
+
+.users-list::-webkit-scrollbar-thumb:hover,
+.history-list::-webkit-scrollbar-thumb:hover {
+    background: var(--purple-400);
+}
+
+/* * ======== View 1: List & Shared Items ======== */
+.users-list-wrapper,
+.history-list-wrapper {
+    position: relative;
+    border-radius: 0.5rem;
+    padding: 0.2rem 0;
+}
+
+.users-list,
+.history-list {
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
-    /* Eliminamos el max-height y overflow-y de aquí para que crezca de manera fluida */
-    width: 100%;
+    max-height: 18rem;
+    overflow-y: auto;
+    padding: 0.5rem 0.6rem;
+    box-sizing: border-box;
+    scrollbar-width: thin;
+    scrollbar-color: var(--brown-400) var(--brown-700);
 }
 
-.ban-card-item {
-    background-color: var(--brown-600);
-    border: 0.2rem solid var(--brown-400);
-    border-radius: 0.5rem;
-    overflow: hidden;
-    transition: border-color 0.2s ease;
-}
-
-.ban-card-item.expanded {
-    border-color: var(--purple-400);
-}
-
-.ban-card-header {
+.user-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.8rem 1rem;
-    cursor: pointer;
     background-color: var(--brown-600);
-    user-select: none;
-    transition: background-color 0.2s ease;
+    border: 0.2rem solid var(--brown-400);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: background-color 0.2s ease, transform 0.1s ease, border-color 0.2s ease;
 }
 
-.ban-card-header:hover {
-    background-color: var(--brown-500);
+.user-item:hover {
+    background-color: var(--brown-700);
+    border-color: var(--purple-400);
+    transform: scale(1.01);
 }
 
 .user-info {
     display: flex;
-    align-items: center;
-    gap: 0.6rem;
+    flex-direction: column;
+    gap: 0.15rem;
 }
 
-.banned-username {
-    font-size: clamp(0.9rem, 1.8vw, 1rem);
+.username {
     font-weight: bold;
+    color: var(--brown-100);
+}
+
+.banned-by-sub {
+    font-size: 0.75rem;
+    color: var(--brown-200);
+    letter-spacing: 0.3px;
+}
+
+.arrow-icon {
+    font-size: 0.75rem;
+    color: var(--brown-200);
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.user-item:hover .arrow-icon {
+    transform: translateX(3px);
     color: var(--purple-300);
 }
 
-.ban-badge {
-    background-color: var(--brown-400);
+/* * ======== Botones de Regreso (Estilo Destacado) ======== */
+.btn-back {
+    font-family: inherit;
+    background-color: var(--brown-600);
+    border: 0.15rem solid var(--brown-400);
     color: var(--brown-100);
-    font-size: 0.7rem;
     font-weight: bold;
-    padding: 0.15rem 0.4rem;
-    border-radius: 0.3rem;
+    cursor: pointer;
+    font-size: clamp(0.8rem, 1.5vw, 0.88rem);
+    padding: 0.4rem 0.8rem;
+    border-radius: 0.4rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease, color 0.2s ease;
 }
 
-.ban-badge.active-ban {
-    background-color: #ff6b6b;
-    color: #ffffff;
+.btn-back:hover {
+    background-color: var(--purple-500);
+    border-color: var(--purple-300);
+    color: var(--purple-100);
+    transform: translateX(-2px);
 }
 
-.chevron-icon {
-    font-size: 0.8rem;
-    color: var(--brown-200);
+/* * ======== View 2: Detalle ======== */
+.detail-nav-header {
+    display: flex;
+    justify-content: flex-start;
 }
 
-/* ? --- Body Desplegable --- */
-.ban-card-body {
-    padding: 0.8rem 1rem 1rem 1rem;
-    border-top: 0.15rem solid var(--brown-500);
-    background-color: var(--brown-700);
+.user-detail-container {
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
-    font-size: clamp(0.8rem, 1.6vw, 0.9rem);
-    color: var(--brown-100);
+    gap: 1rem;
 }
 
-.ban-detail-row {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-}
-
-.ban-detail-row strong {
-    color: var(--brown-200);
-    font-size: 0.85rem;
-}
-
-.ban-reason {
-    margin: 0;
-    white-space: pre-wrap;
-    word-break: break-word;
-    background-color: var(--brown-600);
-    padding: 0.5rem;
-    border-radius: 0.3rem;
-    border: 0.1rem solid var(--brown-500);
-}
-
-.card-actions {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 0.4rem;
-}
-
-/* <----- Historial Acordeón ----- */
-.history-accordion {
-    background-color: var(--brown-600);
-    border: 0.2rem solid var(--brown-400);
-    border-radius: 0.5rem;
-    overflow: hidden;
-}
-
-.history-header {
+.detail-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.7rem 1rem;
-    cursor: pointer;
     background-color: var(--brown-600);
+    border: 0.2rem solid var(--brown-400);
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+}
+
+.detail-username {
     font-weight: bold;
-    font-size: clamp(0.85rem, 1.7vw, 0.95rem);
-    color: var(--brown-200);
-    user-select: none;
-    transition: background-color 0.2s ease;
+    color: var(--brown-100);
+    font-size: 1.05rem;
 }
 
-.history-header:hover {
+.btn-history-compact {
+    font-family: inherit;
     background-color: var(--brown-500);
+    border: 0.15rem solid var(--brown-400);
+    color: var(--brown-100);
+    padding: 0.35rem 0.75rem;
+    border-radius: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
 }
 
-.history-body {
-    padding: 0.8rem 1rem;
-    border-top: 0.15rem solid var(--brown-500);
-    background-color: var(--brown-700);
+.btn-history-compact:hover {
+    background-color: var(--purple-400);
+    border-color: var(--purple-300);
+    color: var(--purple-700);
+    transform: scale(1.03);
+}
+
+.ban-info-card,
+.history-card {
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
-}
-
-.history-items-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-}
-
-.history-item {
     background-color: var(--brown-600);
-    padding: 0.6rem 0.8rem;
-    border-radius: 0.4rem;
-    border: 0.1rem solid var(--brown-500);
-    font-size: clamp(0.8rem, 1.6vw, 0.85rem);
-    color: var(--brown-100);
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
+    border: 0.2rem solid var(--brown-400);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    box-sizing: border-box;
 }
 
-/* ? --- Controles de Paginación --- */
-.pagination-controls {
+.ban-card-title {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 0.2rem;
-    padding-top: 0.6rem;
-    border-top: 0.1rem solid var(--brown-500);
+    font-weight: bold;
+    color: var(--brown-200);
+    font-size: 0.9rem;
 }
 
-.page-indicator {
-    font-size: clamp(0.75rem, 1.5vw, 0.85rem);
+.status-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--brown-500);
+    border: 0.15rem solid var(--brown-400);
+    color: var(--brown-100);
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 0.25rem 0.6rem;
+    border-radius: 0.4rem;
+    letter-spacing: 0.5px;
+    line-height: 1;
+}
+
+.status-tag.active-ban {
+    background-color: #ff6b6b;
+    border: 0.15rem solid #ff8787;
+    color: #ffffff;
+}
+
+.info-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.info-row strong,
+.info-row-inline strong {
     color: var(--brown-200);
+    font-size: 0.8rem;
     font-weight: bold;
 }
 
-.btn-page {
-    padding: 0.3rem 0.7rem;
-    font-size: 0.8rem;
-    background-color: var(--brown-600);
-    border: 0.15rem solid var(--brown-400);
-    border-radius: 0.4rem;
+.info-row span,
+.info-row-inline span {
+    font-size: 0.85rem;
     color: var(--brown-100);
 }
 
-.btn-page:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-    transform: none;
+.info-row-inline {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--brown-700);
+    padding: 0.6rem 0.8rem;
+    border-radius: 0.4rem;
+    border: 0.15rem solid var(--brown-400);
 }
 
-.empty-message, 
-.status-message {
+.text-right {
+    text-align: right;
+}
+
+.reason-text {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    background-color: var(--brown-700);
+    padding: 0.65rem 0.8rem;
+    border-radius: 0.5rem;
+    border: 0.15rem solid var(--brown-400);
+    font-size: 0.85rem;
+    color: var(--brown-100);
+}
+
+/* * ======== View 3: Historial ======== */
+.history-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.history-title {
+    margin: 0;
+    color: var(--brown-200);
+    font-size: clamp(0.95rem, 1.8vw, 1.1rem);
+    font-weight: bold;
+}
+
+.history-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ban-date-meta {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: var(--brown-100);
+}
+
+/* * ======== Paginador ======== */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.pagination-btn {
+    font-family: inherit;
+    background-color: var(--brown-500);
+    border: 0.2rem solid var(--brown-400);
+    color: var(--brown-100);
+    padding: 0.4rem 0.8rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
+    transition: background-color 0.2s ease, transform 0.1s ease, color 0.2s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background-color: var(--purple-300);
+    border-color: var(--purple-400);
+    color: var(--purple-700);
+    transform: scale(1.05);
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: var(--brown-600);
+    color: var(--brown-400);
+}
+
+.page-indicator {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: var(--brown-200);
+}
+
+.status-msg {
     text-align: center;
     color: var(--brown-200);
     font-style: italic;
     padding: 1.5rem 0;
+    font-size: 0.9rem;
 }
 
-/* * ========== Footer (.form-actions) ========== */
+/* * ======== Footer Idéntico a Reseñas (.form-actions) ======== */
 .form-actions {
     display: flex;
     justify-content: flex-end;
@@ -247,10 +347,11 @@
 }
 
 .btn {
+    font-family: inherit;
     padding: 0.55rem 1.2rem;
+    border-radius: 0.5rem;
     font-size: clamp(0.85rem, 1.8vw, 0.95rem);
     font-weight: bold;
-    border-radius: 0.5rem;
     cursor: pointer;
     background-color: var(--brown-500);
     color: var(--brown-100);
@@ -258,7 +359,7 @@
     transition: background-color 0.2s ease, transform 0.1s ease, color 0.2s ease;
 }
 
-.btn:hover:not(:disabled) {
+.btn:hover {
     transform: scale(1.05);
 }
 
@@ -269,14 +370,20 @@
 }
 
 .btn-unban {
-    background-color: var(--brown-600);
-    border-color: var(--brown-400);
+    background-color: #ff6b6b;
+    border: 0.2rem solid #ff8787;
+    color: #ffffff;
 }
 
 .btn-unban:hover:not(:disabled) {
-    background-color: #ff6b6b;
+    background-color: #e05252;
     border-color: #ff8787;
-    color: #ffffff;
+    transform: scale(1.05);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 /* ! =========== RESPONSIVE =========== */
@@ -287,5 +394,10 @@
 
     .btn {
         width: 100%;
+    }
+
+    .history-top-bar {
+        flex-direction: column;
+        align-items: flex-start;
     }
 }

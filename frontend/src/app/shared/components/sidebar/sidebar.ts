@@ -35,6 +35,6 @@ export class Sidebar {
     // <----- Abrir el Modal de Baneos a través de ModalService ----->
     openBanModal(): void {
         this.closeSidebar(); 
-        this.modalService.openBan('Manage Banned Users'); // <----- Usar método dedicado
+        this.modalService.openBan('Banned Users Menu');
     }
 }

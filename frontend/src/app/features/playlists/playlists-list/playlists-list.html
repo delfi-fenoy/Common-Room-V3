@@ -1,20 +1,19 @@
 <div class="playlists-container">
-
-    <!-- ! ====== Header Title Section ====== -->
+    <!-- * ========== Encabezado ========== -->
     <section class="filters-section">
         <div class="filters-container">
             <h2>Users' Playlists</h2>
         </div>
     </section>
 
-    <!-- ! === Playlists Section === -->
+    <!-- * ========== Grid de Playlists ========== -->
     <section class="playlists-section">
         @for (playlist of playlists; track playlist.id) {
-           <app-playlist-card [playlist]="playlist" />
+            <app-playlist-card [playlist]="playlist" />
         }
     </section>
 
-    <!-- ? --- Loading Spinner --- -->
+    <!-- ? --- Spinner de Carga Infinito --- -->
     @if (isLoading) {
         <div class="loading-indicator">
             <div class="spinner"></div>
@@ -22,11 +21,10 @@
         </div>
     }
 
-    <!-- ? --- Button to Top --- -->
+    <!-- ? --- Botón Flotante para Volver Arriba --- -->
     @if (showScrollTopBtn) {
         <button class="scroll-top-btn" (click)="scrollToTop()" aria-label="Scroll to top">
             <img src="assets/img/buttons-icons/arrow-button.png" alt="Scroll to top" />
         </button>
     }
-
 </div>

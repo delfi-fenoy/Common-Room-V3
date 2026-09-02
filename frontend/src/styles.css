@@ -25,6 +25,16 @@
     --purple-500: #5d5271;
     --purple-600: #3a3348;
     --purple-700: #1b1722;
+
+    /* Delete | Red */
+    --red-100: #ffcdd2;
+    --red-200: #ef9a9a;
+    --red-300: #e57373;
+    --red-400: #ef5350;
+    --red-500: #e53935; 
+    --red-600: #c62828;
+    --red-700: #b71c1c;
+    --red-bg-subtle: rgba(229, 57, 53, 0.2);
 }
 
 /* <----- Reset de Box Sizing y Márgenes Globales -----> */
@@ -47,4 +57,14 @@ body {
     background-repeat: repeat;
     background-size: auto;
     background-position: top center;
+}
+
+/* <----- Bloquear arrastrado y selección en todas las imágenes -----> */
+img {
+    user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    pointer-events: auto; /* Permite clics pero no arrastrar */
 }

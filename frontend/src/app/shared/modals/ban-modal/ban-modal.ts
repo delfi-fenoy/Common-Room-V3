@@ -1,158 +1,164 @@
-import { Component, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { forkJoin, catchError, of } from 'rxjs';
+import { UserService } from '../../../core/services/user-service';
 import { UserbanService } from '../../../core/services/userban-service';
+import { UserBanPreview, UserPreview } from '../../../core/models';
 import { UserBanResponse } from '../../../core/models/bans/user-ban-response';
-import { UserBanPreview } from '../../../core/models/bans/user-ban-preview';
 import { ModalService } from '../../../shared/services/modal-services';
 import { Modal } from '../modal/modal';
 
 @Component({
     selector: 'app-ban-modal',
     standalone: true,
-    imports: [CommonModule, FormsModule, Modal],
+    imports: [CommonModule, Modal],
     templateUrl: './ban-modal.html',
     styleUrl: './ban-modal.css',
 })
-export class BanModal {
+export class BanModal implements OnInit {
     // * ======== Inyección de Servicios ========
+    private userService = inject(UserService);
     private userBanService = inject(UserbanService);
     public modalService = inject(ModalService);
     private cdr = inject(ChangeDetectorRef);
 
-    // * ======== Estado de Búsqueda y Resultados ========
-    searchQuery: string = '';
-    lastBan: UserBanResponse | null = null;
-    historyBans: UserBanPreview[] = [];
+    // * ======== Estado de Vistas ========
+    currentView: 'list' | 'detail' | 'history' = 'list';
 
-    // * ======== Estado de Paginación Simple (4 por página) ========
-    historyCurrentPage: number = 1;
-    hasMorePages: boolean = false;
+    // * ======== Estado Vista 1: Lista Baneados ========
+    bannedUsers: UserPreview[] = [];
+    isLoadingList: boolean = true;
+    currentPage: number = 1;
+    totalPages: number = 1;
+
+    // * ======== Estado Vista 2: Detalle Baneo ========
+    selectedUser: UserPreview | null = null;
+    currentBan: UserBanResponse | null = null;
+    isLoadingDetail: boolean = false;
+    isUnbanning: boolean = false;
+
+    // * ======== Estado Vista 3: Historial de Baneos ========
+    banHistory: UserBanPreview[] = [];
     isLoadingHistory: boolean = false;
+    historyPage: number = 1;
+    historyTotalPages: number = 1;
 
-    // * ======== Estado de Desplegables ========
-    isLastBanExpanded: boolean = true;
-    isHistoryExpanded: boolean = false;
-
-    // * ======== Indicadores de Carga y Flujo ========
-    isLoading = false;
-    isProcessing = false;
-    hasSearched = false;
-
-    // <----- Normalizar Arreglo / Respuesta Paginada Backend ----->
-    private extractBanArray(data: any): UserBanPreview[] {
-        if (!data) return [];
-        if (Array.isArray(data)) return data;
-        if (Array.isArray(data.content)) return data.content;
-        return [];
+    // * ======== Lifecycle Hooks ========
+    ngOnInit(): void {
+        this.fetchBannedUsers(1);
     }
 
-    // <----- Búsqueda Manual por Nombre de Usuario ----->
-    onSearch(): void {
-        const query = this.searchQuery.trim();
-        if (!query) return;
-        this.isLoading = true;
-        this.hasSearched = true;
-        this.lastBan = null;
-        this.historyBans = [];
-        this.historyCurrentPage = 1;
-        this.hasMorePages = false;
-
-        forkJoin({
-            lastBan: this.userBanService.getUserLastBanInfo(query).pipe(catchError(() => of(null))),
-            history: this.userBanService.getUserBanHistory(query, 1).pipe(catchError(() => of([]))),
-        }).subscribe({
-            next: (res) => {
-                this.isLoading = false;
-                this.lastBan = res.lastBan;
-                const bans = this.extractBanArray(res.history);
-                this.historyBans = bans;
-                this.hasMorePages = bans.length === 4;
-                this.cdr.detectChanges();
+    // <----- Vista 1: Obtener Usuarios Baneados Paginados ----->
+    fetchBannedUsers(page: number = 1): void {
+        this.isLoadingList = true;
+        this.userService.getBannedUsers('', page).subscribe({
+            next: (response) => {
+                console.log('GET /users/banned:', response);
+                this.bannedUsers = response.content || [];
+                this.currentPage = page;
+                this.totalPages = response.totalPages || 1;
+                this.isLoadingList = false;
+                this.cdr.markForCheck();
             },
-
             error: (err) => {
-                this.isLoading = false;
-                this.lastBan = null;
-                this.historyBans = [];
-                this.hasMorePages = false;
-                this.cdr.detectChanges();
-                console.error('Error fetching user ban data:', err);
+                console.error('Error fetching banned users:', err);
+                this.isLoadingList = false;
+                this.cdr.markForCheck();
             },
         });
     }
 
-    // <----- Cargar Página Específica del Historial ----->
-    loadHistoryPage(page: number): void {
-        const query = this.searchQuery.trim();
-        if (!query || page < 1) return;
+    onListPageChange(newPage: number): void {
+        if (newPage >= 1 && newPage <= this.totalPages) {
+            this.fetchBannedUsers(newPage);
+        }
+    }
+
+    // <----- Vista 2: Seleccionar Usuario e ir a Detalle ----->
+    selectUser(user: UserPreview): void {
+        this.selectedUser = user;
+        this.currentView = 'detail';
+        this.isLoadingDetail = true;
+
+        this.userBanService.getUserLastBanInfo(user.username).subscribe({
+            next: (banInfo) => {
+                console.log(`GET /users/${user.username}/ban:`, banInfo);
+                this.currentBan = banInfo;
+                this.isLoadingDetail = false;
+                this.cdr.markForCheck();
+            },
+            error: (err) => {
+                console.error('Error fetching last ban info:', err);
+                this.currentBan = null;
+                this.isLoadingDetail = false;
+                this.cdr.markForCheck();
+            },
+        });
+    }
+
+    // <----- Desbanear Usuario ----->
+    onUnbanUser(): void {
+        if (!this.selectedUser || this.isUnbanning) return;
+
+        this.isUnbanning = true;
+        this.userBanService.unbanUser(this.selectedUser.username).subscribe({
+            next: () => {
+                this.isUnbanning = false;
+                this.modalService.openAlert('Success', `User @${this.selectedUser?.username} has been unbanned.`, 'success');
+                this.backToList();
+                this.fetchBannedUsers(this.currentPage);
+            },
+            error: (err) => {
+                console.error('Error unbanning user:', err);
+                this.isUnbanning = false;
+                this.modalService.openAlert('Error', 'Failed to unban user.', 'error');
+                this.cdr.markForCheck();
+            },
+        });
+    }
+
+    // <----- Vista 3: Ir al Historial Paginado ----->
+    goToHistory(page: number = 1): void {
+        if (!this.selectedUser) return;
+
+        this.currentView = 'history';
         this.isLoadingHistory = true;
 
-        this.userBanService.getUserBanHistory(query, page).subscribe({
-            next: (data) => {
-                const bans = this.extractBanArray(data);
-                if (bans.length === 0) {
-                    this.hasMorePages = false;
-                    this.isLoadingHistory = false;
-                    this.cdr.detectChanges();
-                    return;
-                }
-                this.historyBans = bans;
-                this.historyCurrentPage = page;
-                this.hasMorePages = bans.length === 4;
+        this.userBanService.getUserBanHistory(this.selectedUser.username, page).subscribe({
+            next: (response) => {
+                console.log(`GET /users/${this.selectedUser?.username}/ban/history:`, response);
+                this.banHistory = response.content || [];
+                this.historyPage = page;
+                this.historyTotalPages = response.totalPages || 1;
                 this.isLoadingHistory = false;
-                this.cdr.detectChanges();
+                this.cdr.markForCheck();
             },
-
             error: (err) => {
+                console.error('Error fetching ban history:', err);
                 this.isLoadingHistory = false;
-
-                console.error('Error fetching ban history page:', err);
-
-                this.cdr.detectChanges();
+                this.cdr.markForCheck();
             },
         });
     }
 
-    // <----- Alternar Apertura del Último Baneo ----->
-    toggleLastBan(): void {
-        this.isLastBanExpanded = !this.isLastBanExpanded;
+    onHistoryPageChange(newPage: number): void {
+        if (newPage >= 1 && newPage <= this.historyTotalPages) {
+            this.goToHistory(newPage);
+        }
     }
 
-    // <----- Alternar Apertura del Historial de Baneos ----->
-    toggleHistory(): void {
-        this.isHistoryExpanded = !this.isHistoryExpanded;
+    // <----- Navegación de Vistas ----->
+    backToList(): void {
+        this.currentView = 'list';
+        this.selectedUser = null;
+        this.currentBan = null;
+        this.banHistory = [];
     }
 
-    // <----- Desbanear Usuario Activo ----->
-    unbanUser(username: string): void {
-        this.isProcessing = true;
-
-        this.userBanService.unbanUser(username).subscribe({
-            next: () => {
-                this.isProcessing = false;
-
-                this.modalService.openAlert(
-                    'Success',
-                    `User @${username} has been unbanned.`,
-                    'success',
-                );
-
-                this.onSearch();
-            },
-
-            error: (err) => {
-                this.isProcessing = false;
-
-                console.error('Error unbanning user:', err);
-
-                this.modalService.openAlert('Error', 'Could not unban the user.', 'error');
-            },
-        });
+    backToDetail(): void {
+        this.currentView = 'detail';
+        this.banHistory = [];
     }
 
-    // <----- Cerrar Modal ----->
     onClose(): void {
         this.modalService.close();
     }

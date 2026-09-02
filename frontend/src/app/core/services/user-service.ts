@@ -27,14 +27,25 @@ export class UserService {
 
     /* ------ Metodo para buscar usuarios paginados ------ */
     searchUsers(query: string, role?: string, page: number = 1): Observable<PageResponse<UserPreview>> {
-        let params = new HttpParams().set('page', page.toString()); // Query se pasa en el Path Variable, no en HttpParams
+        let params = new HttpParams().set('page', page.toString());
 
         if (role && role !== 'all') {
             params = params.set('role', role);
         }
 
-        // Se ajusta la ruta a /users/search/{query}
         return this.http.get<PageResponse<UserPreview>>(`${this.URL}/search/${encodeURIComponent(query)}`, { params });
+    }
+
+    /* ! <----- Método: Listar usuarios baneados (Sección Admin) -----> */
+    getBannedUsers(query?: string, page: number = 1): Observable<PageResponse<UserPreview>> {
+        let params = new HttpParams().set('page', page.toString());
+        
+        // Solo adjuntar query si realmente tiene texto
+        if (query && query.trim().length > 0) {
+            params = params.set('query', query.trim());
+        }
+
+        return this.http.get<PageResponse<UserPreview>>(`${this.URL}/banned`, { params });
     }
 
     /* ------ Metodo para acceder al perfil publico de un usuario ------ */

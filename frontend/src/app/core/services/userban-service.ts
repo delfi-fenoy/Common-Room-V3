@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { UserBanResponse, UserBanPreview } from '../models';
+import { UserBanResponse, UserBanPreview, PageResponse } from '../models';
 
 @Injectable({
     providedIn: 'root',
@@ -26,11 +26,12 @@ export class UserbanService {
         return this.http.get<UserBanResponse>(`${this.apiUrl}/${username}/ban`);
     }
 
-    // <----- Obtener Historial de Baneos Paginado (Sin PageResponse) ----->
-    getUserBanHistory(username: string, page: number = 1): Observable<UserBanPreview[]> {
+    // <----- Obtener Historial de Baneos Paginado ----->
+    getUserBanHistory(username: string, page: number = 1): Observable<PageResponse<UserBanPreview>> {
         const params = new HttpParams().set('page', page.toString());
-        return this.http.get<UserBanPreview[]>(`${this.apiUrl}/${username}/bans`, { params });
+        return this.http.get<PageResponse<UserBanPreview>>(`${this.apiUrl}/${username}/bans`, { params });
     }
+
     // <----- Obtener Baneo por ID ----->
     getBanById(banId: number): Observable<UserBanResponse> {
         return this.http.get<UserBanResponse>(`${this.bansUrl}/${banId}`);

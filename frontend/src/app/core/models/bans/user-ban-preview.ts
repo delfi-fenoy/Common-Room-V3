@@ -3,4 +3,6 @@ export interface UserBanPreview {
     bannedByUsername: string;
     bannedAt: string;
     reason: string;
+    unbannedAt?: string;
+    unbannedByUsername?: string;
 }

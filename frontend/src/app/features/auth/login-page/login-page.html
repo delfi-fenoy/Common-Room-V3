@@ -1,33 +1,33 @@
 <div class="auth-container">
-    <app-modal/>
+    <app-modal />
 
-    <!-- ? Background Stars -->
+    <!-- ? --- Background Stars --- -->
     <div class="stars"></div>
     <div class="shooting-star"></div>
     <div class="shooting-star"></div>
     <div class="shooting-star"></div>
 
-    <!-- ? --- Button Home --- -->
+    <!-- ? --- Botón de Retorno a Inicio --- -->
     <div class="back-button" routerLink="/" title="Go to home">
         <img src="assets/img/CR-icon2.png" alt="App logo" class="logo-img" />
     </div>
 
-    <!-- ! ====== Form Login ====== -->
+    <!-- * ========== Formulario de Inicio de Sesión ========== -->
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <h1 class="auth-title">Login</h1>
 
-        <!-- ! === Error Message === -->
+        <!-- Mensaje de Error de Acceso -->
         @if (loginError()) {
             <div class="error-message">Invalid access. Please try again.</div>
         }
 
-        <!-- ? --- Username Input --- -->
+        <!-- Subsección: Campo Usuario -->
         <div class="field-container">
             <label for="username">Username</label>
             <input type="text" id="username" formControlName="username" autocomplete="username" />
         </div>
 
-        <!-- ? --- Password Input --- -->
+        <!-- Subsección: Campo Contraseña -->
         <div class="field-container">
             <label for="password">Password</label>
             <div class="password-field">
@@ -48,12 +48,12 @@
             </div>
         </div>
 
-        <!-- ? --- Button Submit --- -->
+        <!-- Botón de Envío -->
         <button type="submit" [disabled]="loginForm.invalid || isSubmitting()">
             {{ isSubmitting() ? 'Logging in...' : 'Login' }}
         </button>
 
-        <!-- ? ----- Go to Register ----- -->
+        <!-- Navegación a Registro -->
         <p class="auth-switch">
             Don't have an account?
             <a routerLink="/register">Register</a>

@@ -1,14 +1,14 @@
 <div class="user-profile-container">
-    <!-- ? --- Loading Indicator --- -->
+    <!-- ? --- Indicador de Carga --- -->
     @if (isLoadingUser) {
         <div class="loading-container">
             <h3>Loading user profile...</h3>
         </div>
     } @else if (selectedUser) {
-        <!-- ! ========== User Main Card Section ========== -->
+        <!-- * ========== Sección de Tarjeta Principal del Usuario ========== -->
         <section class="user-main-card">
             <div class="user-container">
-                <!-- ? --- Columna Izquierda: Foto de Perfil --- -->
+                <!-- Columna Izquierda: Foto de Perfil -->
                 <div class="avatar-column">
                     <div class="img-wrapper">
                         <img
@@ -19,9 +19,9 @@
                     </div>
                 </div>
 
-                <!-- ? --- Columna Derecha: Detalles del Usuario --- -->
+                <!-- Columna Derecha: Detalles de Usuario -->
                 <div class="info-column">
-                    <!-- Título e Información de Cuenta -->
+                    <!-- Título y Fecha -->
                     <div class="block-box info-header">
                         <div class="user-title">
                             <h1>
@@ -30,28 +30,28 @@
                                     <span class="admin-badge" title="Administrator">⭐ Admin</span>
                                 }
                             </h1>
-                            <span class="user-date"
-                                >Member since
-                                {{ selectedUser.createdAt | date: 'yyyy-MM-dd' }}</span
-                            >
+                            <span class="user-date">
+                                Member since {{ selectedUser.createdAt | date: 'yyyy-MM-dd' }}
+                            </span>
                         </div>
                     </div>
 
-                    <!-- Descripción / Sobre el Usuario -->
+                    <!-- Sobre el Usuario -->
                     <div class="block-box info-body">
                         <h3>About</h3>
                         <p>{{ selectedUser.description || 'No description provided.' }}</p>
                     </div>
 
-                    <!-- Pie con Contador y Acciones -->
+                    <!-- Pie: Contadores y Acciones -->
                     <div class="block-box info-footer">
                         <div class="counts-group">
-                            <span class="review-count"
-                                >Total Reviews: <strong>{{ totalElements }}</strong></span
-                            >|
-                            <span class="playlist-count"
-                                >Total Playlists: <strong>{{ totalPlaylistElements }}</strong></span
-                            >
+                            <span class="review-count">
+                                Total Reviews: <strong>{{ totalElements }}</strong>
+                            </span>
+                            |
+                            <span class="playlist-count">
+                                Total Playlists: <strong>{{ totalPlaylistElements }}</strong>
+                            </span>
                         </div>
 
                         @if (isMyProfile) {
@@ -71,8 +71,8 @@
                                     🗑️
                                 </button>
                             </div>
-                        } @else if (isAdmin) {
-                            <!-- <----- Botón de Baneo para Administradores en perfiles ajenos ----->
+                        } @else if (isAdmin && selectedUser.role !== 'ADMIN') { 
+                            <!-- <----- Solo muestra el botón si el objetivo NO es Admin ----->
                             <div class="profile-actions">
                                 <button
                                     (click)="banUser()"
@@ -88,9 +88,9 @@
             </div>
         </section>
 
-        <!-- ! ========== Tabs & Main Content Container ========== -->
+        <!-- * ========== Contenedor de Pestañas y Contenido ========== -->
         <div class="profile-tabs-wrapper">
-            <!-- ! ========== Tab Selector Bar ========== -->
+            <!-- Barra de Pestañas -->
             <div class="profile-tabs-nav">
                 <button
                     class="tab-btn"
@@ -108,10 +108,9 @@
                 </button>
             </div>
 
-            <!-- ! ========== Tab Content: Reviews Section ========== -->
+            <!-- Contenido de Pestaña: Reseñas -->
             @if (activeTab === 'reviews') {
                 <section class="reviews-section">
-                    <!-- Grid de Reseñas -->
                     <div class="reviews-container">
                         @if (isLoadingReviews) {
                             <p class="loading-reviews">Loading reviews...</p>
@@ -132,7 +131,7 @@
                         }
                     </div>
 
-                    <!-- ? --- Controles de Paginación de Reseñas --- -->
+                    <!-- Paginación de Reseñas -->
                     @if (totalPages > 1) {
                         <div class="pagination-controls">
                             <button
@@ -143,9 +142,9 @@
                                 &laquo; Previous
                             </button>
 
-                            <span class="page-info"
-                                >Page {{ currentPage }} of {{ totalPages }}</span
-                            >
+                            <span class="page-info">
+                                Page {{ currentPage }} of {{ totalPages }}
+                            </span>
 
                             <button
                                 [disabled]="currentPage === totalPages"
@@ -159,10 +158,9 @@
                 </section>
             }
 
-            <!-- ! ========== Tab Content: Playlists Section ========== -->
+            <!-- Contenido de Pestaña: Playlists -->
             @if (activeTab === 'playlists') {
                 <section class="playlists-section">
-                    <!-- Grid de Playlists -->
                     <div class="playlists-container">
                         @if (isLoadingPlaylists) {
                             <p class="loading-msg">Loading playlists...</p>
@@ -194,7 +192,7 @@
                         }
                     </div>
 
-                    <!-- ? --- Controles de Paginación de Playlists --- -->
+                    <!-- Paginación de Playlists -->
                     @if (totalPlaylistPages > 1) {
                         <div class="pagination-controls">
                             <button
@@ -205,9 +203,9 @@
                                 &laquo; Previous
                             </button>
 
-                            <span class="page-info"
-                                >Page {{ currentPlaylistPage }} of {{ totalPlaylistPages }}</span
-                            >
+                            <span class="page-info">
+                                Page {{ currentPlaylistPage }} of {{ totalPlaylistPages }}
+                            </span>
 
                             <button
                                 [disabled]="currentPlaylistPage === totalPlaylistPages"
@@ -224,7 +222,7 @@
     } @else {
         <!-- ? --- Mensaje de Usuario No Encontrado --- -->
         <div class="not-found-card">
-            <h2>⚠️ User Not Found</h2>
+            <h2>User Not Found</h2>
             <p>The requested user profile does not exist or has been removed.</p>
             <a routerLink="/users" class="back-users-btn">
                 <span>← Back to Users List</span>
@@ -232,7 +230,7 @@
         </div>
     }
 
-    <!-- ! ========== Modal Formulario (Editar Perfil / Editar Reseña / Ban) ========== -->
+    <!-- * ========== Modales de Formulario ========== -->
     @if (modalService.isOpen() && modalService.type() === 'custom') {
         <app-modal>
             @if (activeModal === 'profile' && selectedUser) {

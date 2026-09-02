@@ -47,8 +47,8 @@
                     @if (currentUsername && user.username === currentUsername) {
                         <button (click)="onEdit()" title="Edit Review">✏️</button>
                     }
-                    @if ((currentUsername && user.username === currentUsername) || isAdmin) {
-                        <button (click)="onDelete()" title="Delete Review">🗑️</button>
+                    @if ((currentUsername && user.username === currentUsername) || (isAdmin && user.role !== 'ADMIN')) {
+                        <button class="btn-delete-review" (click)="onDelete()" title="Delete Review">🗑️</button>
                     }
                 </div>
             </div>
@@ -109,11 +109,11 @@
 
                     <!-- Action Buttons -->
                     <div class="buttons-container">
-                        @if (isAdmin || isMyProfile) {
-                            <button (click)="onDelete()" title="Delete Review">🗑️</button>
-                        }
                         @if (isMyProfile) {
                             <button (click)="onEdit()" title="Edit Review">✏️</button>
+                        }
+                        @if (isMyProfile || (isAdmin && review.userPreview?.role !== 'ADMIN')) {
+                            <button class="btn-delete-review" (click)="onDelete()" title="Delete Review">🗑️</button>
                         }
                     </div>
                 </div>

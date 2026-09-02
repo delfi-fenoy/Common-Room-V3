@@ -3,11 +3,11 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 
+import { PlaylistDetails, MoviePreview } from '../../../core/models';
 import { PlaylistService } from '../../../core/services/playlist-service';
 import { AuthService } from '../../../core/services/auth-service';
 import { ModalService } from '../../../shared/services/modal-services';
 
-import { PlaylistDetails, MoviePreview } from '../../../core/models';
 import { MovieCard } from '../../../shared/cards/movie-card/movie-card';
 import { EditPlaylistModal } from '../../../shared/modals/edit-playlist-modal/edit-playlist-modal';
 import { Modal } from '../../../shared/modals/modal/modal';
@@ -30,20 +30,20 @@ export class PlaylistSheet implements OnInit {
     private titleService = inject(Title);
 
     // * ======== Variables de Estado ========
-    playlist: PlaylistDetails | null = null; // La playlist seleccionada
-    movies: MoviePreview[] = []; // Películas asociadas a la playlist
-    isLoadingPlaylist: boolean = true; // Indica si la playlist se está cargando
+    playlist: PlaylistDetails | null = null;
+    movies: MoviePreview[] = [];
+    isLoadingPlaylist: boolean = true;
 
-    // <----- Variables para Paginación de Películas ----->
-    currentPage: number = 1; // Página actual
-    totalPages: number = 1; // Cantidad total de páginas
-    totalElements: number = 0; // Total de películas en la playlist
+    // ? ----- Paginación de Películas -----
+    currentPage: number = 1;
+    totalPages: number = 1;
+    totalElements: number = 0;
 
-    // ? ----- Estado de Usuario y Permisos -----
+    // ? ----- Permisos y Sesión -----
     isLoggedIn: boolean = false;
     currentUsername: string | null = null;
-    isOwner: boolean = false; // Indica si el usuario actual es el creador de la playlist
-    isAdmin: boolean = false; // Indica si el usuario actual es Administrador
+    isOwner: boolean = false;
+    isAdmin: boolean = false;
 
     // * ======== Lifecycle Hooks ========
     ngOnInit(): void {
@@ -59,7 +59,7 @@ export class PlaylistSheet implements OnInit {
                 this.isLoadingPlaylist = true;
                 this.playlist = null;
                 this.movies = [];
-                this.currentPage = 1; // Resetear a la primera página si cambia la playlist
+                this.currentPage = 1;
                 this.cdr.markForCheck();
 
                 this.loadPlaylist(playlistId, 1);
@@ -67,23 +67,19 @@ export class PlaylistSheet implements OnInit {
         });
     }
 
-    // ! -------- Método para cargar la Playlist desde el Backend --------
+    // <----- Cargar Datos e Ítems de la Playlist ----->
     loadPlaylist(id: number, page: number = 1): void {
         // 1. Cargamos la información general de la playlist si no la tenemos aún
         if (!this.playlist) {
             this.pService.getPlaylistById(id).subscribe({
                 next: (data) => {
                     this.playlist = data;
+                    this.isOwner = !!(
+                        this.currentUsername &&
+                        data?.userPreviewDTO?.username === this.currentUsername
+                    );
 
-                    // Verifica si el usuario actual es el dueño de la playlist
-                    if (this.currentUsername && data.userPreviewDTO) {
-                        this.isOwner = data.userPreviewDTO.username === this.currentUsername;
-                    } else {
-                        this.isOwner = false;
-                    }
-
-                    // Actualiza el título de la pestaña en el navegador con el nombre de la playlist
-                    if (data && data.name) {
+                    if (data?.name) {
                         this.titleService.setTitle(`${data.name} | Common Room`);
                     }
 
@@ -119,21 +115,22 @@ export class PlaylistSheet implements OnInit {
         });
     }
 
-    // <----- Método de Navegación de Paginación ----->
+    // <----- Paginación ----->
     goToPage(page: number): void {
         if (page >= 1 && page <= this.totalPages && page !== this.currentPage && this.playlist) {
             this.loadPlaylist(this.playlist.id, page);
         }
     }
 
-    // ! -------- Gestión de Modales (Edición) --------
+    // <----- Apertura de Modales ----->
     openEditModal(): void {
         this.modalService.openCustom('Edit Playlist');
     }
 
-    // ! -------- Confirmación y Eliminación de Playlist --------
+    // <----- Eliminación de Playlist ----->
     deletePlaylist(): void {
-        if (!this.playlist) return;
+        // Valida que exista la playlist y que el usuario actual sea el dueño
+        if (!this.playlist || !this.isOwner) return;
 
         this.modalService.openConfirm(
             'Delete Playlist',
@@ -159,9 +156,10 @@ export class PlaylistSheet implements OnInit {
         });
     }
 
-    // ! -------- Eliminar Película de la Playlist --------
+    // <----- Remoción de Películas de la Playlist ----->
     removeMovie(movieId: number): void {
-        if (!this.playlist) return;
+        // Valida que exista la playlist y que el usuario actual sea el dueño
+        if (!this.playlist || !this.isOwner) return;
 
         this.modalService.openConfirm(
             'Remove Movie',
@@ -199,16 +197,16 @@ export class PlaylistSheet implements OnInit {
         });
     }
 
-    // ? ----- Refrescar Datos de la Playlist tras Editar -----
+    // <----- Evento de Actualización tras Edición ----->
     onPlaylistUpdated(): void {
         if (this.playlist) {
             const playlistId = this.playlist.id;
-            this.playlist = null; // Reiniciamos para forzar recarga de info general
+            this.playlist = null;
             this.loadPlaylist(playlistId, 1);
         }
     }
 
-    // * -------- Métodos para reemplazar imágenes fallidas --------
+    // <----- Helpers de Imágenes Fallidas ----->
     noPlaylistPicture(event: Event): void {
         const img = event.target as HTMLImageElement;
         img.src = 'assets/img/default-img/playlist-noimg.jpg';
