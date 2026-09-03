@@ -155,7 +155,8 @@
     border-radius: 50%;
     border: 0.15rem solid var(--purple-400);
     cursor: pointer;
-    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    font-family: inherit; /* <----- Acomodar fuentes del botón -----> */
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, color 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -165,6 +166,19 @@
     background-color: var(--purple-300);
     border-color: var(--purple-700);
     transform: scale(1.1);
+}
+
+/* <----- Botón de Eliminar Reseña -----> */
+.buttons-container button.btn-delete-review {
+    background-color: var(--red-600);
+    border-color: var(--red-500);
+    color: var(--red-500);
+}
+
+.buttons-container button.btn-delete-review:hover {
+    background-color: var(--red-500);
+    border-color: var(--red-600);
+    color: #ffffff;
 }
 
 /* ? ------- Comment Section ------- */

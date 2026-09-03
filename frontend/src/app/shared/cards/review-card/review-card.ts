@@ -23,8 +23,8 @@ export class ReviewCard {
     @Input() currentUsername: string | null = null;
     @Input() isAdmin: boolean = false;
     @Input() isMyProfile: boolean = false;
-    @Input() isHighlighted: boolean = false; // <----- Resalta la reseña del usuario en la vista ----->
-
+    @Input() isHighlighted: boolean = false; // Resalta la reseña del usuario en la vista
+    
     // * ======== Outputs ========
     @Output() edit = new EventEmitter<Review>();
     @Output() delete = new EventEmitter<number>();

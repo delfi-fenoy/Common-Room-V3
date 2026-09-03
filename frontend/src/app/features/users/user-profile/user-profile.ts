@@ -31,7 +31,7 @@ const RESERVED_USERNAMES = ['all', 'null', 'undefined', 'config', 'api', 'root',
         EditProfileModal,
         ReviewFormModal,
         BanReasonModal,
-        Modal
+        Modal,
     ],
     templateUrl: './user-profile.html',
     styleUrl: './user-profile.css',
@@ -43,7 +43,7 @@ export class UserProfile implements OnInit, OnDestroy {
     private uService = inject(UserService);
     private rService = inject(ReviewService);
     private pService = inject(PlaylistService);
-    private userBanService = inject(UserbanService); // <--- Servicio de baneo
+    private userBanService = inject(UserbanService);
     private auth = inject(AuthService);
     public modalService = inject(ModalService);
     private titleService = inject(Title);
@@ -57,7 +57,7 @@ export class UserProfile implements OnInit, OnDestroy {
     isAdmin: boolean = false;
     userNotFound: boolean = false;
 
-    // ? ----- Control de Vista por Pestañas (Tabs) -----
+    // ? ----- Control de Pestaña Activa -----
     activeTab: 'reviews' | 'playlists' = 'reviews';
 
     // ? ----- Control de Modales -----
@@ -71,14 +71,14 @@ export class UserProfile implements OnInit, OnDestroy {
     totalElements: number = 0;
     isLoadingReviews: boolean = false;
 
-    // ? ----- Paginación y Estado de Playlists -----
+    // ? ----- Paginación de Playlists -----
     playlists: PlaylistPreview[] = [];
     currentPlaylistPage: number = 1;
     totalPlaylistPages: number = 1;
     totalPlaylistElements: number = 0;
     isLoadingPlaylists: boolean = false;
 
-    // Suscripción a los cambios de parámetros de la ruta
+    // Suscripciones
     private routeSubscription!: Subscription;
     private authSubscription!: Subscription;
 
@@ -86,7 +86,7 @@ export class UserProfile implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.isAdmin = this.auth.getUserRole() === 'ADMIN';
 
-        // <----- Escucha cambios en la sesión/username global ----->
+        // Escucha cambios en la sesión/username global
         this.authSubscription = this.auth.username$.subscribe((username) => {
             this.currentUsername = username;
             if (this.selectedUser) {
@@ -122,12 +122,12 @@ export class UserProfile implements OnInit, OnDestroy {
         }
     }
 
-    // ? ----- Selector de Pestaña Activa -----
+    // <----- Cambio de Pestaña Activa ----->
     setTab(tab: 'reviews' | 'playlists'): void {
         this.activeTab = tab;
     }
 
-    // ! -------- Método para cargar el Perfil del Usuario --------
+    // <----- Cargar Información del Perfil ----->
     loadUser(username: string): void {
         this.isLoadingUser = true;
         this.userNotFound = false;
@@ -136,7 +136,7 @@ export class UserProfile implements OnInit, OnDestroy {
             next: (data) => {
                 this.selectedUser = data;
 
-                if (data && data.username) {
+                if (data?.username) {
                     this.titleService.setTitle(`${data.username}'s Profile | Common Room`);
                 }
 
@@ -154,7 +154,7 @@ export class UserProfile implements OnInit, OnDestroy {
         });
     }
 
-    // ! -------- Método para cargar Playlists del Usuario --------
+    // <----- Cargar Playlists del Usuario ----->
     loadPlaylists(username: string, page: number): void {
         this.isLoadingPlaylists = true;
         this.currentPlaylistPage = page;
@@ -178,7 +178,6 @@ export class UserProfile implements OnInit, OnDestroy {
         });
     }
 
-    // <----- Helper privado para resetear estado de playlists ----->
     private resetPlaylistState(): void {
         this.playlists = [];
         this.totalPlaylistPages = 1;
@@ -187,7 +186,6 @@ export class UserProfile implements OnInit, OnDestroy {
         this.cdr.markForCheck();
     }
 
-    // ? ----- Cambio de Página de Playlists -----
     changePlaylistPage(newPage: number): void {
         if (this.selectedUser && newPage >= 1 && newPage <= this.totalPlaylistPages) {
             this.currentPlaylistPage = newPage;
@@ -195,7 +193,7 @@ export class UserProfile implements OnInit, OnDestroy {
         }
     }
 
-    // ! -------- Método para cargar Reseñas del Usuario --------
+    // <----- Cargar Reseñas del Usuario ----->
     loadReviews(username: string, page: number): void {
         this.isLoadingReviews = true;
         this.currentPage = page;
@@ -223,7 +221,6 @@ export class UserProfile implements OnInit, OnDestroy {
         this.cdr.markForCheck();
     }
 
-    // ? ----- Cambio de Página -----
     changePage(newPage: number): void {
         if (this.selectedUser && newPage >= 1 && newPage <= this.totalPages) {
             this.currentPage = newPage;
@@ -231,7 +228,7 @@ export class UserProfile implements OnInit, OnDestroy {
         }
     }
 
-    // ! -------- Gestión de Modales y Edición --------
+    // <----- Handlers de Modales y Edición ----->
     openEditModal(): void {
         this.activeModal = 'profile';
         this.modalService.openCustom('Account Settings');
@@ -249,7 +246,7 @@ export class UserProfile implements OnInit, OnDestroy {
         }
     }
 
-    // ! -------- Eliminación de Reseñas --------
+    // <----- Confirmación y Eliminación de Reseña ----->
     onDeleteReview(reviewId: number): void {
         this.modalService.openConfirm(
             'Delete Review',
@@ -279,7 +276,7 @@ export class UserProfile implements OnInit, OnDestroy {
         );
     }
 
-    // ! -------- Eliminación de Cuenta de Usuario --------
+    // <----- Eliminación de Cuenta de Usuario ----->
     deleteUser(): void {
         if (!this.selectedUser) return;
 
@@ -310,15 +307,15 @@ export class UserProfile implements OnInit, OnDestroy {
         );
     }
 
-    // <----- Banear Usuario (Exclusivo Admin) ----->
+    // <----- Baneo de Usuario (Administradores) ----->
     banUser(): void {
-        if (!this.selectedUser) return;
+        // Si el objetivo es un administrador, bloquea la acción
+        if (!this.selectedUser || this.selectedUser.role === 'ADMIN') return;
 
         this.activeModal = 'ban';
         this.modalService.openCustom(`Ban User: @${this.selectedUser.username}`);
     }
 
-    // Callback llamado por (confirmed) del modal
     onConfirmBan(reason: string): void {
         if (!this.selectedUser) return;
 
@@ -341,7 +338,7 @@ export class UserProfile implements OnInit, OnDestroy {
         });
     }
 
-    // ? ----- Refrescar Datos de Perfil -----
+    // <----- Refrescar Perfil ----->
     refreshProfileData(newUsername?: string): void {
         const targetUsername = newUsername || this.auth.getUsername();
 
@@ -356,14 +353,13 @@ export class UserProfile implements OnInit, OnDestroy {
         }
     }
 
-    // * -------- Métodos para reemplazar imagen de perfil/playlist fallida --------
+    // <----- Helpers de Imágenes Fallidas ----->
     noProfilePicture(event: Event): void {
         const img = event.target as HTMLImageElement;
-        const defaultPath =
+        img.src =
             this.selectedUser?.role === 'ADMIN'
                 ? 'assets/img/default-img/admin-noimg.jpg'
                 : 'assets/img/default-img/user-noimg.jpg';
-        img.src = defaultPath;
     }
 
     noPlaylistPicture(event: Event): void {

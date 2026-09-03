@@ -74,6 +74,7 @@
 
 /* ? --- Buttons Styles --- */
 .close-btn {
+    font-family: inherit;
     background-color: var(--green-300);
     border: 3px solid var(--green-600);
     border-radius: 6px;
@@ -113,11 +114,12 @@
     flex-direction: column;
     gap: 0.85rem;
     overflow-y: auto;
-    overflow-x: hidden; /* <----- Agregá esto para matar el scrollbar horizontal */
-    padding: 0.2rem;   /* <----- Le da un margen interno para que el transform del hover no colisione */
+    overflow-x: hidden;
+    padding: 0.2rem;
 }
 
 .nav-btn {
+    font-family: inherit;
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -131,7 +133,7 @@
     opacity: 0.8;
     transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease, color 0.2s ease, opacity 0.2s ease;
     width: 100%;
-    box-sizing: border-box; /* <----- Asegura que bordes y padding no agranden el botón */
+    box-sizing: border-box;
     cursor: pointer;
 }
 
@@ -157,4 +159,17 @@
 
 .nav-btn:active {
     transform: scale(0.98);
+}
+
+/* ! <----- Botón de Ban para Admin en Sidebar -----> */
+.nav-btn.ban-btn {
+    background-color: var(--red-600);
+    border-color: var(--red-500);
+    color: var(--red-100);
+}
+
+.nav-btn.ban-btn:hover {
+    background-color: var(--red-500);
+    border-color: var(--red-600);
+    color: #ffffff;
 }

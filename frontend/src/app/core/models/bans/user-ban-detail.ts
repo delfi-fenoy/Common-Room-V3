@@ -1,4 +1,4 @@
-export interface UserBanResponse {
+export interface UserBanDetails {
     id: number;
     bannedUsername: string;
     bannedByUsername: string;

@@ -33,26 +33,26 @@ export class ReviewFormModal implements OnInit {
 
     // * ======== Formulario Reactivo y Estado de Puntuación ========
     reviewForm!: FormGroup;
-    displayedRating: number = 5;
-    finalRating: number = 5;
+    displayedRating: number = 0;
+    finalRating: number = 0;
 
     // * ======== Lifecycle Hooks ========
     ngOnInit(): void {
-        const initialRating = this.review()?.rating ?? 5;
-        this.finalRating = initialRating;
-        this.displayedRating = initialRating;
+        const initialRating = this.review()?.rating ?? null;
+        this.finalRating = initialRating ?? 0;
+        this.displayedRating = initialRating ?? 0;
 
         this.initReviewForm(initialRating);
     }
 
     // <----- Inicializar Formulario de Reseña ----->
-    private initReviewForm(initialRating: number): void {
+    private initReviewForm(initialRating: number | null): void {
         this.reviewForm = this.fb.group({
             rating: [
                 initialRating,
                 [Validators.required, Validators.min(0.5), Validators.max(5), this.multipleOfHalf],
             ],
-            comment: [this.review()?.comment ?? '', [Validators.maxLength(700)]],
+            comment: [this.review()?.comment ?? null, [Validators.maxLength(700)]],
             movieId: [this.movie()?.id ?? this.review()?.movieId ?? null],
         });
     }

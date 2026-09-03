@@ -1,18 +1,18 @@
 <div class="movie-sheet-container">
-    <!-- ? --- Loading Indicator --- -->
+    <!-- ? --- Indicador de Carga --- -->
     @if (isLoadingMovie) {
         <div class="loading-container">
             <h3>Loading movie information...</h3>
         </div>
     } @else if (chosenMovie) {
-        <!-- * ---- Fondo Difuminado Fijo ---- -->
+        <!-- * ========== Fondo Difuminado Fijo ========== -->
         @if (chosenMovie.backdropUrl) {
             <div class="bg-wrapper">
                 <img [src]="chosenMovie.backdropUrl" alt="Movie backdrop" class="bg-img" />
             </div>
         }
 
-        <!-- ! ========== Movie Section ========== -->
+        <!-- * ========== Sección Principal de la Película ========== -->
         <section class="movie-main-card">
             <!-- ? --- Columna Izquierda: Póster --- -->
             <div class="poster-column">
@@ -27,14 +27,17 @@
 
             <!-- ? --- Columna Derecha: Detalles de la Película --- -->
             <div class="info-column">
-                <!-- Título, Botón Playlist y Rating -->
+                <!-- Título, Rating y Acciones -->
                 <div class="block-box title-box">
                     <h1>{{ chosenMovie.title }}</h1>
 
-                    <!-- <----- Contenedor para Botón y Rating ----->
                     <div class="title-actions">
                         @if (isLoggedIn) {
-                            <button (click)="openAddPlaylistModal()" class="add-playlist-btn" title="Add to Playlist">
+                            <button
+                                (click)="openAddPlaylistModal()"
+                                class="add-playlist-btn"
+                                title="Add to Playlist"
+                            >
                                 + Playlist
                             </button>
                         }
@@ -51,11 +54,11 @@
                     <p>{{ chosenMovie.synopsis || 'No synopsis available.' }}</p>
                 </div>
 
-                <!-- Metadatos de la Película -->
+                <!-- Detalles y Metadatos -->
                 <div class="block-box data-box">
                     <h3>Movie Details</h3>
 
-                    <!-- Lista de Géneros -->
+                    <!-- Géneros -->
                     @if (chosenMovie.genres && chosenMovie.genres.length > 0) {
                         <div class="genres-container">
                             <strong>Genres:</strong>
@@ -73,7 +76,7 @@
                         </div>
                     }
 
-                    <!-- Información Adicional -->
+                    <!-- Lista de Metadatos Adicionales -->
                     <div class="metadata-details">
                         <h4>Additional Information:</h4>
                         <ul>
@@ -96,7 +99,7 @@
             </div>
         </section>
 
-        <!-- * ========== Reviews Section ========== -->
+        <!-- * ========== Sección de Reseñas de la Comunidad ========== -->
         <section class="reviews-section">
             <h2 class="title-reviews">Community Reviews</h2>
 
@@ -104,7 +107,7 @@
                 <p class="login-text">You must be logged in to post a review...</p>
             }
 
-            <!-- ? === 1. Reseña del Usuario Logueado O Botón para Crear === -->
+            <!-- ? --- Reseña Propia del Usuario Autenticado --- -->
             <div class="user-review-area">
                 @if (isLoggedIn && currentUserReview) {
                     <div class="own-review-wrapper">
@@ -126,7 +129,7 @@
 
             <hr class="reviews-divider" />
 
-            <!-- ? === 2. Lista de Reseñas Generales === -->
+            <!-- ? --- Lista de Reseñas Generales --- -->
             <div class="reviews-container">
                 @if (isLoadingReviews) {
                     <p class="loading-reviews">Loading reviews...</p>
@@ -146,7 +149,7 @@
                 }
             </div>
 
-            <!-- ? === 3. Controles de Paginación === -->
+            <!-- ? --- Paginador de Reseñas --- -->
             @if (totalPages > 1) {
                 <div class="pagination-controls">
                     <button
@@ -170,24 +173,24 @@
             }
         </section>
     } @else {
+        <!-- ? --- Película No Encontrada --- -->
         <div class="not-found-container">
             <h3>No movie was found with that information.</h3>
         </div>
     }
 
-    <!-- ! ========== Modales Personalizados de Formulario ========== -->
+    <!-- * ========== Modales de Formulario ========== -->
     @if (modalService.isOpen() && modalService.type() === 'custom') {
-        @if (currentModalContext === 'review') {
-            <app-review-form-modal
-                [movie]="chosenMovie"
-                [review]="selectedReview"
-                (submitted)="refreshReviews()"
-            ></app-review-form-modal>
-        } @else if (currentModalContext === 'playlist') {
-            <app-playlist-modal
-                [mode]="'add-movie'"
-                [movie]="chosenMovie"
-            ></app-playlist-modal>
-        }
+        <app-modal>
+            @if (currentModalContext === 'review') {
+                <app-review-form-modal
+                    [movie]="chosenMovie"
+                    [review]="selectedReview"
+                    (submitted)="refreshReviews()"
+                ></app-review-form-modal>
+            } @else if (currentModalContext === 'playlist') {
+                <app-playlist-modal [mode]="'add-movie'" [movie]="chosenMovie"></app-playlist-modal>
+            }
+        </app-modal>
     }
 </div>

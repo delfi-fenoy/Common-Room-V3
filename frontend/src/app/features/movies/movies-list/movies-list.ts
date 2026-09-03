@@ -1,12 +1,12 @@
 import { Component, HostListener, OnInit, inject, ChangeDetectorRef } from '@angular/core';
-import { MoviePreview } from '../../../core/models';
-import { MovieService } from '../../../core/services/movie-service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
+
+import { MoviePreview } from '../../../core/models';
+import { MovieService } from '../../../core/services/movie-service';
 import { MovieCard } from '../../../shared/cards/movie-card/movie-card';
 
-// Filtro de películas: relevancia, popularidad, recientes o próximas
 export type MovieFilterType = 'relevance' | 'popular' | 'recent' | 'upcoming';
 
 export const TMDB_GENRES = [
@@ -41,27 +41,28 @@ export const TMDB_GENRES = [
 export class MoviesList implements OnInit {
     // * ======== Inyección de Servicios ========
     public mService = inject(MovieService);
-    private cdr = inject(ChangeDetectorRef); // Detector de cambios
+    private cdr = inject(ChangeDetectorRef);
     private route = inject(ActivatedRoute);
     private router = inject(Router);
 
-    // * ======== Variables de Estado ========
-    movies: MoviePreview[] = []; // Array peliculas visibles
-    currentPage = 1; // Número de página actual para la paginación del backend
-    hasMorePages = true; // Boolean para saber si el backend aun tiene más páginas disponibles
+    // * ======== Variables de Estado y Filtros ========
+    movies: MoviePreview[] = [];
+    currentPage = 1;
+    hasMorePages = true;
     isLoading = false;
     showScrollTopBtn = false;
-    selectedFilter: MovieFilterType = 'relevance'; // Por defecto
+
+    selectedFilter: MovieFilterType = 'relevance';
     selectedYear: string = '';
     selectedGenre: number | null = null;
     genresList = TMDB_GENRES;
-    yearsList: number[] = Array.from({ length: 2026 - 1900 + 1 }, (_, i) => 2026 - i); // Array de años desde 2026 hasta 1900
+    yearsList: number[] = Array.from({ length: 2026 - 1900 + 1 }, (_, i) => 2026 - i);
 
     // * ======== Lifecycle Hooks ========
     ngOnInit(): void {
         // * Escucha cambios en los QueryParams para mantener sincronizados los filtros y la URL
         this.route.queryParams.subscribe((params) => {
-            // ? Validación de género en la URL
+            // Validar Género en URL
             const rawGenre = params['genre'];
             if (rawGenre !== undefined && rawGenre !== '') {
                 const parsedGenre = Number(rawGenre);
@@ -78,13 +79,12 @@ export class MoviesList implements OnInit {
                 this.selectedGenre = null;
             }
 
-            // ? Validación de año en la URL
+            // Validar Año en URL
             const rawYear = params['year'];
             if (rawYear !== undefined && rawYear !== '') {
                 const parsedYear = Number(rawYear);
                 const existsYear = !isNaN(parsedYear) && this.yearsList.includes(parsedYear);
 
-                // ! Si el año ingresado no es válido, redirige a 404
                 if (!existsYear) {
                     this.router.navigate(['/404']);
                     return;
@@ -94,20 +94,19 @@ export class MoviesList implements OnInit {
                 this.selectedYear = '';
             }
 
-            if (params['filter']) {
-                this.selectedFilter = params['filter'] as MovieFilterType;
-            } else {
-                this.selectedFilter = 'relevance';
-            }
+            // Validar Orden (Filter)
+            this.selectedFilter = params['filter']
+                ? (params['filter'] as MovieFilterType)
+                : 'relevance';
 
             this.resetAndReload();
         });
     }
 
-    // ! -------- Método para cargar películas --------
+    // <----- Cargar Películas según Filtros y Página ----->
     loadMovies(): void {
-        if (this.isLoading || !this.hasMorePages) return; // Controla si ya hay una petición en curso o si no quedan más páginas
-        this.isLoading = true; // Sppiner de cargando
+        if (this.isLoading || !this.hasMorePages) return;
+        this.isLoading = true;
 
         let request$: Observable<MoviePreview[]>;
 
@@ -144,7 +143,7 @@ export class MoviesList implements OnInit {
         });
     }
 
-    // ! -------- Método Switch para obtener películas por filtro --------
+    // <----- Selector de Petición por Filtro ----->
     private getMoviesByFilter(filter: MovieFilterType, page: number): Observable<MoviePreview[]> {
         switch (filter) {
             case 'popular':
@@ -159,9 +158,8 @@ export class MoviesList implements OnInit {
         }
     }
 
-    // ? --- Evento al cambiar el Filtro General ---
+    // <----- Handlers de Cambios de Filtro ----->
     onFilterChange(newFilter: MovieFilterType): void {
-        // * Al cambiar a un Sort By se remueven los filtros de género y año de la URL
         this.router.navigate([], {
             relativeTo: this.route,
             queryParams: newFilter !== 'relevance' ? { filter: newFilter } : {},
@@ -173,12 +171,11 @@ export class MoviesList implements OnInit {
         this.updateQueryParams({ genre: newGenre });
     }
 
-    // ? --- Evento al cambiar el Año ---
     onYearChange(newYear: string): void {
         this.updateQueryParams({ year: newYear });
     }
 
-    // ! -------- Método para actualizar QueryParams en la URL --------
+    // <----- Actualización de QueryParams en la URL ----->
     private updateQueryParams(updated: { genre?: number | null; year?: string }): void {
         const queryParams: any = { ...this.route.snapshot.queryParams };
 
@@ -207,7 +204,7 @@ export class MoviesList implements OnInit {
         });
     }
 
-    // ! -------- Método para recargar --------
+    // <----- Resetear Lista al Cambiar Filtros ----->
     private resetAndReload(): void {
         this.currentPage = 1;
         this.movies = [];
@@ -215,14 +212,13 @@ export class MoviesList implements OnInit {
         this.loadMovies();
     }
 
-    // ! -------- Listener de Scroll Global --------
+    // <----- Listener de Scroll Infinito y Botón 'Scroll To Top' ----->
     @HostListener('window:scroll', [])
     onWindowScroll(): void {
-        this.showScrollTopBtn = window.scrollY > 400; // Despues de 400px, el botón aparece
+        this.showScrollTopBtn = window.scrollY > 400;
 
-        // Lógica para disparar el Scroll Infinito
-        const scrollPosition = window.innerHeight + window.scrollY; // Posición actual del scroll desde la parte superior de la ventana
-        const threshold = document.documentElement.scrollHeight - 600; // Umbral de 600px desde el final de la página para cargar más películas
+        const scrollPosition = window.innerHeight + window.scrollY;
+        const threshold = document.documentElement.scrollHeight - 600;
 
         if (
             scrollPosition >= threshold &&
@@ -235,7 +231,7 @@ export class MoviesList implements OnInit {
         }
     }
 
-    // ? ----- Método para volver hacia arriba -----
+    // <----- Desplazar suavemente arriba ----->
     scrollToTop(): void {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }

@@ -1,4 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
+
 import { MoviePreview } from '../../core/models';
 import { MovieService } from '../../core/services/movie-service';
 import { MovieCarouselComponent } from '../../shared/components/movie-carousel/movie-carousel';
@@ -11,15 +12,15 @@ import { MovieCarouselComponent } from '../../shared/components/movie-carousel/m
     styleUrl: './home-page.css',
 })
 export class HomePage implements OnInit {
-    // * ---- Inyección de Dependencias ----
+    // * ======== Inyección de Servicios ========
     private movieService = inject(MovieService);
 
-    // * ---- Estados Reactivos con Signals (Listas) ----
+    // * ======== Estados Reactivos con Signals ========
     popularMovies = signal<MoviePreview[]>([]);
     recentMovies = signal<MoviePreview[]>([]);
     upcomingMovies = signal<MoviePreview[]>([]);
 
-    // * -------- Ciclo de Vida: OnInit --------
+    // * ======== Lifecycle Hooks ========
     // Se ejecuta al inicializar el componente; invoca la carga inicial de todas las listas de películas
     ngOnInit(): void {
         this.loadAllMovies();

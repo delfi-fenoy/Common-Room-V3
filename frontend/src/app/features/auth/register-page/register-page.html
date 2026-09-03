@@ -1,27 +1,28 @@
 <div class="auth-container">
-    <app-modal/>
-    <!-- ? Background Stars -->
+    <app-modal />
+
+    <!-- ? --- Background Stars --- -->
     <div class="stars"></div>
     <div class="shooting-star"></div>
     <div class="shooting-star"></div>
     <div class="shooting-star"></div>
     <div class="shooting-star"></div>
 
-    <!-- ? --- Button Home --- -->
+    <!-- ? --- Botón de Retorno a Inicio --- -->
     <div class="back-button" routerLink="/" title="Go to home">
         <img src="assets/img/CR-icon2.png" alt="App logo" class="logo-img" />
     </div>
 
-    <!-- ! ====== Form Register ====== -->
+    <!-- * ========== Formulario de Registro ========== -->
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
         <h1 class="auth-title">Register</h1>
 
-        <!-- ? --- Username Input --- -->
+        <!-- Subsección: Campo Username -->
         <div class="field-container">
             <label for="username">Username</label>
             <input type="text" id="username" formControlName="username" autocomplete="username" />
 
-            <!-- ! === Validators === -->
+            <!-- Validaciones de Username -->
             @if (f.username.touched && f.username.hasError('required')) {
                 <p class="error-text">Username is required.</p>
             } @else if (
@@ -32,7 +33,7 @@
             }
         </div>
 
-        <!-- ? --- Password Input --- -->
+        <!-- Subsección: Campo Password -->
         <div class="field-container">
             <label for="password">Password</label>
             <div class="password-field">
@@ -52,7 +53,7 @@
                 </button>
             </div>
 
-            <!-- ! === Validators === -->
+            <!-- Validaciones de Password -->
             @if (f.password.touched && f.password.hasError('required')) {
                 <p class="error-text">Password is required.</p>
             } @else if (f.password.touched && f.password.hasError('minlength')) {
@@ -60,12 +61,12 @@
             }
         </div>
 
-        <!-- ? --- Email Input --- -->
+        <!-- Subsección: Campo Email -->
         <div class="field-container">
             <label for="email">Email</label>
             <input type="email" id="email" formControlName="email" autocomplete="email" />
 
-            <!-- ! === Validators === -->
+            <!-- Validaciones de Email -->
             @if (f.email.touched && f.email.hasError('required')) {
                 <p class="error-text">Email is required.</p>
             } @else if (f.email.touched && f.email.hasError('email')) {
@@ -75,7 +76,7 @@
             }
         </div>
 
-        <!-- ? --- Profile Picture Input --- -->
+        <!-- Subsección: Campo Profile Picture URL -->
         <div class="field-container">
             <label for="picture">Profile Picture (URL)</label>
             <input
@@ -90,12 +91,12 @@
             }
         </div>
 
-        <!-- ? --- Button Submit --- -->
+        <!-- Botón de Envío -->
         <button type="submit" [disabled]="registerForm.invalid || isSubmitting()">
             {{ isSubmitting() ? 'Registering...' : 'Register' }}
         </button>
 
-        <!-- ? ----- Go to Login ----- -->
+        <!-- Navegación a Login -->
         <p class="auth-switch">
             Already have an account?
             <a routerLink="/login">Login</a>

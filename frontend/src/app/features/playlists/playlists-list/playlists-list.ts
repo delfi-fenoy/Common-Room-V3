@@ -1,6 +1,6 @@
 import { Component, HostListener, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 
 import { PlaylistPreview } from '../../../core/models';
@@ -42,7 +42,7 @@ export class PlaylistsList implements OnInit {
         this.loadPlaylists();
     }
 
-    // ! -------- Método para cargar Playlists Públicas desde el Backend --------
+    // <----- Cargar Playlists Públicas ----->
     loadPlaylists(): void {
         if (this.isLoading || !this.hasMorePages) return;
         this.isLoading = true;
@@ -62,7 +62,7 @@ export class PlaylistsList implements OnInit {
         });
     }
 
-    // ! -------- Listener de Scroll Global para Infinito --------
+    // <----- Listener de Scroll Infinito ----->
     @HostListener('window:scroll', [])
     onWindowScroll(): void {
         this.showScrollTopBtn = window.scrollY > 400;
@@ -81,7 +81,7 @@ export class PlaylistsList implements OnInit {
         }
     }
 
-    // ? ----- Método para volver hacia arriba -----
+    // <----- Desplazar suavemente arriba ----->
     scrollToTop(): void {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }

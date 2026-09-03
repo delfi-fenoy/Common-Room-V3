@@ -1,13 +1,12 @@
-<!-- playlist-sheet.html -->
 <div class="sheet-container">
-    <!-- ? --- Loading Indicator --- -->
+    <!-- ? --- Indicador de Carga --- -->
     @if (isLoadingPlaylist) {
         <div class="loading-container">
             <h3>Loading playlist information...</h3>
         </div>
     } @else if (playlist) {
         <div class="sheet-content">
-            <!-- ! ==================== SIDEBAR IZQUIERDO (Metadata y Acciones) ==================== -->
+            <!-- * ========== Sidebar Izquierdo: Metadata y Acciones ========== -->
             <aside class="playlist-sidebar">
                 <!-- Portada de la Playlist -->
                 <div class="playlist-cover">
@@ -18,7 +17,7 @@
                     />
                 </div>
 
-                <!-- Título y Visibilidad -->
+                <!-- Título y Estado de Visibilidad -->
                 <div class="block-box title-box">
                     <h1>{{ playlist.name }}</h1>
                     @if (playlist.isPrivate) {
@@ -28,12 +27,11 @@
                     }
                 </div>
 
-                <!-- Acciones (Edit / Delete) -->
+                <!-- Botones de Acción -->
                 <div class="actions-box">
-                    @if (isOwner || isAdmin) {
-                        <button class="btn-delete" (click)="deletePlaylist()">🗑️ Delete</button>
-                    }
+                    <!-- Por esta (solo el dueño puede ver el botón de borrar): -->
                     @if (isOwner) {
+                        <button class="btn-delete" (click)="deletePlaylist()">🗑️ Delete</button>
                         <button class="btn-edit" (click)="openEditModal()">✏️ Edit</button>
                     }
                 </div>
@@ -44,7 +42,7 @@
                     <p>{{ playlist.description || 'No description provided.' }}</p>
                 </div>
 
-                <!-- Información del Creador -->
+                <!-- Información del Propietario -->
                 @let user = playlist.userPreviewDTO;
                 <div class="block-box owner-box">
                     <h3>Created by</h3>
@@ -68,7 +66,7 @@
                 </div>
             </aside>
 
-            <!-- ! ==================== SECCIÓN PRINCIPAL (Grid de Películas) ==================== -->
+            <!-- * ========== Sección Principal: Lista de Películas ========== -->
             <main class="movies-main">
                 <div class="movies-header">
                     <h2>Movies in playlist ({{ totalElements }})</h2>
@@ -82,7 +80,7 @@
                     <div class="movies-grid">
                         @for (movie of movies; track movie.id) {
                             <div class="grid-card-wrapper">
-                                @if (isOwner || isAdmin) {
+                                @if (isOwner) {
                                     <button
                                         class="btn-remove-overlay"
                                         (click)="removeMovie(movie.id)"
@@ -96,7 +94,7 @@
                         }
                     </div>
 
-                    <!-- <----- Controles de Paginación ----->
+                    <!-- Paginación -->
                     @if (totalPages > 1) {
                         <div class="pagination-container">
                             <button
@@ -125,12 +123,13 @@
             </main>
         </div>
     } @else {
+        <!-- ? --- Playlist No Encontrada --- -->
         <div class="not-found-container">
             <h3>Playlist not found or unreachable.</h3>
         </div>
     }
 
-    <!-- ! ========== Modal Contextual: Editar Playlist ========== -->
+    <!-- * ========== Modal Contextual: Editar Playlist ========== -->
     @if (modalService.isOpen() && modalService.type() === 'custom') {
         <app-modal>
             @if (playlist) {

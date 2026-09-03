@@ -1,163 +1,256 @@
 <app-modal>
-    <div class="ban-management-container">
-        <!-- * ========== Barra de Búsqueda ========== -->
-        <div class="search-box-section">
-            <div class="form-group search-group">
-                <label for="searchUser">Search Banned User</label>
-                <div class="search-input-wrapper">
-                    <input
-                        id="searchUser"
-                        type="text"
-                        [(ngModel)]="searchQuery"
-                        placeholder="Enter exact username..."
-                        (keyup.enter)="onSearch()"
-                    />
-                    <button type="button" class="btn btn-search" (click)="onSearch()">
-                        🔍 Search
-                    </button>
-                </div>
+    <div class="ban-modal-container">
+        <!-- * ========== VISTA 1: LISTA DE USUARIOS BANEADOS ========== -->
+        @if (currentView === 'list') {
+            <!-- ? --- Barra de Búsqueda --- -->
+            <div class="search-bar-container">
+                <input
+                    type="text"
+                    class="search-input"
+                    placeholder="Search banned user..."
+                    [value]="searchQuery"
+                    (input)="onSearchInput($event)"
+                />
             </div>
-        </div>
 
-        <!-- * ========== Contenido de Resultados del Usuario ========== -->
-        <div class="banned-list-section">
-            @if (isLoading) {
-                <p class="status-message">Searching user ban status...</p>
-            } @else if (hasSearched && !lastBan && historyBans.length === 0) {
-                <p class="empty-message">No ban records found for username "{{ searchQuery }}".</p>
+            @if (isLoadingList) {
+                <p class="status-msg">Loading banned users from database...</p>
+            } @else if (filteredUsers.length === 0) {
+                <p class="status-msg">No banned users found.</p>
             } @else {
-                <div class="banned-cards-wrapper">
-                    <!-- ? --- Tarjeta Principal: Último Baneo --- -->
-                    @if (lastBan) {
-                        <div class="ban-card-item" [class.expanded]="isLastBanExpanded">
-                            <div class="ban-card-header" (click)="toggleLastBan()">
+                <div class="users-list-wrapper">
+                    <div class="users-list">
+                        @for (user of filteredUsers; track user.id) {
+                            <div class="user-item" (click)="selectUser(user)">
                                 <div class="user-info">
-                                    <span class="banned-username"
-                                        >&#64;{{ lastBan.bannedUsername }}</span
-                                    >
-                                    <span
-                                        class="ban-badge"
-                                        [class.active-ban]="!lastBan.unbannedAt"
-                                    >
-                                        {{
-                                            !lastBan.unbannedAt
-                                                ? 'ACTIVE BAN'
-                                                : 'EXPIRED / UNBANNED'
-                                        }}
-                                    </span>
+                                    <span class="username">&#64;{{ user.username }}</span>
+                                    <span class="banned-by-sub">Banned</span>
                                 </div>
-                                <span class="chevron-icon">{{
-                                    isLastBanExpanded ? '▲' : '▼'
-                                }}</span>
+                                <span class="arrow-icon">▶</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Controles de Paginación -->
+                @if (totalPages > 1) {
+                    <div class="pagination-container">
+                        <button
+                            type="button"
+                            class="pagination-btn"
+                            [disabled]="currentPage === 1"
+                            (click)="onListPageChange(currentPage - 1)"
+                        >
+                            ◀ Prev
+                        </button>
+                        <span class="page-indicator">{{ currentPage }} / {{ totalPages }}</span>
+                        <button
+                            type="button"
+                            class="pagination-btn"
+                            [disabled]="currentPage === totalPages"
+                            (click)="onListPageChange(currentPage + 1)"
+                        >
+                            Next ▶
+                        </button>
+                    </div>
+                }
+            }
+        }
+
+        <!-- * ========== VISTA 2: DETALLE DEL BANEO ACTUAL ========== -->
+        @if (currentView === 'detail') {
+            <div class="detail-nav-header">
+                <button type="button" class="btn-back" (click)="backToList()">
+                    ◀ Back to List
+                </button>
+            </div>
+
+            @if (isLoadingDetail) {
+                <p class="status-msg">Loading ban details...</p>
+            } @else {
+                <div class="user-detail-container">
+                    <div class="detail-header">
+                        <span class="detail-username">&#64;{{ selectedUser?.username }}</span>
+                        <button type="button" class="btn-history-compact" (click)="goToHistory(1)">
+                            📜 View History
+                        </button>
+                    </div>
+
+                    <div class="ban-info-card">
+                        <div class="ban-card-title">
+                            <span>Ban Information</span>
+                            <span
+                                class="status-tag"
+                                [class.active-ban]="currentBan && !currentBan.unbannedAt"
+                            >
+                                {{ currentBan && !currentBan.unbannedAt ? 'BANNED' : 'INACTIVE' }}
+                            </span>
+                        </div>
+
+                        @if (currentBan) {
+                            <div class="info-row">
+                                <strong>Reason:</strong>
+                                <p class="reason-text">{{ currentBan.reason }}</p>
                             </div>
 
-                            @if (isLastBanExpanded) {
-                                <div class="ban-card-body">
-                                    <div class="ban-detail-row">
-                                        <strong>Reason:</strong>
-                                        <p class="ban-reason">{{ lastBan.reason }}</p>
-                                    </div>
-                                    <div class="ban-detail-row">
-                                        <strong>Banned at:</strong>
-                                        <span>{{ lastBan.bannedAt | date: 'medium' }}</span>
-                                    </div>
-                                    @if (lastBan.bannedByUsername) {
-                                        <div class="ban-detail-row">
-                                            <strong>Banned by:</strong>
-                                            <span>&#64;{{ lastBan.bannedByUsername }}</span>
-                                        </div>
-                                    }
-
-                                    @if (!lastBan.unbannedAt) {
-                                        <div class="card-actions">
-                                            <button
-                                                type="button"
-                                                class="btn btn-unban"
-                                                (click)="unbanUser(lastBan.bannedUsername)"
-                                                [disabled]="isProcessing"
-                                            >
-                                                {{ isProcessing ? 'Unbanning...' : 'Unban User' }}
-                                            </button>
-                                        </div>
-                                    }
+                            <div class="info-row-inline">
+                                <div>
+                                    <strong>Banned At: </strong>
+                                    <span>{{ currentBan.bannedAt | date: 'mediumDate' }}</span>
                                 </div>
-                            }
-                        </div>
-                    }
-
-                    <!-- ? --- Sub-desplegable: Historial de Baneos Paginado --- -->
-                    @if (historyBans.length > 0) {
-                        <div class="history-accordion">
-                            <div class="history-header" (click)="toggleHistory()">
-                                <span>📜 Ban History</span>
-                                <span class="chevron-icon">{{
-                                    isHistoryExpanded ? '▲' : '▼'
-                                }}</span>
+                                <div class="text-right">
+                                    <strong>Banned By: </strong>
+                                    <span>&#64;{{ currentBan.bannedByUsername }}</span>
+                                </div>
                             </div>
 
-                            @if (isHistoryExpanded) {
-                                <div class="history-body">
-                                    @if (isLoadingHistory) {
-                                        <p class="status-message">
-                                            Loading page {{ historyCurrentPage }}...
-                                        </p>
-                                    } @else {
-                                        <div class="history-items-list">
-                                            @for (hBan of historyBans; track hBan.id) {
-                                                <div class="history-item">
-                                                    <div class="ban-detail-row">
-                                                        <strong>Reason:</strong> {{ hBan.reason }}
-                                                    </div>
-                                                    <div class="ban-detail-row">
-                                                        <strong>Date:</strong>
-                                                        {{ hBan.bannedAt | date: 'shortDate' }}
-                                                    </div>
-                                                    @if (hBan.bannedByUsername) {
-                                                        <div class="ban-detail-row">
-                                                            <strong>Banned by:</strong> &#64;{{
-                                                                hBan.bannedByUsername
-                                                            }}
-                                                        </div>
-                                                    }
-                                                </div>
-                                            }
-                                        </div>
-
-                                        <!-- ? --- Navegación de Páginas --- -->
-                                        <div class="pagination-controls">
-                                            <button
-                                                type="button"
-                                                class="btn btn-page"
-                                                [disabled]="
-                                                    historyCurrentPage === 1 || isLoadingHistory
-                                                "
-                                                (click)="loadHistoryPage(historyCurrentPage - 1)"
-                                            >
-                                                ◀ Prev
-                                            </button>
-                                            <span class="page-indicator">
-                                                Page {{ historyCurrentPage }}
-                                            </span>
-                                            <button
-                                                type="button"
-                                                class="btn btn-page"
-                                                [disabled]="!hasMorePages || isLoadingHistory"
-                                                (click)="loadHistoryPage(historyCurrentPage + 1)"
-                                            >
-                                                Next ▶
-                                            </button>
-                                        </div>
-                                    }
+                            @if (currentBan.unbannedAt) {
+                                <div class="info-row-inline">
+                                    <div>
+                                        <strong>Unbanned At: </strong>
+                                        <span>{{
+                                            currentBan.unbannedAt | date: 'mediumDate'
+                                        }}</span>
+                                    </div>
+                                    <div class="text-right">
+                                        <strong>Unbanned By: </strong>
+                                        <span>&#64;{{ currentBan.unbannedByUsername }}</span>
+                                    </div>
                                 </div>
                             }
-                        </div>
-                    }
+                        } @else {
+                            <p class="status-msg">No active ban record found.</p>
+                        }
+                    </div>
                 </div>
             }
-        </div>
+        }
 
-        <!-- * ========== Footer de Acciones ========== -->
+        <!-- * ========== VISTA 3: HISTORIAL DE BANEOS (DESPLEGABLE) ========== -->
+        @if (currentView === 'history') {
+            <div class="history-top-bar">
+                <button type="button" class="btn-back" (click)="backToDetail()">
+                    ◀ Back to Details
+                </button>
+                <h3 class="history-title">Ban History: &#64;{{ selectedUser?.username }}</h3>
+            </div>
+
+            @if (isLoadingHistory) {
+                <p class="status-msg">Loading history...</p>
+            } @else if (banHistory.length === 0) {
+                <p class="status-msg">No history entries available.</p>
+            } @else {
+                <div class="history-list-wrapper">
+                    <div class="history-list">
+                        @for (item of banHistory; track item.id) {
+                            <div
+                                class="history-accordion-item"
+                                [class.is-expanded]="expandedBanId === item.id"
+                            >
+                                <!-- Header Desplegable Simple -->
+                                <div
+                                    class="accordion-header"
+                                    (click)="toggleBanDetails(item.id)"
+                                >
+                                    <div class="accordion-title">
+                                        <span class="ban-date">On: {{ item.bannedAt | date: 'dd/MM/yyyy' }}</span>| 
+                                        <span class="ban-by">By: &#64;{{ item.bannedByUsername }}</span>
+                                    </div>
+                                    <span class="accordion-arrow">
+                                        {{ expandedBanId === item.id ? '▲' : '▼' }}
+                                    </span>
+                                </div>
+
+                                <!-- Contenido Desplegado (Carga vía getBanById) -->
+                                @if (expandedBanId === item.id) {
+                                    <div class="accordion-body">
+                                        @if (loadingBanDetailsMap.get(item.id)) {
+                                            <p class="status-msg-sm">Loading details...</p>
+                                        } @else if (banDetailsMap.get(item.id); as detail) {
+                                            <div class="accordion-detail-content">
+                                                <div class="info-row">
+                                                    <strong>Reason:</strong>
+                                                    <p class="reason-text">{{ detail.reason }}</p>
+                                                </div>
+
+                                                <div class="info-row-inline">
+                                                    <div>
+                                                        <strong>Banned At: </strong>
+                                                        <span>{{ detail.bannedAt | date: 'medium' }}</span>
+                                                    </div>
+                                                    <div class="text-right">
+                                                        <strong>Banned By: </strong>
+                                                        <span>&#64;{{ detail.bannedByUsername }}</span>
+                                                    </div>
+                                                </div>
+
+                                                @if (detail.unbannedAt) {
+                                                    <div class="info-row-inline unbanned-status">
+                                                        <div>
+                                                            <strong>Unbanned At: </strong>
+                                                            <span>{{ detail.unbannedAt | date: 'medium' }}</span>
+                                                        </div>
+                                                        <div class="text-right">
+                                                            <strong>Unbanned By: </strong>
+                                                            <span>&#64;{{ detail.unbannedByUsername }}</span>
+                                                        </div>
+                                                    </div>
+                                                } @else {
+                                                    <div class="info-row-inline active-status">
+                                                        <strong>Status:</strong>
+                                                        <span>Currently Banned</span>
+                                                    </div>
+                                                }
+                                            </div>
+                                        } @else {
+                                            <p class="status-msg-sm">Failed to load ban details.</p>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Historial Paginado -->
+                @if (historyTotalPages > 1) {
+                    <div class="pagination-container">
+                        <button
+                            type="button"
+                            class="pagination-btn"
+                            [disabled]="historyPage === 1"
+                            (click)="onHistoryPageChange(historyPage - 1)"
+                        >
+                            ◀ Prev
+                        </button>
+                        <span class="page-indicator"
+                            >{{ historyPage }} / {{ historyTotalPages }}</span
+                        >
+                        <button
+                            type="button"
+                            class="pagination-btn"
+                            [disabled]="historyPage === historyTotalPages"
+                            (click)="onHistoryPageChange(historyPage + 1)"
+                        >
+                            Next ▶
+                        </button>
+                    </div>
+                }
+            }
+        }
+
+        <!-- * ========== Footer de Acciones (.form-actions) ========== -->
         <div class="form-actions">
+            @if (currentView === 'detail' && currentBan && !currentBan.unbannedAt) {
+                <button
+                    type="button"
+                    class="btn btn-unban"
+                    (click)="onUnbanUser()"
+                    [disabled]="isUnbanning"
+                >
+                    {{ isUnbanning ? 'Unbanning...' : 'Unban User' }}
+                </button>
+            }
             <button type="button" class="btn btn-cancel" (click)="onClose()">Close</button>
         </div>
     </div>

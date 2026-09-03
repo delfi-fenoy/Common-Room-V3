@@ -1,16 +1,15 @@
 <div class="users-container">
-
-    <!-- ! ====== Filters Section ====== -->
+    <!-- * ========== Sección de Filtros ========== -->
     <section class="filters-section">
         <div class="filters-container">
             <label for="filter-select">Filter users:</label>
-            
-            <!-- ? --- User Filter --- -->
-            <select 
-                id="filter-select" 
-                class="filter-dropdown" 
-                [value]="selectedFilter" 
-                (change)="onFilterSelect($event)">
+
+            <select
+                id="filter-select"
+                class="filter-dropdown"
+                [value]="selectedFilter"
+                (change)="onFilterSelect($event)"
+            >
                 <option value="all">All Users</option>
                 <option value="ADMIN">Admins ⭐</option>
                 <option value="USER">Members</option>
@@ -18,19 +17,22 @@
         </div>
     </section>
 
-    <!-- ! === Users Section === -->
+    <!-- * ========== Grid de Usuarios ========== -->
     <section class="users-section">
         @for (user of users; track user.id) {
-            <!-- ? --- User Card --- -->
             <div class="user-card" [routerLink]="[user.username]">
                 <div class="img-wrapper">
                     <img
-                        [src]="user.profilePictureUrl"
+                        [src]="
+                            user.profilePictureUrl ||
+                            (user.role === 'ADMIN'
+                                ? 'assets/img/default-img/admin-noimg.jpg'
+                                : 'assets/img/default-img/user-noimg.jpg')
+                        "
                         [alt]="user.username || 'User picture'"
                         (error)="noProfilePicture($event, user.role)"
                     />
 
-                    <!-- <----- Rectángulo inferior fijo con el nombre y rol ----->
                     <div class="info-overlay">
                         @if (user.role === 'ADMIN') {
                             <h3>⭐</h3>
@@ -42,7 +44,7 @@
         }
     </section>
 
-    <!-- ? --- Loading Spinner --- -->
+    <!-- ? --- Spinner de Carga Infinito --- -->
     @if (isLoading) {
         <div class="loading-indicator">
             <div class="spinner"></div>
@@ -50,11 +52,10 @@
         </div>
     }
 
-    <!-- ? --- Button to Top --- -->
+    <!-- ? --- Botón Flotante para Volver Arriba --- -->
     @if (showScrollTopBtn) {
         <button class="scroll-top-btn" (click)="scrollToTop()" aria-label="Scroll to top">
-            <img src="assets/img/buttons-icons/arrow-button.png" alt="Scroll to top"/>
+            <img src="assets/img/buttons-icons/arrow-button.png" alt="Scroll to top" />
         </button>
     }
-
 </div>

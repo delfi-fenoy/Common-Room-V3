@@ -1,42 +1,42 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+
 import { AuthService } from '../../../core/services/auth-service';
-import { Modal } from '../../../shared/modals/modal/modal';
 import { ModalService } from '../../../shared/services/modal-services';
+import { Modal } from '../../../shared/modals/modal/modal';
 
 @Component({
     selector: 'app-login-page',
+    standalone: true,
     imports: [ReactiveFormsModule, RouterLink, Modal],
     templateUrl: './login-page.html',
     styleUrl: '../styles/auth-forms.css',
 })
 export class LoginPage {
-    // * ---- Inyección de Dependencias ----
+    // * ======== Inyección de Servicios ========
     private fb = inject(FormBuilder);
     private authService = inject(AuthService);
     private router = inject(Router);
     private modalService = inject(ModalService);
 
-    // * ---- Estados Reactivos con Signals ----
+    // * ======== Estados Reactivos con Signals ========
     loginError = signal<boolean>(false);
     isSubmitting = signal<boolean>(false);
-
-    // ? ----- Signal visibilidad de contraseña -----
     showPassword = signal<boolean>(false);
 
-    // * ---- Formulario Reactivo ----
+    // * ======== Formulario Reactivo ========
     loginForm = this.fb.nonNullable.group({
         username: ['', Validators.required],
         password: ['', Validators.required],
     });
 
-    // ? ----- Alternar visibilidad de contraseña -----
+    // <----- Alternar Visibilidad de Contraseña ----->
     togglePassword(): void {
         this.showPassword.update((val) => !val);
     }
 
-    // * -------- Metodo de Formulario --------
+    // <----- Envío de Formulario de Inicio de Sesión ----->
     onSubmit(): void {
         if (this.loginForm.invalid) return;
 

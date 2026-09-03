@@ -95,6 +95,7 @@
 
 .btn-edit,
 .btn-delete {
+    font-family: inherit; 
     flex: 1;
     padding: 0.5rem;
     border-radius: 0.5rem;
@@ -102,7 +103,7 @@
     font-size: clamp(0.85rem, 1.8vw, 0.95rem);
     cursor: pointer;
     border: 0.15rem solid var(--brown-400);
-    transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+    transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
 .btn-edit {
@@ -117,16 +118,18 @@
     color: var(--purple-700);
 }
 
+/* ! <----- Uso de paleta global de peligro en Delete Playlist -----> */
 .btn-delete {
-    background-color: var(--brown-500);
-    color: #ffb3b3;
+    background-color: var(--red-600);
+    border-color: var(--red-500);
+    color: var(--red-100);
 }
 
 .btn-delete:hover {
     transform: scale(1.03);
-    background-color: #8b0000;
-    border-color: #a00000;
-    color: #fff;
+    background-color: var(--red-500);
+    border-color: var(--red-600);
+    color: #ffffff;
 }
 
 .description-box h3,
@@ -255,14 +258,15 @@
     flex-direction: column;
 }
 
-/* <----- Botón X reubicado estéticamente sobre la esquina de la tarjeta -----> */
+/* ! <----- Botón '✕' Overlay para quitar películas de la Playlist -----> */
 .btn-remove-overlay {
+    font-family: inherit;
     position: absolute;
     top: -0.4rem;
     right: -0.4rem;
     z-index: 20;
-    background-color: #8b0000;
-    color: #fff;
+    background-color: var(--red-500);
+    color: #ffffff;
     border: 0.15rem solid var(--brown-100);
     border-radius: 50%;
     width: clamp(1.8rem, 4vw, 2.2rem);
@@ -274,12 +278,12 @@
     font-size: clamp(0.75rem, 1.5vw, 0.9rem);
     font-weight: bold;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-    transition: transform 0.2s ease, background-color 0.2s ease;
+    transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
     padding: 0;
 }
 
 .btn-remove-overlay:hover {
-    background-color: #ff4d4d;
+    background-color: var(--red-600);
     transform: scale(1.15);
 }
 
@@ -296,6 +300,7 @@
 }
 
 .pagination-btn {
+    font-family: inherit; 
     padding: 0.4rem 0.9rem;
     border-radius: 0.4rem;
     background-color: var(--brown-500);

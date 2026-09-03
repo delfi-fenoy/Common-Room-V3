@@ -1,5 +1,5 @@
 <div class="search-container">
-    <!-- ! ========== Navigation Tabs ========== -->
+    <!-- * ========== Navegación por Pestañas ========== -->
     <section class="tabs-section">
         <div class="tabs-container">
             <button
@@ -26,16 +26,14 @@
         </div>
     </section>
 
-    <!-- ! ========== Tab: Movies ========== -->
+    <!-- * ========== Pestaña: Películas ========== -->
     @if (activeTab === 'movies') {
         <section class="movies-section">
             @for (movie of movies; track movie.id) {
-                <!-- ? --- Movie Card --- -->
                 <app-movie-card [movie]="movie" />
             }
         </section>
 
-        <!-- Mensaje sin resultados -->
         @if (!isLoading && movies.length === 0) {
             <div class="no-results">
                 <p>No movies found for "{{ query }}"</p>
@@ -43,26 +41,22 @@
         }
     }
 
-    <!-- ! ========== Tab: Users ========== -->
+    <!-- * ========== Pestaña: Usuarios ========== -->
     @if (activeTab === 'users') {
         <section class="users-section">
             @for (user of users; track user.id) {
-                <!-- ? --- User Card --- -->
                 <div class="user-card" [routerLink]="['/users', user.username]">
                     <div class="img-wrapper">
-                        @if (user.role === 'ADMIN') {
-                            <img
-                                [src]="user.profilePictureUrl || 'assets/img/default-img/admin-noimg.jpg'"
-                                alt="{{ user.username || 'User picture' }}"
-                                (error)="noProfilePicture($event, 'ADMIN')"
-                            />
-                        } @else {
-                            <img
-                                [src]="user.profilePictureUrl || 'assets/img/default-img/user-noimg.jpg'"
-                                alt="{{ user.username || 'User picture' }}"
-                                (error)="noProfilePicture($event, 'USER')"
-                            />
-                        }
+                        <img
+                            [src]="
+                                user.profilePictureUrl ||
+                                (user.role === 'ADMIN'
+                                    ? 'assets/img/default-img/admin-noimg.jpg'
+                                    : 'assets/img/default-img/user-noimg.jpg')
+                            "
+                            [alt]="user.username || 'User picture'"
+                            (error)="noProfilePicture($event, user.role)"
+                        />
 
                         <div class="info-overlay">
                             @if (user.role === 'ADMIN') {
@@ -75,7 +69,6 @@
             }
         </section>
 
-        <!-- Mensaje sin resultados -->
         @if (!isLoading && users.length === 0) {
             <div class="no-results">
                 <p>No users found for "{{ query }}"</p>
@@ -83,7 +76,7 @@
         }
     }
 
-    <!-- <----- Tab: Playlists -----> 
+    <!-- * ========== Pestaña: Playlists ========== -->
     @if (activeTab === 'playlists') {
         <section class="playlists-section">
             @for (playlist of playlists; track playlist.id) {
@@ -91,7 +84,6 @@
             }
         </section>
 
-        <!-- Mensaje sin resultados -->
         @if (!isLoading && playlists.length === 0) {
             <div class="no-results">
                 <p>No playlists found for "{{ query }}"</p>
@@ -99,7 +91,7 @@
         }
     }
 
-    <!-- ? --- Loading Indicator --- -->
+    <!-- ? --- Indicador de Carga --- -->
     @if (isLoading) {
         <div class="loading-indicator">
             <div class="spinner"></div>
@@ -107,7 +99,7 @@
         </div>
     }
 
-    <!-- ? --- Scroll Top Button --- -->
+    <!-- ? --- Botón Flotante para Volver Arriba --- -->
     @if (showScrollTopBtn) {
         <button class="scroll-top-btn" (click)="scrollToTop()" aria-label="Scroll to top">
             <img src="assets/img/buttons-icons/arrow-button.png" alt="Scroll to top" />

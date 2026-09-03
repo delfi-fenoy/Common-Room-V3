@@ -3,21 +3,22 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 
+import { MovieDetails, Review } from '../../../core/models';
 import { MovieService } from '../../../core/services/movie-service';
 import { ReviewService } from '../../../core/services/review-service';
 import { AuthService } from '../../../core/services/auth-service';
 import { ModalService } from '../../../shared/services/modal-services';
 
-import { MovieDetails, Review } from '../../../core/models';
 import { ReviewCard } from '../../../shared/cards/review-card/review-card';
 import { ReviewFormModal } from '../../../shared/modals/review-form-modal/review-form-modal';
 import { PlaylistModal } from '../../../shared/modals/playlist-modal/playlist-modal';
+import { Modal } from '../../../shared/modals/modal/modal';
 import { TMDB_GENRES } from '../movies-list/movies-list';
 
 @Component({
     selector: 'app-movie-sheet',
     standalone: true,
-    imports: [CommonModule, RouterLink, ReviewCard, ReviewFormModal, PlaylistModal],
+    imports: [CommonModule, RouterLink, ReviewCard, ReviewFormModal, PlaylistModal, Modal],
     templateUrl: './movie-sheet.html',
     styleUrl: './movie-sheet.css',
 })
@@ -29,7 +30,7 @@ export class MovieSheet implements OnInit {
     private auth = inject(AuthService);
     public modalService = inject(ModalService);
     private cdr = inject(ChangeDetectorRef);
-    private titleService = inject(Title); // <----- Inyección del servicio de título
+    private titleService = inject(Title);
 
     // * ======== Variables de Estado ========
     chosenMovie: MovieDetails | null = null; // La película seleccionada
@@ -41,7 +42,7 @@ export class MovieSheet implements OnInit {
     totalPages: number = 1;
     isLoadingReviews: boolean = false;
 
-    // ? ----- Selección y Estado de Usuario -----
+    // ? ----- Estado del Usuario Autenticado -----
     selectedReview: Review | null = null;
     isLoggedIn: boolean = false;
     isAdmin: boolean = false;
@@ -79,7 +80,7 @@ export class MovieSheet implements OnInit {
         });
     }
 
-    // ? ----- Genre Navigation Helper ----->
+    // <----- Helper de Mapeo de Géneros ----->
     getGenreIdByName(genre: any): number | null {
         if (!genre) return null;
         if (typeof genre === 'object' && genre.id) return genre.id;
@@ -88,14 +89,14 @@ export class MovieSheet implements OnInit {
         return found ? found.id : null;
     }
 
-    // ! -------- Método para cargar la Película desde el Backend --------
+    // <----- Cargar Información de la Película ----->
     loadMovie(id: number): void {
         this.mService.getMovieById(id).subscribe({
             next: (data) => {
                 this.chosenMovie = data;
 
                 // Actualiza el título de la pestaña en el navegador con el nombre de la película
-                if (data && data.title) {
+                if (data?.title) {
                     this.titleService.setTitle(`${data.title} | Common Room`);
                 }
 
@@ -112,7 +113,7 @@ export class MovieSheet implements OnInit {
         });
     }
 
-    // ! -------- Método para cargar Reseñas --------
+    // <----- Cargar Reseñas Generales de la Película ----->
     loadReviews(movieId: number, page: number): void {
         this.isLoadingReviews = true;
         this.currentPage = page;
@@ -137,7 +138,7 @@ export class MovieSheet implements OnInit {
         });
     }
 
-    // ? ----- Cambio de Página -----
+    // <----- Cambio de Página en Reseñas ----->
     changePage(newPage: number): void {
         if (this.chosenMovie && newPage >= 1 && newPage <= this.totalPages) {
             this.currentPage = newPage;
@@ -160,15 +161,13 @@ export class MovieSheet implements OnInit {
         });
     }
 
-    // ! -------- Gestión de Modales --------
-    // Abrir Modal de Crear Reseña
+    // <----- Handlers de Apertura de Modales ----->
     openCreateModal(): void {
         this.selectedReview = null;
         this.currentModalContext = 'review';
         this.modalService.openCustom('Add Review');
     }
 
-    // Abrir Modal de Editar Reseña
     openEditModal(review: Review): void {
         this.modalService.close();
         this.selectedReview = review;
@@ -176,13 +175,12 @@ export class MovieSheet implements OnInit {
         this.modalService.openCustom('Edit Review');
     }
 
-    // Abrir Modal de Agregar película a Playlist
     openAddPlaylistModal(): void {
         this.currentModalContext = 'playlist';
         this.modalService.openCustom('Add to Playlist');
     }
 
-    // ! -------- Confirmación y Eliminación de Reseñas --------
+    // <----- Confirmación y Eliminación de Reseñas ----->
     confirmDeleteReview(reviewId: number): void {
         this.modalService.openConfirm(
             'Delete Review',
@@ -208,7 +206,7 @@ export class MovieSheet implements OnInit {
         });
     }
 
-    // ? ----- Refrescar Reseñas -----
+    // <----- Refrescar Reseñas ----->
     refreshReviews(): void {
         if (!this.chosenMovie) return;
         this.loadReviews(this.chosenMovie.id, this.currentPage);
@@ -217,7 +215,7 @@ export class MovieSheet implements OnInit {
         }
     }
 
-    // * -------- Método para reemplazar imagen de póster fallida --------
+    // <----- Reemplazo de Imagen de Póster Fallida ----->
     onImgError(event: Event): void {
         const img = event.target as HTMLImageElement;
         img.src = 'assets/img/default-img/movie-noimg.jpg';
