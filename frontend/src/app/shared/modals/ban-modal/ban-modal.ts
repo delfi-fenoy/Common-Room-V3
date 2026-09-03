@@ -6,6 +6,12 @@ import { UserBanPreview, UserPreview } from '../../../core/models';
 import { UserBanDetails } from '../../../core/models/bans/user-ban-detail';
 import { ModalService } from '../../../shared/services/modal-services';
 import { Modal } from '../modal/modal';
+import { Subject, forkJoin, of } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap, catchError } from 'rxjs/operators';
+
+export interface UserSearchItem extends UserPreview {
+    isBanned?: boolean;
+}
 
 @Component({
     selector: 'app-ban-modal',
@@ -24,21 +30,22 @@ export class BanModal implements OnInit {
     // * ======== Estado de Vistas ========
     currentView: 'list' | 'detail' | 'history' = 'list';
 
-    // * ======== Estado Vista 1: Lista Baneados ========
-    bannedUsers: UserPreview[] = [];
-    filteredUsers: UserPreview[] = [];
+    // * ======== Estado Vista 1: Lista y Búsqueda ========
+    bannedUsers: UserSearchItem[] = [];
+    unbannedUsers: UserSearchItem[] = [];
     searchQuery: string = '';
     isLoadingList: boolean = true;
     currentPage: number = 1;
     totalPages: number = 1;
+    private searchSubject = new Subject<string>();
 
     // * ======== Estado Vista 2: Detalle Baneo Actual ========
-    selectedUser: UserPreview | null = null;
+    selectedUser: UserSearchItem | null = null;
     currentBan: UserBanDetails | null = null;
     isLoadingDetail: boolean = false;
     isUnbanning: boolean = false;
 
-    // * ======== Estado Vista 3: Historial Desplegable ========
+    // * ======== Estado Vista 3: Historial ========
     banHistory: UserBanPreview[] = [];
     expandedBanId: number | null = null;
     banDetailsMap: Map<number, UserBanDetails> = new Map();
@@ -50,15 +57,69 @@ export class BanModal implements OnInit {
     // * ======== Lifecycle Hooks ========
     ngOnInit(): void {
         this.fetchBannedUsers(1);
+        this.setupSearchObservable();
     }
 
-    // <----- Vista 1: Obtener Usuarios Baneados Paginados ----->
+    // <----- Búsqueda Dual con Debounce ----->
+    private setupSearchObservable(): void {
+        this.searchSubject
+            .pipe(
+                debounceTime(300),
+                distinctUntilChanged(),
+                switchMap((query) => {
+                    const trimmed = query.trim();
+                    if (!trimmed) return of(null);
+
+                    this.isLoadingList = true;
+                    this.cdr.markForCheck();
+
+                    return forkJoin({
+                        banned: this.userService.getBannedUsers(trimmed, 1).pipe(catchError(() => of(null))),
+                        all: this.userService.searchUsers(trimmed, 'all', 1).pipe(catchError(() => of(null))),
+                    });
+                }),
+            )
+            .subscribe({
+                next: (results) => {
+                    if (!results) {
+                        this.fetchBannedUsers(1);
+                        return;
+                    }
+
+                    const bannedList: UserSearchItem[] = (results.banned?.content || []).map((u) => ({
+                        ...u,
+                        isBanned: true,
+                    }));
+
+                    const bannedIds = new Set(bannedList.map((u) => u.id));
+
+                    const unbannedList: UserSearchItem[] = (results.all?.content || [])
+                        .filter((u) => !bannedIds.has(u.id))
+                        .map((u) => ({ ...u, isBanned: false }));
+
+                    this.bannedUsers = bannedList;
+                    this.unbannedUsers = unbannedList;
+                    this.isLoadingList = false;
+                    this.cdr.markForCheck();
+                },
+                error: (err) => {
+                    console.error('Error in search:', err);
+                    this.isLoadingList = false;
+                    this.cdr.markForCheck();
+                },
+            });
+    }
+
+    // <----- Vista 1: Obtener Usuarios Baneados ----->
     fetchBannedUsers(page: number = 1): void {
         this.isLoadingList = true;
+        this.unbannedUsers = [];
         this.userService.getBannedUsers('', page).subscribe({
             next: (response) => {
-                this.bannedUsers = response.content || [];
-                this.filterUsers();
+                this.bannedUsers = (response.content || []).map((u) => ({
+                    ...u,
+                    isBanned: true,
+                }));
                 this.currentPage = page;
                 this.totalPages = response.totalPages || 1;
                 this.isLoadingList = false;
@@ -72,21 +133,10 @@ export class BanModal implements OnInit {
         });
     }
 
-    // <----- Vista 1: Búsqueda Local de Usuarios ----->
-    onSearchInput(event: any): void {
-        this.searchQuery = event.target.value;
-        this.filterUsers();
-    }
-
-    filterUsers(): void {
-        const query = this.searchQuery.toLowerCase().trim();
-        if (!query) {
-            this.filteredUsers = [...this.bannedUsers];
-        } else {
-            this.filteredUsers = this.bannedUsers.filter((user) =>
-                user.username.toLowerCase().includes(query),
-            );
-        }
+    onSearchInput(event: Event): void {
+        const input = event.target as HTMLInputElement;
+        this.searchQuery = input.value;
+        this.searchSubject.next(this.searchQuery);
     }
 
     onListPageChange(newPage: number): void {
@@ -95,8 +145,8 @@ export class BanModal implements OnInit {
         }
     }
 
-    // <----- Vista 2: Seleccionar Usuario e Ir a Detalle ----->
-    selectUser(user: UserPreview): void {
+    // <----- Vista 2: Detalle del Usuario ----->
+    selectUser(user: UserSearchItem): void {
         this.selectedUser = user;
         this.currentView = 'detail';
         this.isLoadingDetail = true;
@@ -116,7 +166,6 @@ export class BanModal implements OnInit {
         });
     }
 
-    // <----- Vista 2: Desbanear Usuario ----->
     onUnbanUser(): void {
         if (!this.selectedUser || this.isUnbanning) return;
 
@@ -141,7 +190,7 @@ export class BanModal implements OnInit {
         });
     }
 
-    // <----- Vista 3: Obtener Historial Paginado ----->
+    // <----- Vista 3: Historial ----->
     goToHistory(page: number = 1): void {
         if (!this.selectedUser) return;
 
@@ -165,7 +214,6 @@ export class BanModal implements OnInit {
         });
     }
 
-    // <----- Vista 3: Desplegar y Cargar Detalle por ID ----->
     toggleBanDetails(banId: number): void {
         if (this.expandedBanId === banId) {
             this.expandedBanId = null;
@@ -173,14 +221,12 @@ export class BanModal implements OnInit {
         }
 
         this.expandedBanId = banId;
-
         if (this.banDetailsMap.has(banId)) return;
 
         this.loadingBanDetailsMap.set(banId, true);
 
         this.userBanService.getBanById(banId).subscribe({
             next: (banDetail) => {
-                console.log('Baneo completo', banDetail);
                 this.banDetailsMap.set(banId, banDetail);
                 this.loadingBanDetailsMap.set(banId, false);
                 this.cdr.markForCheck();
@@ -199,13 +245,19 @@ export class BanModal implements OnInit {
         }
     }
 
-    // <----- Navegación entre Vistas y Cierre ----->
+    // <----- Navegación ----->
     backToList(): void {
         this.currentView = 'list';
         this.selectedUser = null;
         this.currentBan = null;
         this.banHistory = [];
         this.expandedBanId = null;
+
+        if (this.searchQuery.trim()) {
+            this.searchSubject.next(this.searchQuery);
+        } else {
+            this.fetchBannedUsers(1);
+        }
     }
 
     backToDetail(): void {

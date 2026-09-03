@@ -20,7 +20,7 @@
     background: var(--brown-500);
     width: 100%;
     max-width: 35rem;
-    max-height: 90vh;
+    max-height: 100vh;
     display: flex;
     flex-direction: column;
     border-radius: 0.8rem;

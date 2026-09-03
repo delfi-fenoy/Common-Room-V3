@@ -1,39 +1,61 @@
 <app-modal>
     <div class="ban-modal-container">
-        <!-- * ========== VISTA 1: LISTA DE USUARIOS BANEADOS ========== -->
+        <!-- * ========== VISTA 1: LISTA Y BÚSQUEDA ========== -->
         @if (currentView === 'list') {
-            <!-- ? --- Barra de Búsqueda --- -->
             <div class="search-bar-container">
                 <input
                     type="text"
                     class="search-input"
-                    placeholder="Search banned user..."
+                    placeholder="Search user or banned user..."
                     [value]="searchQuery"
                     (input)="onSearchInput($event)"
                 />
             </div>
 
             @if (isLoadingList) {
-                <p class="status-msg">Loading banned users from database...</p>
-            } @else if (filteredUsers.length === 0) {
-                <p class="status-msg">No banned users found.</p>
+                <p class="status-msg">Searching users...</p>
+            } @else if (bannedUsers.length === 0 && unbannedUsers.length === 0) {
+                <p class="status-msg">No users found.</p>
             } @else {
                 <div class="users-list-wrapper">
                     <div class="users-list">
-                        @for (user of filteredUsers; track user.id) {
-                            <div class="user-item" (click)="selectUser(user)">
-                                <div class="user-info">
-                                    <span class="username">&#64;{{ user.username }}</span>
-                                    <span class="banned-by-sub">Banned</span>
+                        <!-- <----- Sección: Usuarios Baneados -----> 
+                        @if (bannedUsers.length > 0) {
+                            @if (searchQuery.trim()) {
+                                <div class="section-divider-title">Banned Users</div>
+                            }
+                            @for (user of bannedUsers; track user.id) {
+                                <div class="user-item" (click)="selectUser(user)">
+                                    <div class="user-info">
+                                        <span class="username">&#64;{{ user.username }}</span>
+                                        <span class="banned-by-sub">Banned</span>
+                                    </div>
+                                    <span class="arrow-icon">▶</span>
                                 </div>
-                                <span class="arrow-icon">▶</span>
+                            }
+                        }
+
+                        <!-- <----- Sección: Usuarios Activos ----->
+                        @if (unbannedUsers.length > 0) {
+                            <div class="search-divider">
+                                <span>Active / Unbanned Users</span>
                             </div>
+
+                            @for (user of unbannedUsers; track user.id) {
+                                <div class="user-item" (click)="selectUser(user)">
+                                    <div class="user-info">
+                                        <span class="username">&#64;{{ user.username }}</span>
+                                        <span class="unbanned-by-sub">Active</span>
+                                    </div>
+                                    <span class="arrow-icon">▶</span>
+                                </div>
+                            }
                         }
                     </div>
                 </div>
 
-                <!-- Controles de Paginación -->
-                @if (totalPages > 1) {
+                <!-- <----- Paginación -----> 
+                @if (!searchQuery.trim() && totalPages > 1) {
                     <div class="pagination-container">
                         <button
                             type="button"
@@ -57,7 +79,7 @@
             }
         }
 
-        <!-- * ========== VISTA 2: DETALLE DEL BANEO ACTUAL ========== -->
+        <!-- * ========== VISTA 2: DETALLE DEL BANEO ========== -->
         @if (currentView === 'detail') {
             <div class="detail-nav-header">
                 <button type="button" class="btn-back" (click)="backToList()">
@@ -66,7 +88,7 @@
             </div>
 
             @if (isLoadingDetail) {
-                <p class="status-msg">Loading ban details...</p>
+                <p class="status-msg">Loading user info...</p>
             } @else {
                 <div class="user-detail-container">
                     <div class="detail-header">
@@ -82,8 +104,9 @@
                             <span
                                 class="status-tag"
                                 [class.active-ban]="currentBan && !currentBan.unbannedAt"
+                                [class.active-user]="!currentBan || currentBan.unbannedAt"
                             >
-                                {{ currentBan && !currentBan.unbannedAt ? 'BANNED' : 'INACTIVE' }}
+                                {{ currentBan && !currentBan.unbannedAt ? 'BANNED' : 'ACTIVE' }}
                             </span>
                         </div>
 
@@ -104,13 +127,12 @@
                                 </div>
                             </div>
 
+                            <!-- Muestra la info de desbaneo si existe el último registro -->
                             @if (currentBan.unbannedAt) {
-                                <div class="info-row-inline">
+                                <div class="info-row-inline unbanned-status">
                                     <div>
                                         <strong>Unbanned At: </strong>
-                                        <span>{{
-                                            currentBan.unbannedAt | date: 'mediumDate'
-                                        }}</span>
+                                        <span>{{ currentBan.unbannedAt | date: 'mediumDate' }}</span>
                                     </div>
                                     <div class="text-right">
                                         <strong>Unbanned By: </strong>
@@ -119,14 +141,16 @@
                                 </div>
                             }
                         } @else {
-                            <p class="status-msg">No active ban record found.</p>
+                            <p class="status-msg-clean">
+                                User has never been banned.
+                            </p>
                         }
                     </div>
                 </div>
             }
         }
 
-        <!-- * ========== VISTA 3: HISTORIAL DE BANEOS (DESPLEGABLE) ========== -->
+        <!-- * ========== VISTA 3: HISTORIAL DE BANEOS ========== -->
         @if (currentView === 'history') {
             <div class="history-top-bar">
                 <button type="button" class="btn-back" (click)="backToDetail()">
@@ -147,13 +171,12 @@
                                 class="history-accordion-item"
                                 [class.is-expanded]="expandedBanId === item.id"
                             >
-                                <!-- Header Desplegable Simple -->
                                 <div
                                     class="accordion-header"
                                     (click)="toggleBanDetails(item.id)"
                                 >
                                     <div class="accordion-title">
-                                        <span class="ban-date">On: {{ item.bannedAt | date: 'dd/MM/yyyy' }}</span>| 
+                                        <span class="ban-date">{{ item.bannedAt | date: 'dd/MM/yyyy' }}</span>
                                         <span class="ban-by">By: &#64;{{ item.bannedByUsername }}</span>
                                     </div>
                                     <span class="accordion-arrow">
@@ -161,7 +184,6 @@
                                     </span>
                                 </div>
 
-                                <!-- Contenido Desplegado (Carga vía getBanById) -->
                                 @if (expandedBanId === item.id) {
                                     <div class="accordion-body">
                                         @if (loadingBanDetailsMap.get(item.id)) {
@@ -212,7 +234,6 @@
                     </div>
                 </div>
 
-                <!-- Historial Paginado -->
                 @if (historyTotalPages > 1) {
                     <div class="pagination-container">
                         <button
@@ -239,7 +260,7 @@
             }
         }
 
-        <!-- * ========== Footer de Acciones (.form-actions) ========== -->
+        <!-- * ========== FOOTER DE ACCIONES ========== -->
         <div class="form-actions">
             @if (currentView === 'detail' && currentBan && !currentBan.unbannedAt) {
                 <button
