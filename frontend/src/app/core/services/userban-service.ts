@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { UserBanResponse, UserBanPreview, PageResponse } from '../models';
+import { UserBanDetails, UserBanPreview, PageResponse } from '../models';
 
 @Injectable({
     providedIn: 'root',
@@ -12,18 +12,18 @@ export class UserbanService {
     private bansUrl = 'http://localhost:8080/bans';
 
     // <----- Banear Usuario ----->
-    banUser(username: string, reason: string): Observable<UserBanResponse> {
-        return this.http.post<UserBanResponse>(`${this.apiUrl}/${username}/ban`, { reason });
+    banUser(username: string, reason: string): Observable<UserBanDetails> {
+        return this.http.post<UserBanDetails>(`${this.apiUrl}/${username}/ban`, { reason });
     }
 
     // <----- Desbanear Usuario ----->
-    unbanUser(username: string): Observable<UserBanResponse> {
-        return this.http.put<UserBanResponse>(`${this.apiUrl}/${username}/ban`, {});
+    unbanUser(username: string): Observable<UserBanDetails> {
+        return this.http.put<UserBanDetails>(`${this.apiUrl}/${username}/ban`, {});
     }
 
     // <----- Obtener Último Baneo ----->
-    getUserLastBanInfo(username: string): Observable<UserBanResponse> {
-        return this.http.get<UserBanResponse>(`${this.apiUrl}/${username}/ban`);
+    getUserLastBanInfo(username: string): Observable<UserBanDetails> {
+        return this.http.get<UserBanDetails>(`${this.apiUrl}/${username}/ban`);
     }
 
     // <----- Obtener Historial de Baneos Paginado ----->
@@ -33,7 +33,7 @@ export class UserbanService {
     }
 
     // <----- Obtener Baneo por ID ----->
-    getBanById(banId: number): Observable<UserBanResponse> {
-        return this.http.get<UserBanResponse>(`${this.bansUrl}/${banId}`);
+    getBanById(banId: number): Observable<UserBanDetails> {
+        return this.http.get<UserBanDetails>(`${this.bansUrl}/${banId}`);
     }
 }

@@ -1,16 +1,26 @@
 <app-modal>
     <div class="ban-modal-container">
-
         <!-- * ========== VISTA 1: LISTA DE USUARIOS BANEADOS ========== -->
         @if (currentView === 'list') {
+            <!-- ? --- Barra de Búsqueda --- -->
+            <div class="search-bar-container">
+                <input
+                    type="text"
+                    class="search-input"
+                    placeholder="Search banned user..."
+                    [value]="searchQuery"
+                    (input)="onSearchInput($event)"
+                />
+            </div>
+
             @if (isLoadingList) {
                 <p class="status-msg">Loading banned users from database...</p>
-            } @else if (bannedUsers.length === 0) {
+            } @else if (filteredUsers.length === 0) {
                 <p class="status-msg">No banned users found.</p>
             } @else {
                 <div class="users-list-wrapper">
                     <div class="users-list">
-                        @for (user of bannedUsers; track user.id) {
+                        @for (user of filteredUsers; track user.id) {
                             <div class="user-item" (click)="selectUser(user)">
                                 <div class="user-info">
                                     <span class="username">&#64;{{ user.username }}</span>
@@ -47,7 +57,7 @@
             }
         }
 
-        <!-- * ========== VISTA 2: DETALLE DEL BANEO ========== -->
+        <!-- * ========== VISTA 2: DETALLE DEL BANEO ACTUAL ========== -->
         @if (currentView === 'detail') {
             <div class="detail-nav-header">
                 <button type="button" class="btn-back" (click)="backToList()">
@@ -83,11 +93,10 @@
                                 <p class="reason-text">{{ currentBan.reason }}</p>
                             </div>
 
-                            <!-- <----- Fecha y Admin alineados en extremos -----> 
                             <div class="info-row-inline">
                                 <div>
                                     <strong>Banned At: </strong>
-                                    <span>{{ currentBan.bannedAt | date:'mediumDate' }}</span>
+                                    <span>{{ currentBan.bannedAt | date: 'mediumDate' }}</span>
                                 </div>
                                 <div class="text-right">
                                     <strong>Banned By: </strong>
@@ -98,11 +107,13 @@
                             @if (currentBan.unbannedAt) {
                                 <div class="info-row-inline">
                                     <div>
-                                        <strong>Unbanned At:</strong>
-                                        <span>{{ currentBan.unbannedAt | date:'mediumDate' }}</span>
+                                        <strong>Unbanned At: </strong>
+                                        <span>{{
+                                            currentBan.unbannedAt | date: 'mediumDate'
+                                        }}</span>
                                     </div>
                                     <div class="text-right">
-                                        <strong>Unbanned By:</strong>
+                                        <strong>Unbanned By: </strong>
                                         <span>&#64;{{ currentBan.unbannedByUsername }}</span>
                                     </div>
                                 </div>
@@ -115,7 +126,7 @@
             }
         }
 
-        <!-- * ========== VISTA 3: HISTORIAL DE BANEOS ========== -->
+        <!-- * ========== VISTA 3: HISTORIAL DE BANEOS (DESPLEGABLE) ========== -->
         @if (currentView === 'history') {
             <div class="history-top-bar">
                 <button type="button" class="btn-back" (click)="backToDetail()">
@@ -132,13 +143,70 @@
                 <div class="history-list-wrapper">
                     <div class="history-list">
                         @for (item of banHistory; track item.id) {
-                            <div class="history-card">
-                                <div class="history-card-header">
-                                    <span class="ban-date-meta">
-                                        {{ item.bannedAt | date:'dd/MM/yy' }} | By: &#64;{{ item.bannedByUsername }}
+                            <div
+                                class="history-accordion-item"
+                                [class.is-expanded]="expandedBanId === item.id"
+                            >
+                                <!-- Header Desplegable Simple -->
+                                <div
+                                    class="accordion-header"
+                                    (click)="toggleBanDetails(item.id)"
+                                >
+                                    <div class="accordion-title">
+                                        <span class="ban-date">On: {{ item.bannedAt | date: 'dd/MM/yyyy' }}</span>| 
+                                        <span class="ban-by">By: &#64;{{ item.bannedByUsername }}</span>
+                                    </div>
+                                    <span class="accordion-arrow">
+                                        {{ expandedBanId === item.id ? '▲' : '▼' }}
                                     </span>
                                 </div>
-                                <p class="reason-text">{{ item.reason }}</p>
+
+                                <!-- Contenido Desplegado (Carga vía getBanById) -->
+                                @if (expandedBanId === item.id) {
+                                    <div class="accordion-body">
+                                        @if (loadingBanDetailsMap.get(item.id)) {
+                                            <p class="status-msg-sm">Loading details...</p>
+                                        } @else if (banDetailsMap.get(item.id); as detail) {
+                                            <div class="accordion-detail-content">
+                                                <div class="info-row">
+                                                    <strong>Reason:</strong>
+                                                    <p class="reason-text">{{ detail.reason }}</p>
+                                                </div>
+
+                                                <div class="info-row-inline">
+                                                    <div>
+                                                        <strong>Banned At: </strong>
+                                                        <span>{{ detail.bannedAt | date: 'medium' }}</span>
+                                                    </div>
+                                                    <div class="text-right">
+                                                        <strong>Banned By: </strong>
+                                                        <span>&#64;{{ detail.bannedByUsername }}</span>
+                                                    </div>
+                                                </div>
+
+                                                @if (detail.unbannedAt) {
+                                                    <div class="info-row-inline unbanned-status">
+                                                        <div>
+                                                            <strong>Unbanned At: </strong>
+                                                            <span>{{ detail.unbannedAt | date: 'medium' }}</span>
+                                                        </div>
+                                                        <div class="text-right">
+                                                            <strong>Unbanned By: </strong>
+                                                            <span>&#64;{{ detail.unbannedByUsername }}</span>
+                                                        </div>
+                                                    </div>
+                                                } @else {
+                                                    <div class="info-row-inline active-status">
+                                                        <strong>Status:</strong>
+                                                        <span>Currently Banned</span>
+                                                    </div>
+                                                }
+                                            </div>
+                                        } @else {
+                                            <p class="status-msg-sm">Failed to load ban details.</p>
+                                        }
+                                    </div>
+                                }
                             </div>
                         }
                     </div>
@@ -155,7 +223,9 @@
                         >
                             ◀ Prev
                         </button>
-                        <span class="page-indicator">{{ historyPage }} / {{ historyTotalPages }}</span>
+                        <span class="page-indicator"
+                            >{{ historyPage }} / {{ historyTotalPages }}</span
+                        >
                         <button
                             type="button"
                             class="pagination-btn"
@@ -169,7 +239,7 @@
             }
         }
 
-        <!-- ? --- Modal Actions (Footer) --- -->
+        <!-- * ========== Footer de Acciones (.form-actions) ========== -->
         <div class="form-actions">
             @if (currentView === 'detail' && currentBan && !currentBan.unbannedAt) {
                 <button

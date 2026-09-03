@@ -24,7 +24,7 @@ export * from './users/user-preview';
 
 /* ------ Modulo de Usuarios Baneados ------ */
 export * from './bans/user-ban-preview';
-export * from './bans/user-ban-response';
+export * from './bans/user-ban-detail';
 
 /* ------ Modulo Compartido / General ------ */
 export * from './common/not-found-item';
